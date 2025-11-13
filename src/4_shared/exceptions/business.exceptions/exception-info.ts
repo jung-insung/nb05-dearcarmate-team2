@@ -3,6 +3,7 @@ export enum BusinessExceptionType {
   INVALID_CAR_NUMBER,
   INVALID_MILEAGE,
   INVALID_PRICE,
+  BAD_REQUEST,
 }
 
 export const BusinessExceptionTable: Record<BusinessExceptionType, {statusCode: number, message: string}> = {
@@ -21,5 +22,9 @@ export const BusinessExceptionTable: Record<BusinessExceptionType, {statusCode: 
   [BusinessExceptionType.INVALID_PRICE]: {
     statusCode: 404,
     message: "가격은 0이상이어야 합니다."
+  },
+  [BusinessExceptionType.BAD_REQUEST]: {
+    statusCode: 400,
+    message: "잘못된 요청입니다."
   }
 }
