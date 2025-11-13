@@ -1,4 +1,6 @@
 import { AgeGroup, Gender, Region } from "@prisma/client";
+import { BusinessException } from "../../../4_shared/exceptions/business.exceptions/business.exception";
+import { BusinessExceptionType } from "../../../4_shared/exceptions/business.exceptions/exception-info";
 
 export type CustomerCreateData = {
   name: string;
@@ -58,7 +60,7 @@ export class CustomerEntity {
     memo?: string;
     contractCount?: number;
     version?: number;
-    isModified?:boolean
+    isModified?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
   }) {
@@ -153,6 +155,8 @@ export class CustomerEntity {
   }): NewCustomerEntity {
     const { name, gender, phoneNumber, ageGroup, region, email, memo } = params;
 
+    this.checkNameRule(name);
+
     return new CustomerEntity({
       name,
       gender,
@@ -201,8 +205,15 @@ export class CustomerEntity {
     });
   }
 
+  private static checkNameRule(name: string): void {
+    if (name.length > 10) {
+      throw new BusinessException({
+        type: BusinessExceptionType.NAME_TOO_LONG,
+      });
+    }
+  }
+
   markUnmodified() {
     this._isModified = false;
   }
-
 }
