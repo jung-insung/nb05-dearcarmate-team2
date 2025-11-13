@@ -204,7 +204,23 @@ export class CustomerEntity {
       isModified: true,
     });
   }
+  static createPersist (attrs:PersistCustomerEntity) : CustomerEntity {
+    const { id, name, gender, phoneNumber, ageGroup, region, email, memo, contractCount, version, isModified} = attrs;
 
+    return new CustomerEntity({
+      id,
+      name,
+      gender,
+      phoneNumber,
+      ageGroup,
+      region,
+      email,
+      memo,
+      contractCount,
+      version,
+      isModified
+    })
+  }
   private static checkNameRule(name: string): void {
     if (name.length > 10) {
       throw new BusinessException({
