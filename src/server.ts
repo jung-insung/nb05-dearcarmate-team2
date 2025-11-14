@@ -4,10 +4,13 @@ import { CorsMiddleware } from "./1_inbound/middleware/cors.middleware";
 import { LoggerMiddleware } from "./1_inbound/middleware/logger.middleware";
 import { JsonMiddleware } from "./1_inbound/middleware/json.middleware";
 import { GlobalErrorMiddleware } from "./1_inbound/middleware/global-error.middleware";
+import { IUserRepo } from "./2_domain/port/repos/user.repo.interface";
+import { UserRouter } from "./1_inbound/router/user.router";
 export class Server {
   private _app;
 
   constructor(
+    private _userRouter: UserRouter,
     private _configManager: IConfigUtil,
     private _corsMiddleware: CorsMiddleware,
     private _loggerMiddleware: LoggerMiddleware,
@@ -26,9 +29,13 @@ export class Server {
   };
 
   start() {
-    this._app.use(this._corsMiddleware.handler);
-    this._app.use(this._loggerMiddleware.handler);
-    this._app.use(this._jsonMiddleware.handler);
+    this._app.use(this._corsMiddleware.handler());
+    this._app.use(this._loggerMiddleware.handler());
+    this._app.use(this._jsonMiddleware.handler());
+    
+    // routers
+     this._app.use(this._userRouter.basePath, this._userRouter.router);
+
     this._app.use(this._globalErrorMiddleware.handler);
     this.listen();
   }

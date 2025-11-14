@@ -15,7 +15,10 @@ export class BusinessException extends Error {
     type?: BusinessExceptionType,
     error?: Error
   }) {
-    if (option.type != undefined) {
+    if (option.type != undefined && option.message != undefined) { // type하고 message가 둘 다 있으면
+      super(option.message ?? BusinessExceptionTable[option.type].message);
+      this.statusCode = BusinessExceptionTable[option.type].statusCode;
+    } else if (option.type != undefined) { // 타입만 있으면
       super(BusinessExceptionTable[option.type].message);
       this.statusCode = BusinessExceptionTable[option.type].statusCode;
     } else {
