@@ -20,7 +20,7 @@ export class BaseController {
       params?: unknown;
       //userId?: unknown; 인증 jwt 페이로드로 들어오는 값
     },
-    exceptionMap: Record<string, any>
+    exceptionMap: Record<string, BusinessExceptionType>
   ) {
     const result = schema.safeParse(data);
     if (!result.success) {

@@ -9,6 +9,7 @@ import { ConfigUtil } from "./4_shared/utils/config.util";
 import { Server } from "./server";
 import { UserService } from "./2_domain/services/user.service";
 import { UserController } from "./1_inbound/controller/user.controller";
+import { NotFoundMiddleware } from "./1_inbound/middleware/not-found.middleware";
 
 export class Injector {
   private _server: Server;
@@ -28,6 +29,7 @@ export class Injector {
     const globalErrorMiddleware = new GlobalErrorMiddleware(configUtil);
     const jsonMiddleware = new JsonMiddleware(configUtil);
     const loggerMiddleware = new LoggerMiddleware(configUtil);
+    const notFoundMiddleware = new NotFoundMiddleware();
 
     const userRepo = new UserRepo(prisma);
 
@@ -43,6 +45,7 @@ export class Injector {
       corsMiddleware,
       loggerMiddleware,
       jsonMiddleware,
+      notFoundMiddleware,
       globalErrorMiddleware
     );
   }

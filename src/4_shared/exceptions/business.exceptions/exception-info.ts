@@ -14,6 +14,7 @@ export enum BusinessExceptionType {
   COMPANYNAME_FORM,
   COMPANYCODE_FORM,
   INVALID_REQUEST,
+  NOT_FOUND,
 }
 
 export const BusinessExceptionTable: Record<
@@ -84,5 +85,9 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.INVALID_REQUEST]: {
     statusCode: 500,
     message: "잘못된 요청입니다.",
+  },
+  [BusinessExceptionType.NOT_FOUND]: {
+    statusCode: 404,
+    message: "클라이언트가 요청한 경로가 없습니다.",
   },
 };

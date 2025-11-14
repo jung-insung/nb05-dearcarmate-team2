@@ -6,6 +6,7 @@ import { JsonMiddleware } from "./1_inbound/middleware/json.middleware";
 import { GlobalErrorMiddleware } from "./1_inbound/middleware/global-error.middleware";
 import { IUserRepo } from "./2_domain/port/repos/user.repo.interface";
 import { UserRouter } from "./1_inbound/router/user.router";
+import { NotFoundMiddleware } from "./1_inbound/middleware/not-found.middleware";
 export class Server {
   private _app;
 
@@ -15,6 +16,7 @@ export class Server {
     private _corsMiddleware: CorsMiddleware,
     private _loggerMiddleware: LoggerMiddleware,
     private _jsonMiddleware: JsonMiddleware,
+    private _notFoundMiddleware: NotFoundMiddleware,
     private _globalErrorMiddleware: GlobalErrorMiddleware,
   ) {
     this._app = express();
@@ -32,10 +34,11 @@ export class Server {
     this._app.use(this._corsMiddleware.handler());
     this._app.use(this._loggerMiddleware.handler());
     this._app.use(this._jsonMiddleware.handler());
-    
-    // routers
-     this._app.use(this._userRouter.basePath, this._userRouter.router);
 
+    // routers
+    this._app.use(this._userRouter.basePath, this._userRouter.router);
+
+    this._app.use(this._notFoundMiddleware.handler());
     this._app.use(this._globalErrorMiddleware.handler);
     this.listen();
   }
