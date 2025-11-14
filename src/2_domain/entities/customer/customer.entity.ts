@@ -204,8 +204,20 @@ export class CustomerEntity {
       isModified: true,
     });
   }
-  static createPersist (attrs:PersistCustomerEntity) : CustomerEntity {
-    const { id, name, gender, phoneNumber, ageGroup, region, email, memo, contractCount, version, isModified} = attrs;
+  static createPersist(attrs: PersistCustomerEntity): CustomerEntity {
+    const {
+      id,
+      name,
+      gender,
+      phoneNumber,
+      ageGroup,
+      region,
+      email,
+      memo,
+      contractCount,
+      version,
+      isModified,
+    } = attrs;
 
     return new CustomerEntity({
       id,
@@ -218,8 +230,8 @@ export class CustomerEntity {
       memo,
       contractCount,
       version,
-      isModified
-    })
+      isModified,
+    });
   }
   private static checkNameRule(name: string): void {
     if (name.length > 10) {

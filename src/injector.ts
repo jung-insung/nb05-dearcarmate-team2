@@ -6,7 +6,7 @@ import { ConfigUtil } from "./4_shared/utils/config.util";
 import { Server } from "./server";
 
 export class Injector {
-  private _server : Server;
+  private _server: Server;
 
   constructor() {
     this._server = this.injectDeps();
@@ -15,7 +15,7 @@ export class Injector {
   get server() {
     return this._server;
   }
-  injectDeps() : Server {
+  injectDeps(): Server {
     const configUtil = new ConfigUtil();
     const corsMiddleware = new CorsMiddleware(configUtil);
     const globalErrorMiddleware = new GlobalErrorMiddleware(configUtil);
@@ -26,7 +26,7 @@ export class Injector {
       corsMiddleware,
       loggerMiddleware,
       jsonMiddleware,
-      globalErrorMiddleware
+      globalErrorMiddleware,
     );
   }
 }

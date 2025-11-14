@@ -1,5 +1,8 @@
 import { BusinessException } from "../../../4_shared/exceptions/business.exceptions/business.exception";
-import { BusinessExceptionTable, BusinessExceptionType } from "../../../4_shared/exceptions/business.exceptions/exception-info";
+import {
+  BusinessExceptionTable,
+  BusinessExceptionType,
+} from "../../../4_shared/exceptions/business.exceptions/exception-info";
 import { IBcryptHashUtil } from "../../port/managers/bcrypt-hash.manager.interface";
 
 export type CreateUserData = {
@@ -9,7 +12,7 @@ export type CreateUserData = {
   phoneNumber?: string;
   password?: string;
   version: number;
-}
+};
 
 export type UpdateUserData = {
   employeeNumber?: string;
@@ -17,10 +20,16 @@ export type UpdateUserData = {
   password?: string;
   imageUrl?: string;
   version: number;
-}
+};
 
-export type NewUserEntity = Omit<UserEntity, "id" | "createdAt" | "updatedAt" | "imageUrl">;
-export type UpdateUserEntity = Omit<UserEntity, "createdAt" | "updatedAt" | "isAdmin">
+export type NewUserEntity = Omit<
+  UserEntity,
+  "id" | "createdAt" | "updatedAt" | "imageUrl"
+>;
+export type UpdateUserEntity = Omit<
+  UserEntity,
+  "createdAt" | "updatedAt" | "isAdmin"
+>;
 
 export class UserEntity {
   private readonly _id?: number;
@@ -104,8 +113,8 @@ export class UserEntity {
       employeeNumber: this.employeeNumber,
       phoneNumber: this.phoneNumber,
       password: this.password,
-      version: this._version
-    }
+      version: this._version,
+    };
   }
 
   toUpdateData(): UpdateUserData {
@@ -114,8 +123,8 @@ export class UserEntity {
       phoneNumber: this._phoneNumber,
       password: this._password,
       imageUrl: this._imageUrl,
-      version: this._version
-    }
+      version: this._version,
+    };
   }
 
   // Factory(도장 찍기)
@@ -146,19 +155,19 @@ export class UserEntity {
       phoneNumber,
       password: hashedPassword,
       version: 1,
-    })
+    });
   }
 
   static async updateUser(params: {
-    id: number,
-    name: string,
-    email: string,
+    id: number;
+    name: string;
+    email: string;
     employeeNumber: string;
     phoneNumber: string;
     password: string;
     imageUrl: string;
     version: number;
-    bcryptHashManager: IBcryptHashUtil
+    bcryptHashManager: IBcryptHashUtil;
   }): Promise<UpdateUserEntity> {
     const {
       id,
@@ -169,7 +178,7 @@ export class UserEntity {
       password,
       imageUrl,
       version,
-      bcryptHashManager
+      bcryptHashManager,
     } = params;
 
     this.checkPasswordRule(password);
@@ -190,13 +199,21 @@ export class UserEntity {
   // 비즈니스 규칙
   private static checkPasswordRule(password: string): void {
     if (password.length < 15) {
-      throw new BusinessException({ type: BusinessExceptionType.EMPLOYEENUMBER_TOO_LONG});
+      throw new BusinessException({
+        type: BusinessExceptionType.EMPLOYEENUMBER_TOO_LONG,
+      });
     }
   }
 
   // password
-  async isPasswordMatch(InputPassword: string, bcryptHashManager: IBcryptHashUtil) {
-    return await bcryptHashManager.verifyPassword(InputPassword, this._password!);
+  async isPasswordMatch(
+    InputPassword: string,
+    bcryptHashManager: IBcryptHashUtil,
+  ) {
+    return await bcryptHashManager.verifyPassword(
+      InputPassword,
+      this._password!,
+    );
   }
 
   incrementVersion() {
@@ -205,4 +222,3 @@ export class UserEntity {
     }
   }
 }
-

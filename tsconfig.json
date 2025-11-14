@@ -1,34 +1,35 @@
 {
   "compilerOptions": {
     /* 기본 경로 설정 */
-    "rootDir": "./src",              // TypeScript 소스코드가 들어있는 폴더
-    "outDir": "./dist",              // 컴파일 후 JS 파일이 저장될 폴더
+    "rootDir": "./src", // TypeScript 소스코드가 들어있는 폴더
+    "outDir": "./dist", // 컴파일 후 JS 파일이 저장될 폴더
 
     /* 모듈/빌드 설정 */
-    "module": "CommonJS",            // Node.js에서 사용하는 모듈 시스템 (import/export 대신 require 지원)
-    "target": "ES2020",              // 변환될 자바스크립트 버전 (최신 문법 지원)
-    "moduleResolution": "Node",      // Node.js 방식으로 모듈 탐색 (node_modules에서 찾음)
+    "module": "CommonJS", // Node.js에서 사용하는 모듈 시스템 (import/export 대신 require 지원)
+    "target": "ES2020", // 변환될 자바스크립트 버전 (최신 문법 지원)
+    "moduleResolution": "Node", // Node.js 방식으로 모듈 탐색 (node_modules에서 찾음)
 
     /* TypeScript 기본 동작 */
-    "strict": true,                  // 엄격한 타입 검사 (타입 실수 방지용)
-    "esModuleInterop": true,         // CommonJS 모듈도 import 문법으로 사용할 수 있게 함
-    "skipLibCheck": true,            // 외부 라이브러리의 타입 정의 검사 생략 (속도 향상)
+    "strict": true, // 엄격한 타입 검사 (타입 실수 방지용)
+    "esModuleInterop": true, // CommonJS 모듈도 import 문법으로 사용할 수 있게 함
+    "skipLibCheck": true, // 외부 라이브러리의 타입 정의 검사 생략 (속도 향상)
     "forceConsistentCasingInFileNames": true, // 파일 이름 대소문자 불일치 에러 방지 (Mac/Windows 차이 해결)
 
     /* 디버깅 편의 */
-    "sourceMap": true,               // JS 파일과 TS 파일을 연결해 디버깅 시 TS로 추적 가능
+    "sourceMap": true, // JS 파일과 TS 파일을 연결해 디버깅 시 TS로 추적 가능
 
     /* JSON import 허용 */
-    "resolveJsonModule": true,       // .json 파일을 import 할 수 있게 함
+    "resolveJsonModule": true, // .json 파일을 import 할 수 있게 함
 
     /* 타입 정의 경로 */
-    "typeRoots": [                   // 커스텀 타입 정의를 저장할 폴더 지정
+    "typeRoots": [
+      // 커스텀 타입 정의를 저장할 폴더 지정
       "./src/types",
       "./node_modules/@types"
     ]
   },
 
   /* 포함/제외 설정 */
-  "include": ["src"],                // TypeScript가 읽어야 할 코드 폴더
+  "include": ["src"], // TypeScript가 읽어야 할 코드 폴더
   "exclude": ["node_modules", "dist"] // 컴파일 대상에서 제외할 폴더
 }
