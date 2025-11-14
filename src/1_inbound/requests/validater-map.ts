@@ -1,7 +1,7 @@
 import { email } from "zod";
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
 
-export const userFieldExceptionMap: Record<string, any> = {
+export const userFieldExceptionMap: Record<string, BusinessExceptionType> = {
   userId: BusinessExceptionType.USERID_FORM,
   userName: BusinessExceptionType.USERNAME_FORM,
   email: BusinessExceptionType.EMAIL_FORM,
@@ -13,14 +13,14 @@ export const userFieldExceptionMap: Record<string, any> = {
   companyCode: BusinessExceptionType.COMPANYCODE_FORM,
 }
 
-export const companyFieldExceptionMap: Record<string, any> = {
+export const companyFieldExceptionMap: Record<string, BusinessExceptionType> = {
 
 }
 
-export const customerFieldExceptionMap: Record<string, any> = {
+export const customerFieldExceptionMap: Record<string, BusinessExceptionType> = {
 
 }
 
-export const carFieldExceptionMap: Record<string, any> = {
+export const carFieldExceptionMap: Record<string, BusinessExceptionType> = {
 
 }

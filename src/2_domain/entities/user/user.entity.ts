@@ -20,7 +20,18 @@ export type UpdateUserData = {
 }
 
 export type NewUserEntity = Omit<UserEntity, "id" | "createdAt" | "updatedAt" | "imageUrl">;
-export type UpdateUserEntity = Omit<UserEntity, "createdAt" | "updatedAt" | "isAdmin">
+export type UpdateUserEntity = Omit<UserEntity, "createdAt" | "updatedAt" | "isAdmin">;
+
+export interface PersistUserEntity extends UserEntity {
+  id: number;
+  employeeNumber: string;
+  phoneNumber: string;
+  imageUrl: string;
+  isAdmin: boolean;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export class UserEntity {
   private readonly _id?: number;
@@ -190,7 +201,7 @@ export class UserEntity {
   // 비즈니스 규칙
   private static checkPasswordRule(password: string): void {
     if (password.length < 15) {
-      throw new BusinessException({ type: BusinessExceptionType.EMPLOYEENUMBER_TOO_LONG});
+      throw new BusinessException({ type: BusinessExceptionType.EMPLOYEENUMBER_TOO_LONG });
     }
   }
 
