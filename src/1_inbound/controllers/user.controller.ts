@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { IUserService } from "../../2_domain/services/user.service";
 import { BaseController, ControllerHandler } from "./base.controller";
 import { userFieldExceptionMap } from "../requests/validater-map";
-import { userReqSchema } from "../requests/user-schema.request";
+import { registerUserReqSchema } from "../requests/user-schema.request";
 
 export interface IUserController {
   signUpUserController: ControllerHandler;
@@ -16,10 +16,13 @@ export class UserController extends BaseController {
 
   signUpUserController = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
     const reqDto = this.validateOrThrow(
-      userReqSchema,
+      registerUserReqSchema,
       { body: req.body },
       userFieldExceptionMap)
-      
-    return res.json(reqDto);
+
+    const newUser = await this._userService.signUpUser(reqDto);
+
+    const resDto = new signUpUserResDto(newUser);
+    return res.json(resDto);
   }
 }

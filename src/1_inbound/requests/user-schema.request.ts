@@ -1,6 +1,11 @@
 import z from "zod";
 
-export const userReqSchema = z.object({
+export type RegisterUserReqDto = z.infer<typeof registerUserReqSchema>;
+export type UpdateUserReqDto = z.infer<typeof updateUserReqSchema>;
+export type DeleteUserReqDto = z.infer<typeof deleteUserReqSchema>;
+export type GetUserReqDto = z.infer<typeof getUserReqSchema>;
+
+export const registerUserReqSchema = z.object({
   body: z.object({
     email: z.string({ message: "이메일는 문자열이어야 합니다." })
       .nonempty({ message: "이메일은 필수 항목입니다." })
@@ -32,6 +37,8 @@ export const userReqSchema = z.object({
       .nonempty({ message: "회사 코드는 필수 입력 항목입니다." })
       .trim(),
   }),
-  query: z.object({}),
-  params: z.object({}),
 });
+
+export const updateUserReqSchema = z.object();
+export const deleteUserReqSchema = z.object();
+export const getUserReqSchema = z.object();

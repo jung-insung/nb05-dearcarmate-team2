@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Administrator {
+model PlatAdmin {
   id        Int      @id @default(autoincrement())
   name      String
   email     String   @unique
@@ -15,9 +15,6 @@ model Administrator {
   role      String   @default("ADMIN")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  companies Company[]
-  users     User[]
 }
 
 model User {
@@ -27,8 +24,8 @@ model User {
   employeeNumber String
   phoneNumber    String
   password       String
-  imageUrl       String
-  isAdmin        Boolean
+  imageUrl       String?
+  isAdmin        Boolean  @default(false)
   version        Int      @default(1)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
@@ -36,9 +33,7 @@ model User {
   company   Company @relation(fields: [companyId], references: [id])
   companyId Int
 
-  administrator   Administrator @relation(fields: [administratorId], references: [id], onDelete: Cascade)
-  administratorId Int
-  contracts       Contract[]
+  contracts Contract[]
 }
 
 model Company {
@@ -54,9 +49,6 @@ model Company {
   customers Customer[]
   cars      Car[]
   contracts Contract[]
-
-  administrator   Administrator @relation(fields: [administratorId], references: [id], onDelete: Cascade)
-  administratorId Int
 }
 
 enum Gender {

@@ -1,29 +1,16 @@
 import { BusinessException } from "../../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionTable, BusinessExceptionType } from "../../../4_shared/exceptions/business.exceptions/exception-info";
-import { IBcryptHashUtil } from "../../port/managers/bcrypt-hash.manager.interface";
+import { IBcryptHashManager } from "../../port/managers/bcrypt-hash.manager.interface";
 
-export type CreateUserData = {
-  name: string;
-  email: string;
-  employeeNumber?: string;
-  phoneNumber?: string;
-  password?: string;
-  version: number;
+export interface NewUserEntity extends Omit<UserEntity, "id" | "createdAt" | "updatedAt" | "imageUrl">{
+  companyId: number;
 }
 
-export type UpdateUserData = {
-  employeeNumber?: string;
-  phoneNumber?: string;
-  password?: string;
-  imageUrl?: string;
-  version: number;
-}
-
-export type NewUserEntity = Omit<UserEntity, "id" | "createdAt" | "updatedAt" | "imageUrl">;
 export type UpdateUserEntity = Omit<UserEntity, "createdAt" | "updatedAt" | "isAdmin">;
 
 export interface PersistUserEntity extends UserEntity {
   id: number;
+  companyId: number;
   employeeNumber: string;
   phoneNumber: string;
   imageUrl: string;
@@ -35,13 +22,14 @@ export interface PersistUserEntity extends UserEntity {
 
 export class UserEntity {
   private readonly _id?: number;
+  private readonly _companyId?: number;
   private _name: string;
   private _email: string;
-  private _employeeNumber?: string;
-  private _phoneNumber?: string;
-  private _password?: string;
+  private _employeeNumber: string;
+  private _phoneNumber: string;
+  private _password: string;
   private _imageUrl?: string;
-  private _isAdmin?: boolean;
+  private _isAdmin: boolean;
   private _version: number;
   private _isModified: boolean;
   private readonly _createdAt?: Date;
@@ -49,18 +37,20 @@ export class UserEntity {
 
   constructor(attrs: {
     id?: number;
+    companyId?: number;
     name: string;
     email: string;
-    employeeNumber?: string;
-    phoneNumber?: string;
+    employeeNumber: string;
+    phoneNumber: string;
     imageUrl?: string;
-    isAdmin?: boolean;
-    password?: string;
+    isAdmin: boolean;
+    password: string;
     version: number;
     createdAt?: Date;
     updatedAt?: Date;
   }) {
     this._id = attrs.id;
+    this._companyId = attrs.companyId;
     this._name = attrs.name;
     this._email = attrs.email;
     this._employeeNumber = attrs.employeeNumber;
@@ -76,6 +66,9 @@ export class UserEntity {
 
   get id() {
     return this._id;
+  }
+  get companyId() {
+    return this._companyId;
   }
   get name() {
     return this._name;
@@ -104,29 +97,11 @@ export class UserEntity {
   get updatedAt() {
     return this._updatedAt;
   }
+  get version() {
+    return this._version;
+  }
   get isModified() {
     return this._isModified;
-  }
-
-  toCreateData(): CreateUserData {
-    return {
-      name: this._name,
-      email: this.email,
-      employeeNumber: this.employeeNumber,
-      phoneNumber: this.phoneNumber,
-      password: this.password,
-      version: this._version
-    }
-  }
-
-  toUpdateData(): UpdateUserData {
-    return {
-      employeeNumber: this._employeeNumber,
-      phoneNumber: this._phoneNumber,
-      password: this._password,
-      imageUrl: this._imageUrl,
-      version: this._version
-    }
   }
 
   // Factory(도장 찍기)
@@ -136,14 +111,17 @@ export class UserEntity {
     employeeNumber: string;
     phoneNumber: string;
     password: string;
-    bcryptHashManager: IBcryptHashUtil;
-  }): Promise<NewUserEntity> {
+    bcryptHashManager: IBcryptHashManager,
+    companyId: number
+  },
+  ): Promise<NewUserEntity> {
     const {
       name,
       email,
       employeeNumber,
       phoneNumber,
       password,
+      companyId,
       bcryptHashManager,
     } = params;
 
@@ -151,13 +129,15 @@ export class UserEntity {
     const hashedPassword = await bcryptHashManager.hash(password);
 
     return new UserEntity({
+      companyId,
       name,
       email,
       employeeNumber,
       phoneNumber,
       password: hashedPassword,
+      isAdmin: false,
       version: 1,
-    })
+    }) as NewUserEntity
   }
 
   static async updateUser(params: {
@@ -168,8 +148,9 @@ export class UserEntity {
     phoneNumber: string;
     password: string;
     imageUrl: string;
+    isAdmin: boolean;
     version: number;
-    bcryptHashManager: IBcryptHashUtil
+    bcryptHashManager: IBcryptHashManager
   }): Promise<UpdateUserEntity> {
     const {
       id,
@@ -180,6 +161,7 @@ export class UserEntity {
       password,
       imageUrl,
       version,
+      isAdmin,
       bcryptHashManager
     } = params;
 
@@ -194,6 +176,7 @@ export class UserEntity {
       phoneNumber,
       password: hashedPassword,
       imageUrl,
+      isAdmin,
       version: version + 1,
     });
   }
@@ -206,7 +189,7 @@ export class UserEntity {
   }
 
   // password
-  async isPasswordMatch(InputPassword: string, bcryptHashManager: IBcryptHashUtil) {
+  async isPasswordMatch(InputPassword: string, bcryptHashManager: IBcryptHashManager) {
     return await bcryptHashManager.verifyPassword(InputPassword, this._password!);
   }
 

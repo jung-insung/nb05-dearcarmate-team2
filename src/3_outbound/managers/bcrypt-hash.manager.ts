@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
-import { IBcryptHashUtil } from "../../2_domain/port/managers/bcrypt-hash.manager.interface";
+import { IBcryptHashManager } from "../../2_domain/port/managers/bcrypt-hash.manager.interface";
 import { IConfigUtil } from "../../4_shared/port/config.util.interface";
 
-export class HashManager implements IBcryptHashUtil {
+export class HashManager implements IBcryptHashManager {
 
   constructor(private readonly _configManager: IConfigUtil) { }
 
