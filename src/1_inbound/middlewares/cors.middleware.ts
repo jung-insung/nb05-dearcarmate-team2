@@ -5,11 +5,11 @@ import { BusinessException } from "../../4_shared/exceptions/business.exceptions
 export class CorsMiddleware {
   private _option: cors.CorsOptions;
 
-  constructor(private _configManager: IConfigUtil) {
-    const protocol = this._configManager.getParsed().NODE_ENV === "dev" ? "http" : "https";
-    const clientDomain = this._configManager.getParsed().NODE_ENV === "dev"
-      ? `localhost:${this._configManager.getParsed().PORT}`
-      : this._configManager.getParsed().CLIENT_DOMAIN;
+  constructor(private _configUtil: IConfigUtil) {
+    const protocol = this._configUtil.getParsed().NODE_ENV === "dev" ? "http" : "https";
+    const clientDomain = this._configUtil.getParsed().NODE_ENV === "dev"
+      ? `localhost:${this._configUtil.getParsed().PORT}`
+      : this._configUtil.getParsed().CLIENT_DOMAIN;
     const whitelist = [
       `${protocol}://${clientDomain}`,
       `${protocol}://www.${clientDomain}`

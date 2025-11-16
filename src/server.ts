@@ -1,18 +1,18 @@
 import express from "express";
 import { IConfigUtil } from "./4_shared/port/config.util.interface";
-import { CorsMiddleware } from "./1_inbound/middleware/cors.middleware";
-import { LoggerMiddleware } from "./1_inbound/middleware/logger.middleware";
-import { JsonMiddleware } from "./1_inbound/middleware/json.middleware";
-import { GlobalErrorMiddleware } from "./1_inbound/middleware/global-error.middleware";
+import { CorsMiddleware } from "./1_inbound/middlewares/cors.middleware";
+import { LoggerMiddleware } from "./1_inbound/middlewares/logger.middleware";
+import { JsonMiddleware } from "./1_inbound/middlewares/json.middleware";
+import { GlobalErrorMiddleware } from "./1_inbound/middlewares/global-error.middleware";
 import { IUserRepo } from "./2_domain/port/repos/user.repo.interface";
-import { UserRouter } from "./1_inbound/router/user.router";
-import { NotFoundMiddleware } from "./1_inbound/middleware/not-found.middleware";
+import { UserRouter } from "./1_inbound/routers/user.router";
+import { NotFoundMiddleware } from "./1_inbound/middlewares/not-found.middleware";
 export class Server {
   private _app;
 
   constructor(
     private _userRouter: UserRouter,
-    private _configManager: IConfigUtil,
+    private _configUtil: IConfigUtil,
     private _corsMiddleware: CorsMiddleware,
     private _loggerMiddleware: LoggerMiddleware,
     private _jsonMiddleware: JsonMiddleware,
@@ -23,9 +23,9 @@ export class Server {
   }
 
   listen() {
-    this._app.listen(this._configManager.getParsed().PORT, () => {
+    this._app.listen(this._configUtil.getParsed().PORT, () => {
       console.log(
-        `app server listening on port ${this._configManager.getParsed().PORT}`,
+        `app server listening on port ${this._configUtil.getParsed().PORT}`,
       );
     });
   };

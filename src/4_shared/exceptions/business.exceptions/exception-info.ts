@@ -15,6 +15,10 @@ export enum BusinessExceptionType {
   COMPANYCODE_FORM,
   INVALID_REQUEST,
   NOT_FOUND,
+  EMAIL_DUPLICATE,
+  SIGNUP_PASSWORD_MISMATCH,
+  PASSWORD_MISMATCH,
+  COMPANY_NOT_EXIST,
 }
 
 export const BusinessExceptionTable: Record<
@@ -78,9 +82,27 @@ export const BusinessExceptionTable: Record<
     statusCode: 400,
     message: "회사코드 양식이 안 맞습니다.",
   },
+  [BusinessExceptionType.SIGNUP_PASSWORD_MISMATCH]: {
+    statusCode: 401,
+    message: "비밀번호와 비밀번호 확인이 서로 다릅니다.",
+  },
+  [BusinessExceptionType.PASSWORD_MISMATCH]: {
+    statusCode: 401,
+    message: "비밀번호가 서로 다릅니다.",
+  },
 
-  // 필수 값 누락
+  // 존재 유무
+  [BusinessExceptionType.COMPANY_NOT_EXIST]: {
+    statusCode: 404,
+    message: "회사가 존재하지 않습니다.",
+  },
+
   // 중복, 충돌
+  [BusinessExceptionType.EMAIL_DUPLICATE]: {
+    statusCode: 409,
+    message: "이미 존재한 이메일입니다.",
+  },
+
   // 기타
   [BusinessExceptionType.INVALID_REQUEST]: {
     statusCode: 500,
