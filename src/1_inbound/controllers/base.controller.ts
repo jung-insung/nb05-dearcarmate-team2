@@ -6,11 +6,11 @@ import { BusinessExceptionType } from "../../4_shared/exceptions/business.except
 export type ControllerHandler = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => Promise<Response<any>>;
 
 export class BaseController {
-  constructor() { }
+  constructor() {}
 
   validateOrThrow<T extends z.ZodTypeAny>(
     schema: T,
@@ -20,21 +20,21 @@ export class BaseController {
       params?: unknown;
       //userId?: unknown; 인증 jwt 페이로드로 들어오는 값
     },
-    exceptionMap: Record<string, BusinessExceptionType>
+    exceptionMap: Record<string, BusinessExceptionType>,
   ) {
     const result = schema.safeParse(data);
     if (!result.success) {
       const issue = result.error.issues[0]; // 첫번째 형식 에러 먼저 처리
       const field = issue.path[0] as string;
-      const matched = exceptionMap[field] || BusinessExceptionType.INVALID_REQUEST
+      const matched =
+        exceptionMap[field] || BusinessExceptionType.INVALID_REQUEST;
 
       throw new BusinessException({
         type: matched,
-        message: issue.message
-      })
+        message: issue.message,
+      });
     }
 
     return result.data;
   }
-
 }

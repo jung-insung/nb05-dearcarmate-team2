@@ -9,20 +9,24 @@ export interface IUserController {
 }
 
 export class UserController extends BaseController {
-
   constructor(private _userService: IUserService) {
     super();
   }
 
-  signUpUserController = async (req: Request, res: Response, next: NextFunction): Promise<Response<any>> => {
+  signUpUserController = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response<any>> => {
     const reqDto = this.validateOrThrow(
       registerUserReqSchema,
       { body: req.body },
-      userFieldExceptionMap)
+      userFieldExceptionMap,
+    );
 
     const newUser = await this._userService.signUpUser(reqDto);
 
     const resDto = new signUpUserResDto(newUser);
     return res.json(resDto);
-  }
+  };
 }

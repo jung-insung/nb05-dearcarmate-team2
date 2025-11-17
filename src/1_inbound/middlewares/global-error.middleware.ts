@@ -4,7 +4,7 @@ import { BusinessException } from "../../4_shared/exceptions/business.exceptions
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
 
 export class GlobalErrorMiddleware {
-  constructor(private _configUtil: IConfigUtil) { }
+  constructor(private _configUtil: IConfigUtil) {}
 
   handler = (err: any, req: Request, res: Response, next: NextFunction) => {
     const nodeEnv = this._configUtil.getParsed().NODE_ENV;
@@ -28,5 +28,5 @@ export class GlobalErrorMiddleware {
       }
       return;
     }
-  }
+  };
 }
