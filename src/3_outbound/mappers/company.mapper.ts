@@ -1,11 +1,14 @@
 import {
 	CompanyEntity,
-	PersistCompanyEn,
-	CompanyCreateData,
-	CompanyUpdateData,
 	NewCompanyEntity,
 	PersistCompanyEntity,
 } from "../../2_domain/entities/company/company.entity";
+import {
+	PersistCompanyEn,
+	CompanyCreateData,
+	CompanyUpdateData,
+} from "../../2_domain/entities/company/company.entity.util";
+
 
 export class CompanyMapper {
 	static toCreateData(entity: NewCompanyEntity): { company: CompanyCreateData } {

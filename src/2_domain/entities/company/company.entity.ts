@@ -1,32 +1,15 @@
 import { BusinessException } from "../../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../../../4_shared/exceptions/business.exceptions/exception-info";
-
-interface CompanyEn {
-	id?: number;
-	companyName: string;
-	companyCode: string;
-	userCount: number;
-	version?: number;
-}
-
-type NewCompanyEn = Omit<CompanyEn, "id" | "userCount" | "version"> & { userCount?: number; };
-
-export interface PersistCompanyEn {
-	id: number;
-	companyName: string;
-	companyCode: string;
-	userCount: number;
-	version: number;
-	createdAt: Date;
-	updatedAt: Date;
-}
-
-export type CompanyCreateData = Pick<CompanyEn, "companyName" | "companyCode" | "userCount" | "version">;
-export type CompanyUpdateData = Pick<CompanyEn, "companyName" | "companyCode" | "userCount" | "version">;
+import { 
+	CompanyEn,
+	NewCompanyEn,
+	PersistCompanyEn,
+	CompanyCreateData,
+	CompanyUpdateData,
+ } from "./company.entity.util";
 
 export type NewCompanyEntity = CompanyEntity;
 export type PersistCompanyEntity = CompanyEntity & { readonly id: number };
-
 
 export class CompanyEntity {
 	private readonly _id?: number;
@@ -76,11 +59,11 @@ export class CompanyEntity {
 		const { id, companyName, companyCode, userCount, version } = attrs;
 		
 		return new CompanyEntity({
-			id: attrs.id,
-			companyName: attrs.companyName,
-			companyCode: attrs.companyCode,
-			userCount: attrs.userCount,
-			version: attrs.version,
+			id,
+			companyName,
+			companyCode,
+			userCount,
+			version,
 		});
 	}
 
