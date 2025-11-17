@@ -11,16 +11,12 @@ export const userFieldExceptionMap: Record<string, BusinessExceptionType> = {
   passwordConfirmation: BusinessExceptionType.PASSWORD_FORM,
   companyName: BusinessExceptionType.COMPANYNAME_FORM,
   companyCode: BusinessExceptionType.COMPANYCODE_FORM,
-}
+};
 
-export const companyFieldExceptionMap: Record<string, BusinessExceptionType> = {
+export const companyFieldExceptionMap: Record<string, BusinessExceptionType> =
+  {};
 
-}
+export const customerFieldExceptionMap: Record<string, BusinessExceptionType> =
+  {};
 
-export const customerFieldExceptionMap: Record<string, BusinessExceptionType> = {
-
-}
-
-export const carFieldExceptionMap: Record<string, BusinessExceptionType> = {
-
-}
+export const carFieldExceptionMap: Record<string, BusinessExceptionType> = {};

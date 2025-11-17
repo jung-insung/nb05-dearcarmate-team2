@@ -1,4 +1,7 @@
-import { NewUserEntity, PersistUserEntity } from "../../2_domain/entities/user/user.entity";
+import {
+  NewUserEntity,
+  PersistUserEntity,
+} from "../../2_domain/entities/user/user.entity";
 import { PersistDBUser } from "../repos/user.repo";
 
 export type CreateUserData = {
@@ -10,7 +13,7 @@ export type CreateUserData = {
   password: string;
   isAdmin: boolean;
   version: number;
-}
+};
 
 export type UpdateUserData = {
   employeeNumber?: string;
@@ -18,7 +21,7 @@ export type UpdateUserData = {
   password?: string;
   imageUrl?: string;
   version: number;
-}
+};
 
 export class UserMapper {
   static toCreateData(entity: NewUserEntity): CreateUserData {
@@ -30,8 +33,8 @@ export class UserMapper {
       phoneNumber: entity.phoneNumber,
       password: entity.password,
       isAdmin: entity.isAdmin,
-      version: entity.version
-    }
+      version: entity.version,
+    };
     return createUserData;
   }
 

@@ -1,5 +1,8 @@
 import { BusinessException } from "../../../4_shared/exceptions/business.exceptions/business.exception";
-import { BusinessExceptionTable, BusinessExceptionType } from "../../../4_shared/exceptions/business.exceptions/exception-info";
+import {
+  BusinessExceptionTable,
+  BusinessExceptionType,
+} from "../../../4_shared/exceptions/business.exceptions/exception-info";
 
 export type CreateCarData = {
   carNumber: string;
@@ -31,8 +34,8 @@ export type UpdateCarData = {
   version: number;
 };
 
-export type NewCarEntity = CarEntity
-export type UpdateCarEntity = CarEntity
+export type NewCarEntity = CarEntity;
+export type UpdateCarEntity = CarEntity;
 
 export class CarEntity {
   private readonly _id?: number;

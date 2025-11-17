@@ -46,7 +46,7 @@ export class Injector {
       loggerMiddleware,
       jsonMiddleware,
       notFoundMiddleware,
-      globalErrorMiddleware
+      globalErrorMiddleware,
     );
   }
 }

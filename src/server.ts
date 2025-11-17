@@ -28,7 +28,7 @@ export class Server {
         `app server listening on port ${this._configUtil.getParsed().PORT}`,
       );
     });
-  };
+  }
 
   start() {
     this._app.use(this._corsMiddleware.handler());

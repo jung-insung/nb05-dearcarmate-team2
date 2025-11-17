@@ -1,12 +1,19 @@
 import { BusinessException } from "../../../4_shared/exceptions/business.exceptions/business.exception";
-import { BusinessExceptionTable, BusinessExceptionType } from "../../../4_shared/exceptions/business.exceptions/exception-info";
+import {
+  BusinessExceptionTable,
+  BusinessExceptionType,
+} from "../../../4_shared/exceptions/business.exceptions/exception-info";
 import { IBcryptHashManager } from "../../port/managers/bcrypt-hash.manager.interface";
 
-export interface NewUserEntity extends Omit<UserEntity, "id" | "createdAt" | "updatedAt" | "imageUrl">{
+export interface NewUserEntity
+  extends Omit<UserEntity, "id" | "createdAt" | "updatedAt" | "imageUrl"> {
   companyId: number;
 }
 
-export type UpdateUserEntity = Omit<UserEntity, "createdAt" | "updatedAt" | "isAdmin">;
+export type UpdateUserEntity = Omit<
+  UserEntity,
+  "createdAt" | "updatedAt" | "isAdmin"
+>;
 
 export interface PersistUserEntity extends UserEntity {
   id: number;
@@ -111,10 +118,9 @@ export class UserEntity {
     employeeNumber: string;
     phoneNumber: string;
     password: string;
-    bcryptHashManager: IBcryptHashManager,
-    companyId: number
-  },
-  ): Promise<NewUserEntity> {
+    bcryptHashManager: IBcryptHashManager;
+    companyId: number;
+  }): Promise<NewUserEntity> {
     const {
       name,
       email,
@@ -137,20 +143,20 @@ export class UserEntity {
       password: hashedPassword,
       isAdmin: false,
       version: 1,
-    }) as NewUserEntity
+    }) as NewUserEntity;
   }
 
   static async updateUser(params: {
-    id: number,
-    name: string,
-    email: string,
+    id: number;
+    name: string;
+    email: string;
     employeeNumber: string;
     phoneNumber: string;
     password: string;
     imageUrl: string;
     isAdmin: boolean;
     version: number;
-    bcryptHashManager: IBcryptHashManager
+    bcryptHashManager: IBcryptHashManager;
   }): Promise<UpdateUserEntity> {
     const {
       id,
@@ -162,7 +168,7 @@ export class UserEntity {
       imageUrl,
       version,
       isAdmin,
-      bcryptHashManager
+      bcryptHashManager,
     } = params;
 
     this.checkPasswordRule(password);
@@ -184,13 +190,21 @@ export class UserEntity {
   // 비즈니스 규칙
   private static checkPasswordRule(password: string): void {
     if (password.length < 15) {
-      throw new BusinessException({ type: BusinessExceptionType.EMPLOYEENUMBER_TOO_LONG });
+      throw new BusinessException({
+        type: BusinessExceptionType.EMPLOYEENUMBER_TOO_LONG,
+      });
     }
   }
 
   // password
-  async isPasswordMatch(InputPassword: string, bcryptHashManager: IBcryptHashManager) {
-    return await bcryptHashManager.verifyPassword(InputPassword, this._password!);
+  async isPasswordMatch(
+    InputPassword: string,
+    bcryptHashManager: IBcryptHashManager,
+  ) {
+    return await bcryptHashManager.verifyPassword(
+      InputPassword,
+      this._password!,
+    );
   }
 
   incrementVersion() {
@@ -199,4 +213,3 @@ export class UserEntity {
     }
   }
 }
-
