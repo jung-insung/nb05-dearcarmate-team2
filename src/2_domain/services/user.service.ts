@@ -1,3 +1,4 @@
+import { IUserService } from "../../1_inbound/port/services/user.service.interface";
 import { RegisterUserReqDto } from "../../1_inbound/requests/user-schema.request";
 import { BusinessException } from "../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
@@ -7,17 +8,13 @@ import { PersistUserEntity, UserEntity } from "../entities/user/user.entity";
 import { IBcryptHashManager } from "../port/managers/bcrypt-hash.manager.interface";
 import { IUserRepo } from "../port/repos/user.repo.interface";
 
-export interface IUserService {
-  signUpUser(dto: RegisterUserReqDto): Promise<PersistUserEntity>;
-}
 
-export class UserService {
+export class UserService implements IUserService{
   constructor(
     private _userRepo: IUserRepo,
     private _companyRepo: ICompanyRepo,
     private _bcryptHashManager: IBcryptHashManager
   ) {
-
   }
 
   /**
