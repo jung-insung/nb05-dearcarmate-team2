@@ -143,8 +143,7 @@ export class CarEntity {
     return this._updatedAt;
   }
 
-
-// 공장 메소드
+  // 공장 메소드
   //Create (POST /cars)
   static create(params: Omit<CreateCarData, "status" | "version">): CarEntity {
     return new CarEntity({
@@ -168,7 +167,7 @@ export class CarEntity {
     return new CarEntity(record);
   }
 
-// 변환기
+  // 변환기
   toCreateData(): CreateCarData {
     return {
       carNumber: this._carNumber,
