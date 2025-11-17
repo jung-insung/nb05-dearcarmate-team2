@@ -189,10 +189,8 @@ export class UserEntity {
 
   // 비즈니스 규칙
   private static checkPasswordRule(password: string): void {
-    if (password.length < 15) {
-      throw new BusinessException({
-        type: BusinessExceptionType.EMPLOYEENUMBER_TOO_LONG,
-      });
+    if (password.length > 20) {
+      throw new BusinessException({ type: BusinessExceptionType.EMPLOYEENUMBER_TOO_LONG });
     }
   }
 
