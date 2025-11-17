@@ -1,15 +1,17 @@
+import { CarManufacturer, CarStatus, CarType } from "@prisma/client";
+
 export type CreateCarData = {
   carNumber: string;
-  manufacturer: string;
+  manufacturer: CarManufacturer;
   model: string;
-  type: string;
+  type: CarType;
   manufacturingYear: number;
   mileage: number;
   price: number;
   accidentCount: number;
-  explanation?: string;
-  accidentDetails?: string;
-  status: string;
+  explanation?: string | null;
+  accidentDetails?: string | null;
+  status: CarStatus;
   version: number;
   companyId: number;
 };
@@ -21,16 +23,16 @@ export type UpdateCarData = Partial<CreateCarData> & {
 export type PersistCarRecord = {
   id: number;
   carNumber: string;
-  manufacturer: string;
+  manufacturer: CarManufacturer;
   model: string;
-  type: string;
+  type: CarType;
   manufacturingYear: number;
   mileage: number;
   price: number;
   accidentCount: number;
-  explanation?: string;
-  accidentDetails?: string;
-  status: string;
+  explanation?: string | null;
+  accidentDetails?: string | null;
+  status: CarStatus;
   version: number;
   companyId: number;
   createdAt: Date;
@@ -42,16 +44,16 @@ export class CarEntity {
   private readonly _companyId: number;
 
   private _carNumber: string;
-  private _manufacturer: string;
+  private _manufacturer: CarManufacturer;
   private _model: string;
-  private _type: string;
+  private _type: CarType;
   private _manufacturingYear: number;
   private _mileage: number;
   private _price: number;
   private _accidentCount: number;
-  private _explanation?: string;
-  private _accidentDetails?: string;
-  private _status: string;
+  private _explanation?: string | null;
+  private _accidentDetails?: string | null;
+  private _status: CarStatus;
 
   private _version: number;
 
@@ -61,16 +63,16 @@ export class CarEntity {
   constructor(attrs: {
     id?: number;
     carNumber: string;
-    manufacturer: string;
+    manufacturer: CarManufacturer;
     model: string;
-    type: string;
+    type: CarType;
     manufacturingYear: number;
     mileage: number;
     price: number;
     accidentCount: number;
-    explanation?: string;
-    accidentDetails?: string;
-    status: string;
+    explanation?: string | null;
+    accidentDetails?: string | null;
+    status: CarStatus;
     version: number;
     companyId: number;
     createdAt?: Date;
@@ -85,8 +87,8 @@ export class CarEntity {
     this._mileage = attrs.mileage;
     this._price = attrs.price;
     this._accidentCount = attrs.accidentCount;
-    this._explanation = attrs.explanation;
-    this._accidentDetails = attrs.accidentDetails;
+    this._explanation = attrs.explanation ?? null;
+    this._accidentDetails = attrs.accidentDetails ?? null;
     this._status = attrs.status;
     this._version = attrs.version;
     this._companyId = attrs.companyId;
@@ -148,7 +150,7 @@ export class CarEntity {
   static create(params: Omit<CreateCarData, "status" | "version">): CarEntity {
     return new CarEntity({
       ...params,
-      status: "possession",
+      status: "POSSESSION",
       version: 1,
     });
   }
