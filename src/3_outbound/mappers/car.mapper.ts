@@ -1,4 +1,7 @@
-import { CarEntity, PersistCarRecord } from "../../2_domain/entities/car/car.entity";
+import {
+  CarEntity,
+  PersistCarRecord,
+} from "../../2_domain/entities/car/car.entity";
 
 export class CarMapper {
   static toPersistEntity(record: PersistCarRecord): CarEntity {
