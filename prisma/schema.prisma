@@ -123,9 +123,9 @@ enum CarType {
 }
 
 enum CarStatus {
-  POSSESSION          @map("보유 중")
-  CONTRACT_PROCEEDING @map("계약 진행 중")
-  CONTRACT_COMPLETED  @map("계약 완료")
+  POSSESSION          @map("possession")         
+  CONTRACT_PROCEEDING @map("contractProceeding") 
+  CONTRACT_COMPLETED  @map("contractCompleted")  
 }
 
 model Car {
@@ -133,7 +133,7 @@ model Car {
   carNumber         String          @unique
   manufacturer      CarManufacturer
   model             String
-  type              CarType
+  type              CarType         
   manufacturingYear Int
   mileage           Int
   price             Int
@@ -152,6 +152,7 @@ model Car {
   @@index([companyId])
   @@index([model])
 }
+
 
 enum ContractStatus {
   CAR_INSPECTION    @map("carInspection")
