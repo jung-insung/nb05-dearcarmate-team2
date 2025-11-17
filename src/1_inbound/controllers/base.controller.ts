@@ -18,7 +18,7 @@ export class BaseController {
       body?: unknown;
       query?: unknown;
       params?: unknown;
-      //userId?: unknown; 인증 jwt 페이로드로 들어오는 값
+      userId?: unknown; //인증 jwt 페이로드로 들어오는 값
     },
     exceptionMap: Record<string, BusinessExceptionType>,
   ) {

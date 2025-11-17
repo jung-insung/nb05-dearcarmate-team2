@@ -8,6 +8,13 @@ export class UserRouter extends BaseRouter {
   }
 
   registerUserRouter() {
-    this.router.post("", this.catch(this._userController.signUpUserController));
+    this.router.post(
+      "",
+      this.catch(this._userController.signUpUserController)
+    );
+    this.router.patch(
+      "/me",
+      this.catch(this._userController.updateUserController)
+    );
   }
 }
