@@ -1,0 +1,35 @@
+export enum CustomerGender {
+  MALE = "MALE",
+  FEMALE = "FEMALE",
+}
+
+export enum CustomerAgeGroup {
+  TEN = "TEN",
+  TWENTY = "TWENTY",
+  THIRTY = "THIRTY",
+  FOURTY = "FOURTY",
+  FIFTY = "FIFTY",
+  SIXTY = "SIXTY",
+  SEVENTY = "SEVENTY",
+  EIGHTY = "EIGHTY",
+}
+
+export enum CustomerRegion {
+  SEOUL = "SEOUL",
+  GYEONGGI = "GYEONGGI",
+  INCHEON = "INCHEON",
+  GANGWON = "GANGWON",
+  CHUNGBUK = "CHUNGBUK",
+  CHUNGNAM = "CHUNGNAM",
+  SEJONG = "SEJONG",
+  DAEJEON = "DAEJEON",
+  JEONBUK = "JEONBUK",
+  JEONNAM = "JEONNAM",
+  GWANGJU = "GWANGJU",
+  GYEONGBUK = "GYEONGBUK",
+  GYEONGNAM = "GYEONGNAM",
+  DAEGU = "DAEGU",
+  ULSAN = "ULSAN",
+  BUSAN = "BUSAN",
+  JEJU = "JEJU",
+}
