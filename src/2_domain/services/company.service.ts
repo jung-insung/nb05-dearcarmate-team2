@@ -3,18 +3,14 @@ import {
   CreateCompanyDto,
   UpdateCompanyDto,
 } from "../../1_inbound/port/services/company.service.interface";
-import { ICompanyRepo } from "../../2_domain/port/repos/company.repo.interface";
 import { CompanyEntity } from "../../2_domain/entities/company/company.entity";
 import { BusinessException } from "../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
-import { CompanyResponseDto } from "../../1_inbound/response/company.response";
+import { CompanyResponseDto } from "../../1_inbound/responses/company/company.response";
+import { IUnitOfWork } from "../port/unit-of-work.interface";
 
 export class CompanyService implements ICompanyService {
-  private _companyRepo;
-
-  constructor(companyRepo: ICompanyRepo) {
-    this._companyRepo = companyRepo;
-  }
+  constructor(private _unitOfWork: IUnitOfWork) {}
 
   async createCompany(dto: CreateCompanyDto): Promise<CompanyResponseDto> {
     const newEntity = CompanyEntity.createNewCom({
@@ -22,7 +18,8 @@ export class CompanyService implements ICompanyService {
       companyCode: dto.companyCode,
     });
 
-    const createdEntity = await this._companyRepo.createCompany(newEntity);
+    const createdEntity =
+      await this._unitOfWork.repos.company.createCompany(newEntity);
 
     return {
       id: createdEntity.id,
@@ -36,7 +33,7 @@ export class CompanyService implements ICompanyService {
     companyId: number,
     dto: UpdateCompanyDto,
   ): Promise<CompanyResponseDto> {
-    const entity = await this._companyRepo.findById(companyId);
+    const entity = await this._unitOfWork.repos.company.findById(companyId);
 
     if (!entity) {
       throw new BusinessException({
@@ -46,7 +43,8 @@ export class CompanyService implements ICompanyService {
 
     entity.updateInfo(dto);
 
-    const updatedEntity = await this._companyRepo.updateCompany(entity);
+    const updatedEntity =
+      await this._unitOfWork.repos.company.updateCompany(entity);
 
     return {
       id: updatedEntity.id,
@@ -57,7 +55,7 @@ export class CompanyService implements ICompanyService {
   }
 
   async deleteCompany(companyId: number): Promise<void> {
-    const entity = await this._companyRepo.findById(companyId);
+    const entity = await this._unitOfWork.repos.company.findById(companyId);
 
     if (!entity) {
       throw new BusinessException({
@@ -65,6 +63,6 @@ export class CompanyService implements ICompanyService {
       });
     }
 
-    await this._companyRepo.deleteCompany(companyId);
+    await this._unitOfWork.repos.company.deleteCompany(companyId);
   }
 }

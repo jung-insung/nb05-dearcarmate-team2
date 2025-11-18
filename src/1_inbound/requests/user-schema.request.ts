@@ -53,7 +53,7 @@ export const registerUserReqSchema = z.object({
 });
 
 export const updateUserReqSchema = z.object({
-  userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
+  // userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
 
   body: z.object({
     employeeNumber: z
@@ -74,11 +74,15 @@ export const updateUserReqSchema = z.object({
       .nonempty({ message: "비밀번호를 입력하세요." })
       .trim(),
 
-    password: z.string({ message: "비밀번호는 문자열이어야 합니다." }).trim(),
+    password: z
+      .string({ message: "비밀번호는 문자열이어야 합니다." })
+      .trim()
+      .optional(),
 
     passwordConfirmation: z
       .string({ message: "비밀번호는 문자열이어야 합니다." })
-      .trim(),
+      .trim()
+      .optional(),
 
     imageUrl: z.url({ message: "이미지url 형식이 아닙니다." }).trim(),
   }),

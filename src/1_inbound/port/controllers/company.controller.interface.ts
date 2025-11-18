@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
+import { ControllerHandler } from "../../controllers/base.controller";
 
 export interface ICompanyController {
-  createCompany(req: Request, res: Response): Promise<void>;
-  updateCompany(req: Request, res: Response): Promise<void>;
-  deleteCompany(req: Request, res: Response): Promise<void>;
+  createCompany: ControllerHandler;
+  updateCompany: ControllerHandler;
+  deleteCompany: ControllerHandler;
 }

@@ -11,6 +11,7 @@ import { UpdateUserResDto } from "../responses/user/update.user.res.dto";
 
 export interface IUserController {
   signUpUserController: ControllerHandler;
+  updateUserController: ControllerHandler;
 }
 
 export class UserController extends BaseController {
@@ -51,6 +52,6 @@ export class UserController extends BaseController {
 
     const resDto = new UpdateUserResDto(updatedUser);
 
-    return res.json(reqDto);
+    return res.json(resDto);
   };
 }

@@ -29,7 +29,7 @@ export class CompanyController
 
     const newCompany = await this._companyService.createCompany(body);
 
-    res.status(201).json(newCompany);
+    return res.status(201).json(newCompany);
   };
 
   updateCompany = async (req: Request, res: Response) => {
@@ -44,7 +44,7 @@ export class CompanyController
       body,
     );
 
-    res.status(200).json(updatedCompany);
+    return res.status(200).json(updatedCompany);
   };
 
   deleteCompany = async (req: Request, res: Response) => {
@@ -56,6 +56,6 @@ export class CompanyController
 
     await this._companyService.deleteCompany(params.companyId);
 
-    res.status(200).json({ message: "회사 삭제 성공" });
+    return res.status(200).json({ message: "회사 삭제 성공" });
   };
 }

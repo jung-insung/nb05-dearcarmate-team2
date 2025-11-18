@@ -1,8 +1,5 @@
 import { BusinessException } from "../../../4_shared/exceptions/business.exceptions/business.exception";
-import {
-  BusinessExceptionTable,
-  BusinessExceptionType,
-} from "../../../4_shared/exceptions/business.exceptions/exception-info";
+import { BusinessExceptionType } from "../../../4_shared/exceptions/business.exceptions/exception-info";
 import { IBcryptHashManager } from "../../port/managers/bcrypt-hash.manager.interface";
 
 export interface NewUserEntity

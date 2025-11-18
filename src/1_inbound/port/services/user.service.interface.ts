@@ -1,4 +1,4 @@
-import { PersistUserEntity } from "../../../2_domain/entities/user/user.entity";
+import { PersistUserEntityWithCompany } from "../../../3_outbound/mappers/user.mapper";
 import {
   RegisterUserReqDto,
   UpdateUserReqDto,
@@ -16,7 +16,7 @@ export interface IUserService {
    * @param dto 회원가입 요청 데이터
    * @returns PersistUserEntity
    */
-  signUpUser(dto: RegisterUserReqDto): Promise<PersistUserEntity>;
+  signUpUser(dto: RegisterUserReqDto): Promise<PersistUserEntityWithCompany>;
 
-  updateUser(dto: UpdateUserReqDto): Promise<PersistUserEntity>;
+  updateUser(dto: UpdateUserReqDto): Promise<PersistUserEntityWithCompany>;
 }
