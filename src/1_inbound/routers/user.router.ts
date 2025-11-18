@@ -15,14 +15,11 @@ export class UserRouter extends BaseRouter {
       this.catch(this._userController.updateUserController),
     );
 
-    this.router.get(
-      "/me",
-      this.catch(this._userController.getUserController)
-    );
+    this.router.get("/me", this.catch(this._userController.getUserController));
 
     this.router.delete(
       "/me",
-      this.catch(this._userController.deleteUserController)
+      this.catch(this._userController.deleteUserController),
     );
   }
 }

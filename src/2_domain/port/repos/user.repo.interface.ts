@@ -32,4 +32,10 @@ export interface IUserRepo {
    * @throws TechnicalException OPTIMISTIC_LOCK_FAILED
    */
   update(entity: UpdateUserEntity): Promise<PersistUserEntityWithCompany>;
+
+  /**
+   * 팬텀 리드 시 P2025 발생하지만 굳이 삭제된 걸 에러 던질 필요가 없어서 그냥 return 함
+   * @throws P2025 에러
+   */
+  delete(id: number): Promise<void>;
 }

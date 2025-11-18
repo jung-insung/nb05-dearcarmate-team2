@@ -88,5 +88,9 @@ export const updateUserReqSchema = z.object({
   }),
 });
 
-export const deleteUserReqSchema = z.object();
-export const getUserReqSchema = z.object();
+export const getUserReqSchema = z.object({
+  userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
+});
+export const deleteUserReqSchema = z.object({
+  userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
+});
