@@ -13,8 +13,11 @@ export const userFieldExceptionMap: Record<string, BusinessExceptionType> = {
   companyCode: BusinessExceptionType.COMPANYCODE_FORM,
 };
 
-export const companyFieldExceptionMap: Record<string, BusinessExceptionType> =
-  {};
+export const companyFieldExceptionMap: Record<string, BusinessExceptionType> = {
+  companyId: BusinessExceptionType.COMPANYID_FORM,
+  companyName: BusinessExceptionType.COMPANYNAME_FORM,
+  companyCode: BusinessExceptionType.COMPANYCODE_FORM,
+};
 
 export const customerFieldExceptionMap: Record<string, BusinessExceptionType> =
   {};
