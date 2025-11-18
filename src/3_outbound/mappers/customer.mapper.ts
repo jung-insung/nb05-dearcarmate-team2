@@ -1,75 +1,113 @@
 import {
-  CustomerCreateData,
+  RegistCustomerReq,
+  UpdateCustomerReq,
+} from "../../1_inbound/requests/customer-schema.request";
+import { CustomerResponseDto } from "../../1_inbound/response/customer.response";
+import {
   CustomerEntity,
-  CustomerUpdatedData,
   NewCustomerEntity,
   PersistCustomerEntity,
+  UpdateCustomerEntity,
 } from "../../2_domain/entities/customer/customer.entity";
+import {
+  CustomerAgeGroup,
+  CustomerGender,
+  CustomerRegion,
+} from "../../2_domain/entities/customer/customer.enum";
 
-export type CustomerCreateData = {
+export interface CustomerReocrd {
+  id: number;
   name: string;
-  gender: Gender;
+  gender: CustomerGender;
   phoneNumber: string;
-  ageGroup?: AgeGroup;
-  region?: Region;
+  ageGroup?: CustomerAgeGroup;
+  region?: CustomerRegion;
   email: string;
   memo?: string;
-};
-
-export type CustomerUpdatedData = {
-  name: string;
-  gender: Gender;
-  phoneNumber: string;
-  ageGroup?: AgeGroup;
-  region?: Region;
-  email: string;
-  memo?: string;
+  companyId: number;
+  contractCount: number;
   version: number;
-};
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-toCreateData(): CustomerCreateData {
-    return {
-      name: this._name,
-      gender: this._gender,
-      phoneNumber: this._phoneNumber,
-      ageGroup: this._ageGroup,
-      region: this._region,
-      email: this._email,
-      memo: this._memo,
-    };
-  }
-
-  toUpdateData(): CustomerUpdatedData {
-    return {
-      name: this._name,
-      gender: this._gender,
-      phoneNumber: this._phoneNumber,
-      ageGroup: this._ageGroup,
-      region: this._region,
-      email: this._email,
-      memo: this._memo,
-      version: this._version,
-    };
-  }
-
+//DTO -> Entity
 export class CustomerMapper {
-  static toCreateData(entity: NewCustomerEntity): {
-    customer: CustomerCreateData;
-  } {
-    return {
-      customer: entity.toCreateData(),
-    };
+  static toNewEntity(
+    dto: RegistCustomerReq,
+    companyId: number,
+  ): NewCustomerEntity {
+    const { ...customer } = dto.body;
+
+    return CustomerEntity.createNew({
+      name: customer.name,
+      gender: (customer.gender as CustomerGender) ?? CustomerGender.MALE,
+      phoneNumber: customer.phoneNumber,
+      ageGroup: customer.ageGroup as CustomerAgeGroup | undefined,
+      region: customer.region as CustomerRegion | undefined,
+      email: customer.email,
+      memo: customer.memo,
+      companyId,
+    });
   }
 
-  static toUpdateData(entity: PersistCustomerEntity): {
-    customer: CustomerUpdatedData;
-  } {
-    return {
-      customer: entity.toUpdateData(),
-    };
+  static toUpdateEntity(
+    currentEntity: PersistCustomerEntity,
+    dto: UpdateCustomerReq,
+  ): UpdateCustomerEntity {
+    const { ...customer } = dto.body;
+
+    return CustomerEntity.update({
+      name: customer.name ?? currentEntity.name,
+      gender: customer.gender
+        ? (customer.gender as CustomerGender)
+        : CustomerGender.MALE,
+      phoneNumber: customer.phoneNumber ?? currentEntity.phoneNumber,
+      ageGroup: customer.ageGroup
+        ? (customer.ageGroup as CustomerAgeGroup)
+        : undefined,
+      region: customer.region ? (customer.region as CustomerRegion) : undefined,
+      email: customer.email ?? currentEntity.email,
+      memo: customer.memo ?? currentEntity.memo,
+      companyId: currentEntity.companyId,
+      version: currentEntity.version,
+    });
   }
 
-  static toPersistEntity(record: PersistCustomerEntity): CustomerEntity {
-    return CustomerEntity.createPersist(record);
+  //DB -> Entity
+  static toPersistEntity(record: CustomerReocrd): PersistCustomerEntity {
+    return CustomerEntity.createPersist({
+      id: record.id,
+      name: record.name,
+      gender: record.gender,
+      phoneNumber: record.phoneNumber,
+      ageGroup: record.ageGroup,
+      region: record.region,
+      email: record.email,
+      memo: record.memo,
+      contractCount: record.contractCount,
+      companyId: record.companyId,
+      version: record.version,
+      createdAt: record.createdAt,
+      updatedAt: record.updatedAt,
+    });
+  }
+
+  //Entity -> DTO
+  static toResponseData(entity: PersistCustomerEntity): CustomerResponseDto {
+    return {
+      id: entity.id,
+      name: entity.name,
+      gender: entity.gender,
+      phoneNumber: entity.phoneNumber,
+      ageGroup: entity.ageGroup,
+      region: entity.region,
+      email: entity.email,
+      memo: entity.memo,
+      contractCount: entity.contractCount,
+      version: entity.version,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
+    };
   }
 }
