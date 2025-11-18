@@ -5,6 +5,7 @@ export enum TechnicalExceptionType {
   UNIQUE_VIOLATION_EMAIL,
   UNIQUE_VIOLATION_COMPANY_NAME,
   UNIQUE_VIOLATION_COMPANY_CODE,
+  NOT_FOUND,
 }
 
 export const TechnicaalExceptionTable: Record<TechnicalExceptionType, string> =
@@ -21,4 +22,6 @@ export const TechnicaalExceptionTable: Record<TechnicalExceptionType, string> =
       "회사명 유니크 제약 조건 위반 에러가 발생했습니다.",
     [TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_CODE]:
       "회사코드 유니크 제약 조건 위반 에러가 발생했습니다.",
+    [TechnicalExceptionType.NOT_FOUND]:
+      "요청에 대한 데이터를 찾을 수 없습니다.",
   };
