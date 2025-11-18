@@ -3,6 +3,8 @@ export enum TechnicalExceptionType {
   OPTIMISTIC_LOCK_FAILED,
   UNIQUE_VIOLATION,
   UNIQUE_VIOLATION_EMAIL,
+  UNIQUE_VIOLATION_COMPANY_NAME,
+  UNIQUE_VIOLATION_COMPANY_CODE,
 }
 
 export const TechnicaalExceptionTable: Record<TechnicalExceptionType, string> =
@@ -15,4 +17,8 @@ export const TechnicaalExceptionTable: Record<TechnicalExceptionType, string> =
       "데이터베이스 유니크 제약 조건 위반 에러가 발생했습니다.",
     [TechnicalExceptionType.UNIQUE_VIOLATION_EMAIL]:
       "이메일 유니크 제약 조건 위반 에러가 발생했습니다.",
+    [TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_NAME]:
+      "회사명 유니크 제약 조건 위반 에러가 발생했습니다.",
+    [TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_CODE]:
+      "회사코드 유니크 제약 조건 위반 에러가 발생했습니다.",
   };
