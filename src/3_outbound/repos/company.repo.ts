@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, Company } from "@prisma/client";
+import { Prisma, Company } from "@prisma/client";
 import { BasePrismaClient, BaseRepo } from "./base.repo";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
