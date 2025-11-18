@@ -152,4 +152,19 @@ export class UserRepo extends BaseRepo implements IUserRepo {
       throw err;
     }
   }
+
+  async delete(id: number): Promise<void> {
+    try {
+      await this._prisma.user.delete({
+        where: { id },
+      });
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === "P2025") {
+          return; // 팬텀 리드가 일어나도 그냥 삭제되었으니까 에러 던지지 말기
+        }
+      }
+      throw err;
+    }
+  }
 }

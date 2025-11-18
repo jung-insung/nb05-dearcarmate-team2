@@ -1,5 +1,6 @@
 import { IUserService } from "../../1_inbound/port/services/user.service.interface";
 import {
+  GetUserReqDto,
   RegisterUserReqDto,
   UpdateUserReqDto,
 } from "../../1_inbound/requests/user-schema.request";
@@ -130,5 +131,33 @@ export class UserService implements IUserService {
 
       return await txRepos.user.update(updatedUser);
     });
+  }
+
+  async getUser(dto: GetUserReqDto): Promise<PersistUserEntityWithCompany> {
+    const foundUser = await this._unitOfWork.repos.user.findUserById(
+      dto.userId,
+    );
+
+    if (!foundUser) {
+      throw new BusinessException({
+        type: BusinessExceptionType.USER_NOT_EXIST,
+      });
+    }
+
+    return foundUser;
+  }
+
+  async deleteUser(dto: GetUserReqDto): Promise<void> {
+    const foundUser = await this._unitOfWork.repos.user.findUserById(
+      dto.userId,
+    );
+
+    if (!foundUser) {
+      throw new BusinessException({
+        type: BusinessExceptionType.USER_NOT_EXIST,
+      });
+    }
+
+    await this._unitOfWork.repos.user.delete(foundUser.id);
   }
 }

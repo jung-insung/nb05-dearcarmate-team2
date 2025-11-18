@@ -2,16 +2,22 @@ import { NextFunction, Request, Response } from "express";
 import { BaseController, ControllerHandler } from "./base.controller";
 import { userFieldExceptionMap } from "../requests/validater-map";
 import {
+  deleteUserReqSchema,
+  getUserReqSchema,
   registerUserReqSchema,
   updateUserReqSchema,
 } from "../requests/user-schema.request";
 import { SignUpUserResDto } from "../responses/user/sign-up.user.res.dto";
 import { IUserService } from "../port/services/user.service.interface";
 import { UpdateUserResDto } from "../responses/user/update.user.res.dto";
+import { DeleteUserReqDto } from "../responses/user/delete.user.res.dto";
+import { GetUserResDto } from "../responses/user/get.user.res.dto";
 
 export interface IUserController {
   signUpUserController: ControllerHandler;
   updateUserController: ControllerHandler;
+  getUserController: ControllerHandler;
+  deleteUserController: ControllerHandler;
 }
 
 export class UserController extends BaseController {
@@ -61,7 +67,33 @@ export class UserController extends BaseController {
     next: NextFunction,
   ): Promise<Response<any>> => {
     const reqDto = this.validateOrThrow(
-      
-    )
-  }
+      getUserReqSchema,
+      { userId: req.userId },
+      userFieldExceptionMap,
+    );
+
+    const getUser = await this._userService.getUser(reqDto);
+
+    const resDto = new GetUserResDto(getUser);
+
+    return res.json(resDto);
+  };
+
+  deleteUserController = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response<any>> => {
+    const reqDto = this.validateOrThrow(
+      deleteUserReqSchema,
+      { userId: req.userId },
+      userFieldExceptionMap,
+    );
+
+    await this._userService.deleteUser(reqDto);
+
+    const resDto = new DeleteUserReqDto();
+
+    return res.json(resDto);
+  };
 }
