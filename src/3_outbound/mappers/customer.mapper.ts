@@ -75,8 +75,8 @@ export class CustomerMapper {
   }
 
   //DB -> Entity
-  static toPersistEntity(record: CustomerReocrd): PersistCustomerEntity {
-    return CustomerEntity.createPersist({
+  static toPersistEntity(record: any): PersistCustomerEntity {
+    const domainRecord: CustomerReocrd = {
       id: record.id,
       name: record.name,
       gender: record.gender,
@@ -90,7 +90,9 @@ export class CustomerMapper {
       version: record.version,
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
-    });
+    };
+
+    return CustomerEntity.createPersist(domainRecord);
   }
 
   //Entity -> DTO
