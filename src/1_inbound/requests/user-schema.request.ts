@@ -56,25 +56,32 @@ export const updateUserReqSchema = z.object({
   userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
 
   body: z.object({
-    employeeNumber: z.string({ message: "사번은 문자열이어야 합니다." })
-      .nonempty({ message: "수정할 사번을 입력하세요." }).trim(),
+    employeeNumber: z
+      .string({ message: "사번은 문자열이어야 합니다." })
+      .nonempty({ message: "수정할 사번을 입력하세요." })
+      .trim(),
 
-    phoneNumber: z.string({ message: "전화번호는 문자열이어야 합니다." })
+    phoneNumber: z
+      .string({ message: "전화번호는 문자열이어야 합니다." })
       .nonempty({ message: "수정할 전화번호를 입력하세요." })
       .trim()
-      .regex(/^(\d{2,3}-\d{3,4}-\d{4}|\d{10,11})$/, { message: "유효한 전화번호 형식이 아닙니다." }),
+      .regex(/^(\d{2,3}-\d{3,4}-\d{4}|\d{10,11})$/, {
+        message: "유효한 전화번호 형식이 아닙니다.",
+      }),
 
-    currentPassword: z.string({ message: "현재 비밀번호는 문자열이어야 합니다." }).trim(),
-
-    password: z.string({ message: "비밀번호는 문자열이어야 합니다." })
-      .nonempty({ message: "수정할 비밀번호를 입력하세요." }).trim(),
-
-    passwordConfirmation: z.string({ message: "비밀번호는 문자열이어야 합니다." })
-      .nonempty({ message: "수정할 비밀번호 확인란을 입력하세요." }).trim(),
-
-    imageUrl: z.url({ message: "이미지url 형식이 아닙니다." })
+    currentPassword: z
+      .string({ message: "현재 비밀번호는 문자열이어야 합니다." })
+      .nonempty({ message: "비밀번호를 입력하세요." })
       .trim(),
-  })
+
+    password: z.string({ message: "비밀번호는 문자열이어야 합니다." }).trim(),
+
+    passwordConfirmation: z
+      .string({ message: "비밀번호는 문자열이어야 합니다." })
+      .trim(),
+
+    imageUrl: z.url({ message: "이미지url 형식이 아닙니다." }).trim(),
+  }),
 });
 
 export const deleteUserReqSchema = z.object();

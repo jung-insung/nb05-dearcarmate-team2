@@ -1,25 +1,29 @@
 import { IUserService } from "../../1_inbound/port/services/user.service.interface";
-import { RegisterUserReqDto, UpdateUserReqDto } from "../../1_inbound/requests/user-schema.request";
+import {
+  RegisterUserReqDto,
+  UpdateUserReqDto,
+} from "../../1_inbound/requests/user-schema.request";
 import { BusinessException } from "../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
 import { PersistUserEntity, UserEntity } from "../entities/user/user.entity";
 import { IBcryptHashManager } from "../port/managers/bcrypt-hash.manager.interface";
-import { IUserRepo } from "../port/repos/user.repo.interface";
 import { ICompanyRepo } from "../port/repos/company.repo.interface";
+import { IUnitOfWork } from "../port/unit-of-work.interface";
 
 export class UserService implements IUserService {
   constructor(
-    private _userRepo: IUserRepo,
-    private _companyRepo: ICompanyRepo,
+    private _unitOfWork: IUnitOfWork,
     private _bcryptHashManager: IBcryptHashManager,
   ) {}
 
   async signUpUser(dto: RegisterUserReqDto): Promise<PersistUserEntity> {
     const { body } = dto;
 
-    const foundUser = await this._userRepo.findUserByEmail(body.email);
+    const foundUser = await this._unitOfWork.repos.user.findUserByEmail(
+      body.email,
+    );
     if (foundUser) {
       throw new BusinessException({
         type: BusinessExceptionType.EMAIL_DUPLICATE,
@@ -31,9 +35,10 @@ export class UserService implements IUserService {
       });
     }
 
-    const foundCompany = await this._companyRepo.findCompanyByCompanyCode(
-      body.companyCode,
-    );
+    const foundCompany =
+      await this._unitOfWork.repos.company.findCompanyByCompanyCode(
+        body.companyCode,
+      );
     if (!foundCompany) {
       throw new BusinessException({
         type: BusinessExceptionType.COMPANY_NOT_EXIST,
@@ -54,7 +59,7 @@ export class UserService implements IUserService {
 
     let createdUser: PersistUserEntity;
     try {
-      createdUser = await this._userRepo.create(newUser);
+      createdUser = await this._unitOfWork.repos.user.create(newUser);
     } catch (err) {
       if (err instanceof TechnicalException) {
         if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_EMAIL)
@@ -67,8 +72,57 @@ export class UserService implements IUserService {
     return createdUser;
   }
 
-  async updateUser(dto: UpdateUserReqDto) : Promise<PersistUserEntity>{
-    const foundUser = await this._userRepo.findUserById(dto.userId);
+  async updateUser(dto: UpdateUserReqDto): Promise<PersistUserEntity> {
+    const { body } = dto;
 
+    return await this._unitOfWork.do(async (txRepos) => {
+      const foundUser = await txRepos.user.findUserById(dto.userId);
+
+      if (!foundUser) {
+        throw new BusinessException({
+          type: BusinessExceptionType.USER_NOT_EXIST,
+        });
+      }
+
+      let updatedPassword: string | undefined;
+
+      if (body.password && body.passwordConfirmation) {
+        if (body.password !== body.passwordConfirmation) {
+          throw new BusinessException({
+            type: BusinessExceptionType.PASSWORD_MISMATCH,
+          });
+        }
+
+        if (
+          !(await foundUser.isPasswordMatch(
+            body.currentPassword,
+            this._bcryptHashManager,
+          ))
+        ) {
+          throw new BusinessException({
+            type: BusinessExceptionType.PASSWORD_MISMATCH,
+          });
+        }
+
+        updatedPassword = await foundUser.updatePassword(
+          body.password,
+          this._bcryptHashManager,
+        );
+      }
+
+      const updatedUser = UserEntity.updateUser({
+        id: dto.userId,
+        name: foundUser.name,
+        email: foundUser.email,
+        employeeNumber: body.employeeNumber,
+        phoneNumber: body.phoneNumber,
+        password: body.password,
+        imageUrl: body.imageUrl,
+        isAdmin: foundUser.isAdmin,
+        version: foundUser.version,
+      });
+
+      return await txRepos.user.update(updatedUser);
+    });
   }
 }

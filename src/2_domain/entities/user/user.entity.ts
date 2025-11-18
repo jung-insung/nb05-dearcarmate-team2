@@ -10,10 +10,7 @@ export interface NewUserEntity
   companyId: number;
 }
 
-export type UpdateUserEntity = Omit<
-  UserEntity,
-  "createdAt" | "updatedAt" | "isAdmin"
->;
+export type UpdateUserEntity = Omit<UserEntity, "createdAt" | "updatedAt">;
 
 export interface PersistUserEntity extends UserEntity {
   id: number;
@@ -30,8 +27,8 @@ export interface PersistUserEntity extends UserEntity {
 export class UserEntity {
   private readonly _id?: number;
   private readonly _companyId?: number;
-  private _name: string;
-  private _email: string;
+  private readonly _name: string;
+  private readonly _email: string;
   private _employeeNumber: string;
   private _phoneNumber: string;
   private _password: string;
@@ -146,7 +143,7 @@ export class UserEntity {
     }) as NewUserEntity;
   }
 
-  static async updateUser(params: {
+  static updateUser(params: {
     id: number;
     name: string;
     email: string;
@@ -156,8 +153,7 @@ export class UserEntity {
     imageUrl: string;
     isAdmin: boolean;
     version: number;
-    bcryptHashManager: IBcryptHashManager;
-  }): Promise<UpdateUserEntity> {
+  }): UpdateUserEntity {
     const {
       id,
       name,
@@ -168,11 +164,7 @@ export class UserEntity {
       imageUrl,
       version,
       isAdmin,
-      bcryptHashManager,
     } = params;
-
-    this.checkPasswordRule(password);
-    const hashedPassword = await bcryptHashManager.hash(password);
 
     return new UserEntity({
       id,
@@ -180,29 +172,40 @@ export class UserEntity {
       email,
       employeeNumber,
       phoneNumber,
-      password: hashedPassword,
+      password,
       imageUrl,
       isAdmin,
-      version: version + 1,
-    });
+      version,
+    }) as UpdateUserEntity;
   }
 
   // 비즈니스 규칙
   private static checkPasswordRule(password: string): void {
     if (password.length > 20) {
-      throw new BusinessException({ type: BusinessExceptionType.EMPLOYEENUMBER_TOO_LONG });
+      throw new BusinessException({
+        type: BusinessExceptionType.EMPLOYEENUMBER_TOO_LONG,
+      });
     }
   }
 
   // password
   async isPasswordMatch(
-    InputPassword: string,
+    inputPassword: string,
     bcryptHashManager: IBcryptHashManager,
-  ) {
+  ): Promise<boolean> {
     return await bcryptHashManager.verifyPassword(
-      InputPassword,
-      this._password!,
+      inputPassword,
+      this._password,
     );
+  }
+
+  async updatePassword(
+    newPassword: string,
+    bcryptHashManager: IBcryptHashManager,
+  ): Promise<string> {
+    UserEntity.checkPasswordRule(newPassword);
+
+    return await bcryptHashManager.hash(newPassword);
   }
 
   incrementVersion() {

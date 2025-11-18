@@ -20,9 +20,11 @@ import { UserController } from "./1_inbound/controllers/user.controller";
 import { CompanyController } from "./1_inbound/controllers/company.controller";
 
 import { NotFoundMiddleware } from "./1_inbound/middlewares/not-found.middleware";
-import { CompanyRepo } from "./3_outbound/repos/company.repo";
 import { BcryptHashManager } from "./3_outbound/managers/bcrypt-hash.manager";
 import { UnitOfWork } from "./3_outbound/unit-of-work";
+import { CompanyRepo } from "./3_outbound/repos/company.repo";
+import { IRepos } from "./2_domain/port/repos/repos.interface";
+import { RepoFactory } from "./3_outbound/repo-factory";
 
 export class Injector {
   private _server: Server;
@@ -47,14 +49,15 @@ export class Injector {
     const loggerMiddleware = new LoggerMiddleware(configUtil);
     const notFoundMiddleware = new NotFoundMiddleware();
 
-    const userRepo = new UserRepo(prisma);
-    const companyRepo = new CompanyRepo(prisma);
-
-    const companyService = new CompanyService(companyRepo);
-
-    const unitOfWork = new UnitOfWork();
+    const repoFactory = new RepoFactory({
+      user: (prismaClient) => new UserRepo(prismaClient),
+      company: () => new CompanyRepo(prismaClient),
+    });
     
-    const userService = new UserService(userRepo, companyRepo, bcryptHashManger);
+    const unitOfWork = new UnitOfWork(prisma, repoFactory, configUtil);
+    
+    const userService = new UserService(unitOfWork, bcryptHashManger);
+    const companyService = new CompanyService(companyRepo);
 
     const userController = new UserController(userService);
     const companyController = new CompanyController(companyService);
