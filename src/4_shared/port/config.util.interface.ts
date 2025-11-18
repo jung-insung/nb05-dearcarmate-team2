@@ -12,6 +12,8 @@ export const configSchema = z.object({
   CLIENT_DOMAIN: z.string(),
   PUBLIC_PATH: z.string(),
   JSON_LIMIT: z.coerce.number(),
+  MAX_RETRIES: z.coerce.number(),
+  OPTIMISTIC_LOCK_RETRY_DELAY_MS: z.coerce.number(),
 });
 
 export interface IConfigUtil {

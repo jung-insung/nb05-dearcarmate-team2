@@ -150,4 +150,3 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
       throw err;
     }
   }
-}
