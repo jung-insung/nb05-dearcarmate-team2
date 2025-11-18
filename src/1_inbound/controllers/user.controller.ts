@@ -54,4 +54,14 @@ export class UserController extends BaseController {
 
     return res.json(resDto);
   };
+
+  getUserController = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response<any>> => {
+    const reqDto = this.validateOrThrow(
+      
+    )
+  }
 }
