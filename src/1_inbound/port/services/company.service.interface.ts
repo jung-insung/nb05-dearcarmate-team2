@@ -1,4 +1,4 @@
-import { CompanyResponseDto } from "../../response/company.response";
+import { CompanyResponseDto } from "../../responses/company/company.response";
 
 export interface CreateCompanyDto {
   companyName: string;

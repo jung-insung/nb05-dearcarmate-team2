@@ -6,8 +6,8 @@ export class CompanyRouter extends BaseRouter {
 
   constructor(companyController: ICompanyController) {
     super("/companies");
-    this.registerCompanyRouter();
     this._companyController = companyController;
+    this.registerCompanyRouter();
   }
 
   private registerCompanyRouter() {

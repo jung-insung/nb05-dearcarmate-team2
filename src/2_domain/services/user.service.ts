@@ -3,13 +3,13 @@ import {
   RegisterUserReqDto,
   UpdateUserReqDto,
 } from "../../1_inbound/requests/user-schema.request";
+import { PersistUserEntityWithCompany } from "../../3_outbound/mappers/user.mapper";
 import { BusinessException } from "../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
 import { PersistUserEntity, UserEntity } from "../entities/user/user.entity";
 import { IBcryptHashManager } from "../port/managers/bcrypt-hash.manager.interface";
-import { ICompanyRepo } from "../port/repos/company.repo.interface";
 import { IUnitOfWork } from "../port/unit-of-work.interface";
 
 export class UserService implements IUserService {
@@ -18,7 +18,9 @@ export class UserService implements IUserService {
     private _bcryptHashManager: IBcryptHashManager,
   ) {}
 
-  async signUpUser(dto: RegisterUserReqDto): Promise<PersistUserEntity> {
+  async signUpUser(
+    dto: RegisterUserReqDto,
+  ): Promise<PersistUserEntityWithCompany> {
     const { body } = dto;
 
     const foundUser = await this._unitOfWork.repos.user.findUserByEmail(
@@ -54,10 +56,10 @@ export class UserService implements IUserService {
       phoneNumber,
       password,
       bcryptHashManager: this._bcryptHashManager,
-      companyId: foundCompany.companyId,
+      companyId: foundCompany.id,
     });
 
-    let createdUser: PersistUserEntity;
+    let createdUser: PersistUserEntityWithCompany;
     try {
       createdUser = await this._unitOfWork.repos.user.create(newUser);
     } catch (err) {
@@ -72,12 +74,15 @@ export class UserService implements IUserService {
     return createdUser;
   }
 
-  async updateUser(dto: UpdateUserReqDto): Promise<PersistUserEntity> {
+  async updateUser(
+    dto: UpdateUserReqDto,
+  ): Promise<PersistUserEntityWithCompany> {
     const { body } = dto;
+    const id = 1; // 테스트용
 
     return await this._unitOfWork.do(async (txRepos) => {
-      const foundUser = await txRepos.user.findUserById(dto.userId);
-
+      //const foundUser = await txRepos.user.findUserById(dto.userId);
+      const foundUser = await txRepos.user.findUserById(id);
       if (!foundUser) {
         throw new BusinessException({
           type: BusinessExceptionType.USER_NOT_EXIST,
@@ -111,12 +116,13 @@ export class UserService implements IUserService {
       }
 
       const updatedUser = UserEntity.updateUser({
-        id: dto.userId,
+        //id: dto.userId,
+        id,
         name: foundUser.name,
         email: foundUser.email,
         employeeNumber: body.employeeNumber,
         phoneNumber: body.phoneNumber,
-        password: body.password,
+        password: updatedPassword ? updatedPassword : body.currentPassword,
         imageUrl: body.imageUrl,
         isAdmin: foundUser.isAdmin,
         version: foundUser.version,

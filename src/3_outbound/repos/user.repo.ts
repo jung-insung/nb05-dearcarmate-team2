@@ -1,11 +1,13 @@
-import { Prisma, User } from "@prisma/client";
+import { Company, Prisma, User } from "@prisma/client";
 import { BasePrismaClient, BaseRepo } from "./base.repo";
 import {
   NewUserEntity,
-  PersistUserEntity,
   UpdateUserEntity,
 } from "../../2_domain/entities/user/user.entity";
-import { UserMapper } from "../mappers/user.mapper";
+import {
+  PersistUserEntityWithCompany,
+  UserMapper,
+} from "../mappers/user.mapper";
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
 import {
@@ -13,16 +15,32 @@ import {
   LockType,
 } from "../../2_domain/port/repos/user.repo.interface";
 
-export type PersistDBUser = User;
+export type PersistDBUser = User & {
+  company: {
+    companyName: string;
+  };
+};
 
 export class UserRepo extends BaseRepo implements IUserRepo {
+  private _includeOption: Prisma.UserInclude;
+
   constructor(prisma: BasePrismaClient) {
     super(prisma);
+    this._includeOption = {
+      company: {
+        select: {
+          companyName: true,
+        },
+      },
+    };
   }
 
-  async findUserByEmail(email: string): Promise<PersistUserEntity | null> {
+  async findUserByEmail(
+    email: string,
+  ): Promise<PersistUserEntityWithCompany | null> {
     const foundUser = await this._prisma.user.findUnique({
       where: { email },
+      include: this._includeOption,
     });
 
     return foundUser ? UserMapper.toPersistEntity(foundUser) : null;
@@ -31,10 +49,11 @@ export class UserRepo extends BaseRepo implements IUserRepo {
   async findUserById(
     id: number,
     lockType?: LockType,
-  ): Promise<PersistUserEntity | null> {
+  ): Promise<PersistUserEntityWithCompany | null> {
     if (!lockType) {
       const foundUser = await this._prisma.user.findUnique({
         where: { id },
+        include: this._includeOption,
       });
 
       return foundUser ? UserMapper.toPersistEntity(foundUser) : null;
@@ -60,17 +79,19 @@ export class UserRepo extends BaseRepo implements IUserRepo {
 
     const foundUser = await this._prisma.user.findUnique({
       where: { id },
+      include: this._includeOption,
     });
 
     return UserMapper.toPersistEntity(foundUser!);
   }
 
-  async create(entity: NewUserEntity): Promise<PersistUserEntity> {
+  async create(entity: NewUserEntity): Promise<PersistUserEntityWithCompany> {
     try {
       const newUser = await this._prisma.user.create({
         data: {
           ...UserMapper.toCreateData(entity),
         },
+        include: this._includeOption,
       });
 
       return UserMapper.toPersistEntity(newUser);
@@ -92,7 +113,9 @@ export class UserRepo extends BaseRepo implements IUserRepo {
     }
   }
 
-  async update(entity: UpdateUserEntity): Promise<PersistUserEntity> {
+  async update(
+    entity: UpdateUserEntity,
+  ): Promise<PersistUserEntityWithCompany> {
     try {
       const updatedUser = await this._prisma.user.update({
         where: {
@@ -103,6 +126,7 @@ export class UserRepo extends BaseRepo implements IUserRepo {
           ...UserMapper.toUpdateData(entity),
           version: { increment: 1 },
         },
+        include: this._includeOption,
       });
 
       return UserMapper.toPersistEntity(updatedUser);

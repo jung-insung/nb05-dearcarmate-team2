@@ -2,6 +2,7 @@ import {
   NewUserEntity,
   PersistUserEntity,
   UpdateUserEntity,
+  UserEntity,
 } from "../../2_domain/entities/user/user.entity";
 import { PersistDBUser } from "../repos/user.repo";
 
@@ -23,6 +24,12 @@ export type UpdateUserData = {
   imageUrl: string;
 };
 
+export interface PersistUserEntityWithCompany extends PersistUserEntity {
+  company: {
+    companyName: string;
+  };
+}
+
 export class UserMapper {
   static toCreateData(entity: NewUserEntity): CreateUserData {
     const createUserData: CreateUserData = {
@@ -31,7 +38,7 @@ export class UserMapper {
       email: entity.email,
       employeeNumber: entity.employeeNumber,
       phoneNumber: entity.phoneNumber,
-      password: entity.password,
+      password: entity.password!,
       isAdmin: entity.isAdmin,
       version: entity.version,
     };
@@ -42,14 +49,14 @@ export class UserMapper {
     const updateUserData: UpdateUserData = {
       employeeNumber: entity.employeeNumber,
       phoneNumber: entity.phoneNumber,
-      password: entity.password,
+      password: entity.password!,
       imageUrl: entity.imageUrl!,
     };
     return updateUserData;
   }
 
-  static toPersistEntity(record: PersistDBUser): PersistUserEntity {
-    return {
+  static toPersistEntity(record: PersistDBUser): PersistUserEntityWithCompany {
+    const entity = new UserEntity({
       id: record.id,
       companyId: record.companyId,
       name: record.name,
@@ -57,9 +64,15 @@ export class UserMapper {
       employeeNumber: record.employeeNumber,
       phoneNumber: record.phoneNumber,
       password: record.password,
-      imageUrl: record.imageUrl,
+      imageUrl: record.imageUrl!,
       isAdmin: record.isAdmin,
       version: record.version,
-    } as PersistUserEntity;
+      createdAt: record.createdAt,
+      updatedAt: record.updatedAt,
+    });
+
+    (entity as PersistUserEntityWithCompany).company = record.company;
+
+    return entity as PersistUserEntityWithCompany;
   }
 }

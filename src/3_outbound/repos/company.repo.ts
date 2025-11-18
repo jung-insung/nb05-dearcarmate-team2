@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient, Company } from "@prisma/client";
-import { BaseRepo } from "./base.repo";
+import { BasePrismaClient, BaseRepo } from "./base.repo";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 import {
@@ -13,7 +13,7 @@ import {
 } from "../../2_domain/port/repos/company.repo.interface";
 
 export class CompanyRepo extends BaseRepo implements ICompanyRepo {
-  constructor(prisma: PrismaClient) {
+  constructor(prisma: BasePrismaClient) {
     super(prisma);
   }
 
@@ -54,6 +54,16 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
     }
 
     return CompanyMapper.toPersistEntity(record);
+  }
+
+  async findCompanyByCompanyCode(
+    companyCode: string,
+  ): Promise<PersistCompanyEntity | null> {
+    const foundCompany = await this._prisma.company.findUnique({
+      where: { companyCode },
+    });
+
+    return foundCompany ? CompanyMapper.toPersistEntity(foundCompany) : null;
   }
 
   async createCompany(entity: NewCompanyEntity): Promise<PersistCompanyEntity> {
@@ -150,3 +160,4 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
       throw err;
     }
   }
+}
