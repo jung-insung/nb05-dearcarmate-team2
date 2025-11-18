@@ -11,6 +11,7 @@ export enum BusinessExceptionType {
   PASSWORD_FORM,
   EMPLOYEENUMBER_FORM,
   PHONENUMBER_FORM,
+  COMPANYID_FORM,
   COMPANYNAME_FORM,
   COMPANYCODE_FORM,
   INVALID_REQUEST,
@@ -73,6 +74,10 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.PHONENUMBER_FORM]: {
     statusCode: 400,
     message: "전화번호 양식이 안 맞습니다.",
+  },
+  [BusinessExceptionType.COMPANYID_FORM]: {
+    statusCode: 400,
+    message: "companyId 양식과 다릅니다.",
   },
   [BusinessExceptionType.COMPANYNAME_FORM]: {
     statusCode: 400,

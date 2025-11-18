@@ -7,6 +7,7 @@ import { TechnicalException } from "../../4_shared/exceptions/technical.exceptio
 import { PersistUserEntity, UserEntity } from "../entities/user/user.entity";
 import { IBcryptHashManager } from "../port/managers/bcrypt-hash.manager.interface";
 import { IUserRepo } from "../port/repos/user.repo.interface";
+import { ICompanyRepo } from "../port/repos/company.repo.interface";
 
 export class UserService implements IUserService {
   constructor(
