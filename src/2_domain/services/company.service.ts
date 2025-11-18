@@ -3,10 +3,10 @@ import {
   CreateCompanyDto,
   UpdateCompanyDto,
 } from "../../1_inbound/port/services/company.service.interface";
+import { CompanyResponseDto } from "../../1_inbound/responses/company/company.response";
 import { CompanyEntity } from "../../2_domain/entities/company/company.entity";
 import { BusinessException } from "../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
-import { CompanyResponseDto } from "../../1_inbound/responses/company/company.response";
 import { IUnitOfWork } from "../port/unit-of-work.interface";
 
 export class CompanyService implements ICompanyService {

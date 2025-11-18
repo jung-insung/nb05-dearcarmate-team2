@@ -20,11 +20,5 @@ export interface PersistCompanyEn {
   updatedAt: Date;
 }
 
-export type CompanyCreateData = Pick<
-  CompanyEn,
-  "companyName" | "companyCode" | "userCount" | "version"
->;
-export type CompanyUpdateData = Pick<
-  CompanyEn,
-  "companyName" | "companyCode" | "userCount" | "version"
->;
+export type CompanyCreateData = Omit<CompanyEn, "id">;
+export type CompanyUpdateData = Omit<CompanyEn, "id">;

@@ -6,18 +6,12 @@ import {
   createCompanyReqSchema,
   updateCompanyReqSchema,
   deleteCompanyReqSchema,
-} from "../requests/company.request";
+} from "../requests/company-schema.request";
 import { companyFieldExceptionMap } from "../requests/validater-map";
 
-export class CompanyController
-  extends BaseController
-  implements ICompanyController
-{
-  private _companyService;
-
-  constructor(companyService: ICompanyService) {
+export class CompanyController extends BaseController implements ICompanyController {
+  constructor(private _companyService: ICompanyService) {
     super();
-    this._companyService = companyService;
   }
 
   createCompany = async (req: Request, res: Response) => {

@@ -104,14 +104,14 @@ export class CompanyEntity {
   }
 
   private static checkCompanyNameRule(companyName: string) {
-    if (companyName.length <= 1) {
+    if (companyName.length <= 0) {
       throw new BusinessException({
         type: BusinessExceptionType.BAD_REQUEST,
       });
     }
   }
   private static checkCompanyCodeRule(companyCode: string) {
-    if (companyCode.length <= 1) {
+    if (companyCode.length <= 0) {
       throw new BusinessException({
         type: BusinessExceptionType.BAD_REQUEST,
       });
