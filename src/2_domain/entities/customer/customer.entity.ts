@@ -1,3 +1,4 @@
+import { CustomerReocrd } from "../../../3_outbound/mappers/customer.mapper";
 import { BusinessException } from "../../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../../../4_shared/exceptions/business.exceptions/exception-info";
 import {
@@ -8,13 +9,10 @@ import {
 
 export type NewCustomerEntity = Omit<
   CustomerEntity,
-  "id" | "createdAt" | "updatedAt" | "contracCount" | "version"
+  "id" | "createdAt" | "updatedAt" | "contractCount" | "version"
 >;
 
-export type UpdateCustomerEntity = Omit<
-  CustomerEntity,
-  "id" | "createdAt" | "updatedAt" | "contracCount"
->;
+export type UpdateCustomerEntity = Partial<NewCustomerEntity>;
 
 export interface PersistCustomerEntity extends CustomerEntity {
   id: number;
@@ -33,6 +31,7 @@ export class CustomerEntity {
   private _memo?: string;
   private _contractCount: number;
   private _version: number;
+  private readonly _companyId: number;
   private readonly _createdAt?: Date;
   private readonly _updatedAt?: Date;
 
@@ -47,6 +46,7 @@ export class CustomerEntity {
     memo?: string;
     contractCount?: number;
     version?: number;
+    companyId: number;
     createdAt?: Date;
     updatedAt?: Date;
   }) {
@@ -60,12 +60,16 @@ export class CustomerEntity {
     this._memo = attrs.memo;
     this._contractCount = attrs.contractCount ?? 0;
     this._version = attrs.version ?? 1;
+    this._companyId = attrs.companyId;
     this._createdAt = attrs.createdAt;
     this._updatedAt = attrs.updatedAt;
   }
 
   get id() {
     return this._id;
+  }
+  get companyId() {
+    return this._companyId;
   }
   get name() {
     return this._name;
@@ -109,8 +113,18 @@ export class CustomerEntity {
     region?: CustomerRegion;
     email: string;
     memo?: string;
+    companyId: number;
   }): NewCustomerEntity {
-    const { name, gender, phoneNumber, ageGroup, region, email, memo } = params;
+    const {
+      name,
+      gender,
+      phoneNumber,
+      ageGroup,
+      region,
+      email,
+      memo,
+      companyId,
+    } = params;
 
     this.checkNameRule(name);
 
@@ -122,6 +136,7 @@ export class CustomerEntity {
       region,
       email,
       memo,
+      companyId,
     });
   }
 
@@ -134,6 +149,7 @@ export class CustomerEntity {
     email: string;
     memo?: string;
     version: number;
+    companyId: number;
   }): UpdateCustomerEntity {
     const {
       name,
@@ -143,6 +159,7 @@ export class CustomerEntity {
       region,
       email,
       memo,
+      companyId,
       version,
     } = params;
 
@@ -154,11 +171,12 @@ export class CustomerEntity {
       region,
       email,
       memo,
+      companyId,
       version: version + 1,
     });
   }
 
-  static createPersist(attrs: PersistCustomerEntity): CustomerEntity {
+  static createPersist(record: CustomerReocrd): PersistCustomerEntity {
     const {
       id,
       name,
@@ -169,10 +187,11 @@ export class CustomerEntity {
       email,
       memo,
       contractCount,
+      companyId,
       version,
-    } = attrs;
+    } = record;
 
-    return new CustomerEntity({
+    const entity = new CustomerEntity({
       id,
       name,
       gender,
@@ -182,8 +201,11 @@ export class CustomerEntity {
       email,
       memo,
       contractCount,
+      companyId,
       version,
     });
+
+    return entity as PersistCustomerEntity;
   }
 
   private static checkNameRule(name: string): void {
