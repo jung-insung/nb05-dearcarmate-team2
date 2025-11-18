@@ -80,9 +80,10 @@ export class CarRepo extends BaseRepo implements ICarRepo {
   }
 
   async delete(params: { companyId: number; carId: number }): Promise<void> {
-    await this._prisma.car.delete({
+    await this._prisma.car.deleteMany({
       where: {
         id: params.carId,
+        companyId: params.companyId,
       },
     });
   }

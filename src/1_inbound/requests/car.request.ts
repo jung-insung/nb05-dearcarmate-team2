@@ -19,7 +19,7 @@ export const registerCarSchema = z.object({
 });
 
 export const updateCarSchema = registerCarSchema.partial().extend({
-  version: z.number().int(),
+  version: z.number().int().optional(),
 });
 
 export type RegisterCarReq = z.infer<typeof registerCarSchema>;
