@@ -180,7 +180,7 @@ export class UserEntity {
   private static checkPasswordRule(password: string): void {
     if (password.length > 20) {
       throw new BusinessException({
-        type: BusinessExceptionType.EMPLOYEENUMBER_TOO_LONG,
+        type: BusinessExceptionType.PASSWORD_TOO_LONG,
       });
     }
   }

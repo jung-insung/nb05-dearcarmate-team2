@@ -1,6 +1,6 @@
 export enum BusinessExceptionType {
   BAD_REQUEST,
-  EMPLOYEENUMBER_TOO_LONG,
+  PASSWORD_TOO_LONG,
   INVALID_CAR_NUMBER,
   INVALID_MILEAGE,
   INVALID_PRICE,
@@ -33,7 +33,7 @@ export const BusinessExceptionTable: Record<
     statusCode: 400,
     message: "잘못된 요청입니다.",
   },
-  [BusinessExceptionType.EMPLOYEENUMBER_TOO_LONG]: {
+  [BusinessExceptionType.PASSWORD_TOO_LONG]: {
     statusCode: 404,
     message: "비밀번호가 너무 깁니다.",
   },
