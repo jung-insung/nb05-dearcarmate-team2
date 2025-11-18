@@ -16,9 +16,7 @@ export type CreateCarData = {
   companyId: number;
 };
 
-export type UpdateCarData = Partial<CreateCarData> & {
-  version: number;
-};
+export type UpdateCarData = Partial<CreateCarData>;
 
 export type PersistCarRecord = {
   id: number;
@@ -30,8 +28,8 @@ export type PersistCarRecord = {
   mileage: number;
   price: number;
   accidentCount: number;
-  explanation?: string | null;
-  accidentDetails?: string | null;
+  explanation: string | null;
+  accidentDetails: string | null;
   status: CarStatus;
   version: number;
   companyId: number;
@@ -51,10 +49,9 @@ export class CarEntity {
   private _mileage: number;
   private _price: number;
   private _accidentCount: number;
-  private _explanation?: string | null;
-  private _accidentDetails?: string | null;
+  private _explanation: string | null;
+  private _accidentDetails: string | null;
   private _status: CarStatus;
-
   private _version: number;
 
   private readonly _createdAt?: Date;
@@ -145,31 +142,47 @@ export class CarEntity {
     return this._updatedAt;
   }
 
-  // 공장 메소드
-  //Create (POST /cars)
-  static create(params: Omit<CreateCarData, "status" | "version">): CarEntity {
+  private static calculateType(
+    manufacturer: CarManufacturer,
+    model: string,
+  ): CarType {
+    if (["스파크"].includes(model)) return CarType.COMPACT;
+    if (["K3", "K5", "K7", "K8", "K9"].includes(model)) return CarType.SEDAN;
+    return CarType.SUV;
+  }
+
+  static create(params: CreateCarData): CarEntity {
     return new CarEntity({
       ...params,
-      status: "POSSESSION",
+      type: CarEntity.calculateType(params.manufacturer, params.model),
+      status: CarStatus.POSSESSION,
       version: 1,
     });
   }
 
-  //Update (PATCH /cars/:id)
   static update(existing: CarEntity, params: UpdateCarData): CarEntity {
-    return new CarEntity({
-      ...existing.toPersistence(),
+    const base = existing.toPersistence();
+
+    const merged: PersistCarRecord = {
+      ...base,
       ...params,
       version: existing.version + 1,
-    });
+    };
+
+    if (params.manufacturer || params.model) {
+      merged.type = CarEntity.calculateType(
+        params.manufacturer ?? existing.manufacturer,
+        params.model ?? existing.model,
+      );
+    }
+
+    return new CarEntity(merged);
   }
 
-  //database record → Entity
   static fromPersistence(record: PersistCarRecord): CarEntity {
     return new CarEntity(record);
   }
 
-  // 변환기
   toCreateData(): CreateCarData {
     return {
       carNumber: this._carNumber,
@@ -193,16 +206,12 @@ export class CarEntity {
       carNumber: this._carNumber,
       manufacturer: this._manufacturer,
       model: this._model,
-      type: this._type,
       manufacturingYear: this._manufacturingYear,
       mileage: this._mileage,
       price: this._price,
       accidentCount: this._accidentCount,
       explanation: this._explanation,
       accidentDetails: this._accidentDetails,
-      status: this._status,
-      version: this._version,
-      companyId: this._companyId,
     };
   }
 
