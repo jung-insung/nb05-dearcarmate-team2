@@ -40,7 +40,12 @@ export class CompanyService implements ICompanyService {
 			throw err;
 		}
 		
-		return createdEntity;
+		return {
+			id: createdEntity.id,
+			companyName: createdEntity.companyName,
+			companyCode: createdEntity.companyCode,
+			userCount: createdEntity.userCount,
+		};
 	}
 
   async updateCompany(
@@ -82,7 +87,12 @@ export class CompanyService implements ICompanyService {
 				throw err;
 			}
 			
-			return updatedEntity;
+			return {
+				id: updatedEntity.id,
+				companyName: updatedEntity.companyName,
+				companyCode: updatedEntity.companyCode,
+				userCount: updatedEntity.userCount,
+			};
 		});
 	}
 
