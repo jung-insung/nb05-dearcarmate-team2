@@ -18,6 +18,8 @@ export enum BusinessExceptionType {
   INVALID_REQUEST,
   NOT_FOUND,
   EMAIL_DUPLICATE,
+  COMPANY_NAME_DUPLICATE,
+  COMPANY_CODE_DUPLICATE,
   SIGNUP_PASSWORD_MISMATCH,
   PASSWORD_MISMATCH,
   COMPANY_NOT_EXIST,
@@ -116,6 +118,14 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.EMAIL_DUPLICATE]: {
     statusCode: 409,
     message: "이미 존재한 이메일입니다.",
+  },
+  [BusinessExceptionType.COMPANY_NAME_DUPLICATE]: {
+    statusCode: 409,
+    message: "이미 존재한 회사 이름입니다.",
+  },
+  [BusinessExceptionType.COMPANY_CODE_DUPLICATE]: {
+    statusCode: 409,
+    message: "이미 존재한 회사 코드입니다.",
   },
 
   // 기타
