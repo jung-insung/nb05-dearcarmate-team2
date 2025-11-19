@@ -1,14 +1,20 @@
 import { Request, Response } from "express";
 import { ICustomerService } from "../../2_domain/services/customer.service";
-import { BaseController } from "./base.controller";
+import { BaseController, ControllerHandler } from "./base.controller";
 import {
   registCustomerSchema,
   updateCustomerSchema,
 } from "../requests/customer-schema.request";
 import { customerFieldExceptionMap } from "../requests/validater-map";
 
+export interface ICustomerConteroller {
+  registCustomer: ControllerHandler;
+  updateCustomer: ControllerHandler;
+  deleteCusomer: ControllerHandler;
+}
+
 export class CustomerController extends BaseController {
-  constructor(private _customerService: ICustomerService) {
+  constructo r(private _customerService: ICustomerService) {
     super();
   }
 
@@ -29,7 +35,7 @@ export class CustomerController extends BaseController {
   }
 
   async updateCustomer(req: Request, res: Response) {
-    const { id } = req.userId;
+    const { customerId } = req.params;
     const reqDto = this.validateOrThrow(
       updateCustomerSchema,
       { body: req.body },
@@ -37,17 +43,17 @@ export class CustomerController extends BaseController {
     );
 
     const updatedCustomer = await this._customerService.updateCustomer(
-      id,
+      customerId,
       reqDto,
     );
 
-    res.status(201).json(updatedCustomer);
+    res.status(200).json(updatedCustomer);
   }
 
   async deleteCusomer(req: Request, res: Response): Promise<void> {
-    const { id } = req.userId;
-    await this._customerService.deleteCusomer(id);
+    const { customerId } = req.params;
+    await this._customerService.deleteCusomer(customerId);
 
-    res.status(200).json();
+    res.status(200).json({ message: "고객 삭제 성공" });
   }
 }
