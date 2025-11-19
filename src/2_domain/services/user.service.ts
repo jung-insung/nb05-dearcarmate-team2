@@ -24,55 +24,55 @@ export class UserService implements IUserService {
   ): Promise<PersistUserEntityWithCompany> {
     const { body } = dto;
 
-    const foundUser = await this._unitOfWork.repos.user.findUserByEmail(
-      body.email,
-    );
-    if (foundUser) {
-      throw new BusinessException({
-        type: BusinessExceptionType.EMAIL_DUPLICATE,
-      });
-    }
-    if (body.password !== body.passwordConfirmation) {
-      throw new BusinessException({
-        type: BusinessExceptionType.SIGNUP_PASSWORD_MISMATCH,
-      });
-    }
+    return await this._unitOfWork.do(async (txRepos) => {
+      const foundUser = await txRepos.user.findUserByEmail(body.email);
+      if (foundUser) {
+        throw new BusinessException({
+          type: BusinessExceptionType.EMAIL_DUPLICATE,
+        });
+      }
+      if (body.password !== body.passwordConfirmation) {
+        throw new BusinessException({
+          type: BusinessExceptionType.SIGNUP_PASSWORD_MISMATCH,
+        });
+      }
 
-    const foundCompany =
-      await this._unitOfWork.repos.company.findCompanyByCompanyCode(
+      const foundCompany = await txRepos.company.findCompanyByCompanyCode(
         body.companyCode,
       );
-    if (!foundCompany) {
-      throw new BusinessException({
-        type: BusinessExceptionType.COMPANY_NOT_EXIST,
-      });
-    }
-
-    const { name, email, employeeNumber, phoneNumber, password } = body;
-
-    const newUser = await UserEntity.createUser({
-      name,
-      email,
-      employeeNumber,
-      phoneNumber,
-      password,
-      bcryptHashManager: this._bcryptHashManager,
-      companyId: foundCompany.id,
-    });
-
-    let createdUser: PersistUserEntityWithCompany;
-    try {
-      createdUser = await this._unitOfWork.repos.user.create(newUser);
-    } catch (err) {
-      if (err instanceof TechnicalException) {
-        if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_EMAIL)
-          throw new BusinessException({
-            type: BusinessExceptionType.EMAIL_DUPLICATE,
-          });
+      if (!foundCompany) {
+        throw new BusinessException({
+          type: BusinessExceptionType.COMPANY_NOT_EXIST,
+        });
       }
-      throw err;
-    }
-    return createdUser;
+
+      foundCompany.increaseUserCount();
+      await txRepos.company.updateCompany(foundCompany);
+
+      const { name, email, employeeNumber, phoneNumber, password } = body;
+      const newUser = await UserEntity.createUser({
+        name,
+        email,
+        employeeNumber,
+        phoneNumber,
+        password,
+        bcryptHashManager: this._bcryptHashManager,
+        companyId: foundCompany.id,
+      });
+
+      try {
+        return await txRepos.user.create(newUser);
+      } catch (err) {
+        if (err instanceof TechnicalException) {
+          if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_EMAIL)
+            throw new BusinessException({
+              type: BusinessExceptionType.EMAIL_DUPLICATE,
+            });
+        }
+
+        throw err;
+      }
+    });
   }
 
   async updateUser(
@@ -148,16 +148,23 @@ export class UserService implements IUserService {
   }
 
   async deleteUser(dto: GetUserReqDto): Promise<void> {
-    const foundUser = await this._unitOfWork.repos.user.findUserById(
-      dto.userId,
-    );
+    await this._unitOfWork.do(async (txRepos) => {
+      const foundUser = await txRepos.user.findUserById(dto.userId);
 
-    if (!foundUser) {
-      throw new BusinessException({
-        type: BusinessExceptionType.USER_NOT_EXIST,
-      });
-    }
+      if (!foundUser) {
+        throw new BusinessException({
+          type: BusinessExceptionType.USER_NOT_EXIST,
+        });
+      }
 
-    await this._unitOfWork.repos.user.delete(foundUser.id);
+      const foundCompany = await txRepos.company.findById(foundUser.companyId);
+
+      if (foundCompany) {
+        foundCompany.decreaseUserCount();
+        await txRepos.company.updateCompany(foundCompany);
+      }
+
+      await txRepos.user.delete(foundUser.id);
+    });
   }
 }
