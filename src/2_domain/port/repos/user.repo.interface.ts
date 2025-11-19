@@ -9,7 +9,7 @@ export type LockType = "share" | "beta";
 
 export interface IUserRepo {
   /**
-   * 회원 가입 시에만 사용하므로 락을 고려할 필요가 없음
+   * @throws Error lockType이 유효하지 않은 값일 경우
    */
   findUserByEmail(email: string): Promise<PersistUserEntityWithCompany | null>;
 

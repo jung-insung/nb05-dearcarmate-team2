@@ -22,6 +22,7 @@ export type UpdateUserData = {
   phoneNumber: string;
   password: string;
   imageUrl: string;
+  refreshToken?: string;
 };
 
 export interface PersistUserEntityWithCompany extends PersistUserEntity {
@@ -51,6 +52,7 @@ export class UserMapper {
       phoneNumber: entity.phoneNumber,
       password: entity.password!,
       imageUrl: entity.imageUrl!,
+      refreshToken: entity.refreshToken,
     };
     return updateUserData;
   }
@@ -67,6 +69,7 @@ export class UserMapper {
       imageUrl: record.imageUrl!,
       isAdmin: record.isAdmin,
       version: record.version,
+      refreshToken: record.refreshToken ?? undefined,
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
     });

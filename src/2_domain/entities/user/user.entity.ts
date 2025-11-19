@@ -33,6 +33,7 @@ export class UserEntity {
   private _isAdmin: boolean;
   private _version: number;
   private _isModified: boolean;
+  private _refreshToken?: string;
   private readonly _createdAt?: Date;
   private readonly _updatedAt?: Date;
 
@@ -47,6 +48,7 @@ export class UserEntity {
     isAdmin: boolean;
     password: string;
     version: number;
+    refreshToken?: string;
     createdAt?: Date;
     updatedAt?: Date;
   }) {
@@ -61,6 +63,7 @@ export class UserEntity {
     this._isAdmin = attrs.isAdmin;
     this._version = attrs.version;
     this._isModified = false;
+    this._refreshToken = attrs.refreshToken;
     this._createdAt = attrs.createdAt;
     this._updatedAt = attrs.updatedAt;
   }
@@ -103,6 +106,9 @@ export class UserEntity {
   }
   get isModified() {
     return this._isModified;
+  }
+  get refreshToken() {
+    return this._refreshToken;
   }
 
   // Factory(도장 찍기)
@@ -190,10 +196,7 @@ export class UserEntity {
     inputPassword: string,
     bcryptHashManager: IBcryptHashManager,
   ): Promise<boolean> {
-    return await bcryptHashManager.verifyPassword(
-      inputPassword,
-      this._password,
-    );
+    return await bcryptHashManager.compare(inputPassword, this._password);
   }
 
   async updatePassword(
@@ -205,9 +208,18 @@ export class UserEntity {
     return await bcryptHashManager.hash(newPassword);
   }
 
-  incrementVersion() {
-    if (this._isModified) {
-      this._version++;
-    }
+  // refreshToken
+  async updateRefreshToken(
+    refreshToken: string,
+    bcryptHashManager: IBcryptHashManager,
+  ): Promise<void> {
+    this._refreshToken = await bcryptHashManager.hash(refreshToken);
+  }
+
+  async isRefreshTokenMatch(
+    refreshToken: string,
+    bcryptHashManager: IBcryptHashManager,
+  ): Promise<boolean> {
+    return await bcryptHashManager.compare(refreshToken, this.refreshToken!);
   }
 }
