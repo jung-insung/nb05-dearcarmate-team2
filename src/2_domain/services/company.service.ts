@@ -97,38 +97,39 @@ export class CompanyService implements ICompanyService {
 	}
 
   async createCompany(dto: CreateCompanyDto): Promise<CompanyResponseDto> {
-		const newEntity = CompanyEntity.createNewCom({
-			companyName: dto.companyName,
-			companyCode: dto.companyCode,
-		});
+    const newEntity = CompanyEntity.createNewCom({
+      companyName: dto.companyName,
+      companyCode: dto.companyCode,
+    });
 
-		let createdEntity: CompanyResponseDto;
-		try {
-			createdEntity = await this._unitOfWork.repos.company.createCompany(newEntity);
-		} catch(err) {
-			if (err instanceof TechnicalException) {
-				if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_NAME) {
-					throw new BusinessException({
-						type: BusinessExceptionType.COMPANY_NAME_DUPLICATE,
-					});
-				}
-				if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_CODE) {
-					throw new BusinessException({
-						type: BusinessExceptionType.COMPANY_CODE_DUPLICATE,
-					});
-				}
-			}
-			
-			throw err;
-		}
-		
-		return {
-			id: createdEntity.id,
-			companyName: createdEntity.companyName,
-			companyCode: createdEntity.companyCode,
-			userCount: createdEntity.userCount,
-		};
-	}
+    let createdEntity: CompanyResponseDto;
+    try {
+      createdEntity =
+        await this._unitOfWork.repos.company.createCompany(newEntity);
+    } catch (err) {
+      if (err instanceof TechnicalException) {
+        if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_NAME) {
+          throw new BusinessException({
+            type: BusinessExceptionType.COMPANY_NAME_DUPLICATE,
+          });
+        }
+        if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_CODE) {
+          throw new BusinessException({
+            type: BusinessExceptionType.COMPANY_CODE_DUPLICATE,
+          });
+        }
+      }
+
+      throw err;
+    }
+
+    return {
+      id: createdEntity.id,
+      companyName: createdEntity.companyName,
+      companyCode: createdEntity.companyCode,
+      userCount: createdEntity.userCount,
+    };
+  }
 
   async updateCompany(
 		companyId: number,

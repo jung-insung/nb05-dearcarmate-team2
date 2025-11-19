@@ -7,43 +7,39 @@ export type UpdateCompanyReqDto = z.infer<typeof updateCompanyReqSchema>;
 export type DeleteCompanyReqDto = z.infer<typeof deleteCompanyReqSchema>;
 
 export const getCompanyListReqSchema = z.object({
-	query: z.object({
-		page: z.coerce
-		.number({ message: "페이지 번호는 숫자여야 합니다." })
-		.min(1)
-		.default(1),
+  query: z.object({
+    page: z.coerce
+      .number({ message: "페이지 번호는 숫자여야 합니다." })
+      .min(1)
+      .default(1),
 
-		pageSize: z.coerce
-		.number({ message: "페이지 크기는 숫자여야 합니다." })
-		.min(1)
-		.default(8),
+    pageSize: z.coerce
+      .number({ message: "페이지 크기는 숫자여야 합니다." })
+      .min(1)
+      .default(8),
 
-		searchBy: z
-		.enum(["companyName", "companyCode"])
-		.optional(),
+    searchBy: z.enum(["companyName", "companyCode"]).optional(),
 
-		keyword: z.string().optional(),
-	}),
+    keyword: z.string().optional(),
+  }),
 });
 
 export const getUserListReqSchema = z.object({
-	query: z.object({
-		page: z.coerce
-		.number({ message: "페이지 번호는 숫자여야 합니다." })
-		.min(1)
-		.default(1),
+  query: z.object({
+    page: z.coerce
+      .number({ message: "페이지 번호는 숫자여야 합니다." })
+      .min(1)
+      .default(1),
 
-		pageSize: z.coerce
-		.number({ message: "페이지 크기는 숫자여야 합니다." })
-		.min(1)
-		.default(8),
+    pageSize: z.coerce
+      .number({ message: "페이지 크기는 숫자여야 합니다." })
+      .min(1)
+      .default(8),
 
-		searchBy: z
-		.enum(["companyName", "name", "email"])
-		.optional(),
+    searchBy: z.enum(["companyName", "name", "email"]).optional(),
 
-		keyword: z.string().optional(),
-	}),
+    keyword: z.string().optional(),
+  }),
 });
 
 export const createCompanyReqSchema = z.object({
