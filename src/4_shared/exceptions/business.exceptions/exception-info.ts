@@ -24,6 +24,9 @@ export enum BusinessExceptionType {
   PASSWORD_MISMATCH,
   COMPANY_NOT_EXIST,
   USER_NOT_EXIST,
+  CUSTOMER_NOT_EXIST,
+  CUSTOMER_DATA_CHANGED,
+  CUSTOMER_DATA_ARLEADY_DELETE,
 }
 
 export const BusinessExceptionTable: Record<
@@ -113,6 +116,10 @@ export const BusinessExceptionTable: Record<
     statusCode: 404,
     message: "유저가 존재하지 않습니다.",
   },
+  [BusinessExceptionType.CUSTOMER_NOT_EXIST]: {
+    statusCode: 404,
+    message: "고객정보가 존재하지 않습니다.",
+  },
 
   // 중복, 충돌
   [BusinessExceptionType.EMAIL_DUPLICATE]: {
@@ -126,6 +133,14 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.COMPANY_CODE_DUPLICATE]: {
     statusCode: 409,
     message: "이미 존재한 회사 코드입니다.",
+  },
+  [BusinessExceptionType.CUSTOMER_DATA_CHANGED]: {
+    statusCode: 409,
+    message: "저장하지 못했습니다. 최신 정보로 새로고침 후 다시 시도해주세요",
+  },
+  [BusinessExceptionType.CUSTOMER_DATA_ARLEADY_DELETE]: {
+    statusCode: 409,
+    message: "요청하신 고객 정보가 삭제되었습니다.",
   },
 
   // 기타

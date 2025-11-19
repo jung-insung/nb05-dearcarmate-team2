@@ -11,34 +11,37 @@ import {
 } from "../requests/company-schema.request";
 import { companyFieldExceptionMap } from "../requests/validater-map";
 
-export class CompanyController extends BaseController implements ICompanyController {
+export class CompanyController
+  extends BaseController
+  implements ICompanyController
+{
   constructor(private _companyService: ICompanyService) {
     super();
   }
 
   getCompanyList = async (req: Request, res: Response) => {
-		const { query } = this.validateOrThrow(
-			getCompanyListReqSchema,
-			{ query: req.query },
-			companyFieldExceptionMap
-		);
+    const { query } = this.validateOrThrow(
+      getCompanyListReqSchema,
+      { query: req.query },
+      companyFieldExceptionMap,
+    );
 
-		const result = await this._companyService.getCompanyList(query);
+    const result = await this._companyService.getCompanyList(query);
 
-		return res.status(200).json(result);
-	};
+    return res.status(200).json(result);
+  };
 
-	getUserList = async (req: Request, res: Response) => {
-		const { query } = this.validateOrThrow(
-			getUserListReqSchema,
-			{ query: req.query },
-			companyFieldExceptionMap
-		);
+  getUserList = async (req: Request, res: Response) => {
+    const { query } = this.validateOrThrow(
+      getUserListReqSchema,
+      { query: req.query },
+      companyFieldExceptionMap,
+    );
 
-		const result = await this._companyService.getUserList(query);
+    const result = await this._companyService.getUserList(query);
 
-		return res.status(200).json(result);
-	};
+    return res.status(200).json(result);
+  };
 
   createCompany = async (req: Request, res: Response) => {
     const { body } = this.validateOrThrow(

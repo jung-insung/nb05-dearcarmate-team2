@@ -97,40 +97,42 @@ export class CompanyService implements ICompanyService {
 	}
 
   async createCompany(dto: CreateCompanyDto): Promise<CompanyResponseDto> {
-		const newEntity = CompanyEntity.createNewCom({
-			companyName: dto.companyName,
-			companyCode: dto.companyCode,
-		});
+    const newEntity = CompanyEntity.createNewCom({
+      companyName: dto.companyName,
+      companyCode: dto.companyCode,
+    });
 
-		let createdEntity: CompanyResponseDto;
-		try {
-			createdEntity = await this._unitOfWork.repos.company.createCompany(newEntity);
-		} catch(err) {
-			if (err instanceof TechnicalException) {
-				if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_NAME) {
-					throw new BusinessException({
-						type: BusinessExceptionType.COMPANY_NAME_DUPLICATE,
-					});
-				}
-				if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_CODE) {
-					throw new BusinessException({
-						type: BusinessExceptionType.COMPANY_CODE_DUPLICATE,
-					});
-				}
-			}
-			
-			throw err;
-		}
-		
-		return {
-			id: createdEntity.id,
-			companyName: createdEntity.companyName,
-			companyCode: createdEntity.companyCode,
-			userCount: createdEntity.userCount,
-		};
-	}
+    let createdEntity: CompanyResponseDto;
+    try {
+      createdEntity =
+        await this._unitOfWork.repos.company.createCompany(newEntity);
+    } catch (err) {
+      if (err instanceof TechnicalException) {
+        if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_NAME) {
+          throw new BusinessException({
+            type: BusinessExceptionType.COMPANY_NAME_DUPLICATE,
+          });
+        }
+        if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_CODE) {
+          throw new BusinessException({
+            type: BusinessExceptionType.COMPANY_CODE_DUPLICATE,
+          });
+        }
+      }
+
+      throw err;
+    }
+
+    return {
+      id: createdEntity.id,
+      companyName: createdEntity.companyName,
+      companyCode: createdEntity.companyCode,
+      userCount: createdEntity.userCount,
+    };
+  }
 
   async updateCompany(
+<<<<<<< Updated upstream
 		companyId: number,
 		dto: UpdateCompanyDto,
 	): Promise<CompanyResponseDto> {
@@ -177,6 +179,58 @@ export class CompanyService implements ICompanyService {
 			};
 		});
 	}
+=======
+    companyId: number,
+    dto: UpdateCompanyDto,
+  ): Promise<CompanyResponseDto> {
+    return await this._unitOfWork.do(async (txRepos) => {
+      const entity = await txRepos.company.findById(companyId);
+      if (!entity) {
+        throw new BusinessException({
+          type: BusinessExceptionType.COMPANY_NOT_EXIST,
+        });
+      }
+
+      entity.updateInfo(dto);
+
+      let updatedEntity: CompanyResponseDto;
+      try {
+        updatedEntity = await txRepos.company.updateCompany(entity);
+      } catch (err) {
+        if (err instanceof TechnicalException) {
+          if (
+            err.type === TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_NAME
+          ) {
+            throw new BusinessException({
+              type: BusinessExceptionType.COMPANY_NAME_DUPLICATE,
+            });
+          }
+          if (
+            err.type === TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_CODE
+          ) {
+            throw new BusinessException({
+              type: BusinessExceptionType.COMPANY_CODE_DUPLICATE,
+            });
+          }
+          if (err.type === TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED) {
+            throw new BusinessException({
+              type: BusinessExceptionType.BAD_REQUEST,
+            });
+          }
+        }
+
+        throw err;
+      }
+
+      return {
+        id: updatedEntity.id,
+        companyName: updatedEntity.companyName,
+        companyCode: updatedEntity.companyCode,
+        userCount: updatedEntity.userCount,
+      };
+    });
+  }
+>>>>>>> Stashed changes
 
   async deleteCompany(companyId: number): Promise<void> {
     const entity = await this._unitOfWork.repos.company.findById(companyId);
