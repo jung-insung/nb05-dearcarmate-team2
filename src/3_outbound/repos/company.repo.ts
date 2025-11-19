@@ -7,7 +7,10 @@ import {
   PersistCompanyEntity,
 } from "../../2_domain/entities/company/company.entity";
 import { CompanyMapper } from "../mappers/company.mapper";
-import { UserMapper, PersistUserEntityWithCompany } from "../mappers/user.mapper";
+import {
+  UserMapper,
+  PersistUserEntityWithCompany,
+} from "../mappers/user.mapper";
 import {
   ICompanyRepo,
   CompanyListRepoDto,
@@ -70,10 +73,10 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
   }
 
   async findCompanies(query: CompanyListRepoDto): Promise<{
-		companies: PersistCompanyEntity[];
-		totalItemCount: number;
-	}> {
-		try {
+    companies: PersistCompanyEntity[];
+    totalItemCount: number;
+  }> {
+    try {
       const { offset, limit, keyword, searchBy } = query;
       const queryMode: Prisma.QueryMode = "insensitive";
 
@@ -82,10 +85,14 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
       if (keyword) {
         switch (searchBy) {
           case "companyName":
-            whereCondition = { companyName: { contains: keyword, mode: queryMode } };
+            whereCondition = {
+              companyName: { contains: keyword, mode: queryMode },
+            };
             break;
           case "companyCode":
-            whereCondition = { companyCode: { contains: keyword, mode: queryMode } };
+            whereCondition = {
+              companyCode: { contains: keyword, mode: queryMode },
+            };
             break;
           default:
             whereCondition = {
@@ -109,7 +116,7 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
         },
       });
 
-      const companies = records.map((record) => 
+      const companies = records.map((record) =>
         CompanyMapper.toPersistEntity(record),
       );
 
@@ -127,11 +134,11 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
       throw err;
     }
   }
-	
-	async findUsers(query: UserListRepoDto): Promise<{
-		users: PersistUserEntityWithCompany[];
-		totalItemCount: number;
-	}> {
+
+  async findUsers(query: UserListRepoDto): Promise<{
+    users: PersistUserEntityWithCompany[];
+    totalItemCount: number;
+  }> {
     try {
       const { offset, limit, keyword, searchBy } = query;
       const queryMode: Prisma.QueryMode = "insensitive";
@@ -141,7 +148,9 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
       if (keyword) {
         switch (searchBy) {
           case "companyName":
-            whereCondition = { company: { companyName: { contains: keyword, mode: queryMode } } };
+            whereCondition = {
+              company: { companyName: { contains: keyword, mode: queryMode } },
+            };
             break;
           case "name":
             whereCondition = { name: { contains: keyword, mode: queryMode } };
@@ -152,7 +161,11 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
           default:
             whereCondition = {
               OR: [
-                { company: { companyName: { contains: keyword, mode: queryMode } } },
+                {
+                  company: {
+                    companyName: { contains: keyword, mode: queryMode },
+                  },
+                },
                 { name: { contains: keyword, mode: queryMode } },
                 { email: { contains: keyword, mode: queryMode } },
               ],
@@ -175,9 +188,7 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
         },
       });
 
-      const users = records.map((record) =>
-        UserMapper.toPersistEntity(record),
-      );
+      const users = records.map((record) => UserMapper.toPersistEntity(record));
 
       return { users, totalItemCount };
     } catch (err) {
@@ -285,7 +296,7 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
           });
         }
       }
-      
+
       throw err;
     }
   }

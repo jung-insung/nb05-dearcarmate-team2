@@ -23,9 +23,9 @@ export const companyFieldExceptionMap: Record<string, BusinessExceptionType> = {
   companyName: BusinessExceptionType.COMPANYNAME_FORM,
   companyCode: BusinessExceptionType.COMPANYCODE_FORM,
   page: BusinessExceptionType.BAD_REQUEST,
-	pageSize: BusinessExceptionType.BAD_REQUEST,
-	searchBy: BusinessExceptionType.BAD_REQUEST,
-	keyword: BusinessExceptionType.BAD_REQUEST,
+  pageSize: BusinessExceptionType.BAD_REQUEST,
+  searchBy: BusinessExceptionType.BAD_REQUEST,
+  keyword: BusinessExceptionType.BAD_REQUEST,
 };
 
 export const customerFieldExceptionMap: Record<string, BusinessExceptionType> =
