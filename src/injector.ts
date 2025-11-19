@@ -28,6 +28,7 @@ import { AuthService } from "./2_domain/services/auth.service";
 import { AuthController } from "./1_inbound/controllers/auth.controller";
 import { TokenUtil } from "./4_shared/utils/token.util";
 import { AuthMiddleware } from "./1_inbound/middlewares/auth.middleware";
+import { CustomerRouter } from "./1_inbound/routers/coustomer.router";
 
 export class Injector {
   private _server: Server;
@@ -77,7 +78,7 @@ export class Injector {
     const authRouter = new AuthRouter(authController);
     const userRouter = new UserRouter(userController, authMiddleware);
     const companyRouter = new CompanyRouter(companyController);
-
+    
     return new Server(
       authRouter,
       userRouter,
