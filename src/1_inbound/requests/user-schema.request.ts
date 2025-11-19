@@ -53,7 +53,7 @@ export const registerUserReqSchema = z.object({
 });
 
 export const updateUserReqSchema = z.object({
-  // userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
+  userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
 
   body: z.object({
     employeeNumber: z

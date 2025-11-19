@@ -37,13 +37,41 @@ export class UserRepo extends BaseRepo implements IUserRepo {
 
   async findUserByEmail(
     email: string,
+    lockType?: LockType,
   ): Promise<PersistUserEntityWithCompany | null> {
+    if (!lockType) {
+      const foundUser = await this._prisma.user.findUnique({
+        where: { email },
+        include: this._includeOption,
+      });
+
+      return foundUser ? UserMapper.toPersistEntity(foundUser) : null;
+    }
+
+    let query: Prisma.Sql;
+    switch (lockType) {
+      case "share":
+        query = Prisma.sql`SELECT * FROM "User" WHERE email = ${email} FOR SHARE`;
+        break;
+      case "beta":
+        query = Prisma.sql`SELECT * FROM "User" WHERE email = ${email} FOR UPDATE`;
+        break;
+      default:
+        throw new Error("유효하지 않은 잠금입니다.");
+    }
+
+    const users = await this._prisma.$queryRaw<User[]>(query);
+
+    if (users.length !== 1) {
+      return null;
+    }
+
     const foundUser = await this._prisma.user.findUnique({
       where: { email },
       include: this._includeOption,
     });
 
-    return foundUser ? UserMapper.toPersistEntity(foundUser) : null;
+    return UserMapper.toPersistEntity(foundUser!);
   }
 
   async findUserById(
