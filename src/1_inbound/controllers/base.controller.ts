@@ -6,7 +6,6 @@ import { BusinessExceptionType } from "../../4_shared/exceptions/business.except
 export type ControllerHandler = (
   req: Request,
   res: Response,
-  next: NextFunction,
 ) => Promise<Response<any>>;
 
 export class BaseController {

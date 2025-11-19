@@ -12,10 +12,10 @@ export class BcryptHashManager implements IBcryptHashManager {
     return await bcrypt.hash(password, salt);
   }
 
-  async verifyPassword(
-    plainPassword: string,
-    hashedPasswordFromDB: string,
+  async compare(
+    inputValue: string,
+    hashedValueFromDB: string,
   ): Promise<boolean> {
-    return await bcrypt.compare(plainPassword, hashedPasswordFromDB);
+    return await bcrypt.compare(inputValue, hashedValueFromDB);
   }
 }

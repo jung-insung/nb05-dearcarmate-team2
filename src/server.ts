@@ -5,16 +5,16 @@ import { LoggerMiddleware } from "./1_inbound/middlewares/logger.middleware";
 import { JsonMiddleware } from "./1_inbound/middlewares/json.middleware";
 import { GlobalErrorMiddleware } from "./1_inbound/middlewares/global-error.middleware";
 
-import { IUserRepo } from "./2_domain/port/repos/user.repo.interface";
-
 import { UserRouter } from "./1_inbound/routers/user.router";
 import { CompanyRouter } from "./1_inbound/routers/company.router";
 
 import { NotFoundMiddleware } from "./1_inbound/middlewares/not-found.middleware";
+import { AuthRouter } from "./1_inbound/routers/auth.router";
 export class Server {
   private _app;
 
   constructor(
+    private _authRouter: AuthRouter,
     private _userRouter: UserRouter,
     private _companyRouter: CompanyRouter,
     private _configUtil: IConfigUtil,
@@ -41,6 +41,7 @@ export class Server {
     this._app.use(this._jsonMiddleware.handler());
 
     // routers
+    this._app.use(this._authRouter.basePath, this._authRouter.router);
     this._app.use(this._userRouter.basePath, this._userRouter.router);
     this._app.use(this._companyRouter.basePath, this._companyRouter.router);
 

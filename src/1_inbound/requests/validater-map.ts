@@ -1,5 +1,10 @@
-import { email } from "zod";
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
+
+export const authFieldExceptionMap: Record<string, BusinessExceptionType> = {
+  email: BusinessExceptionType.EMAIL_FORM,
+  password: BusinessExceptionType.PASSWORD_FORM,
+  refreshToken: BusinessExceptionType.REFRESH_FORM,
+};
 
 export const userFieldExceptionMap: Record<string, BusinessExceptionType> = {
   userId: BusinessExceptionType.USERID_FORM,

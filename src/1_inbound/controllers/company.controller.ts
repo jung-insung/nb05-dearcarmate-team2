@@ -9,7 +9,10 @@ import {
 } from "../requests/company-schema.request";
 import { companyFieldExceptionMap } from "../requests/validater-map";
 
-export class CompanyController extends BaseController implements ICompanyController {
+export class CompanyController
+  extends BaseController
+  implements ICompanyController
+{
   constructor(private _companyService: ICompanyService) {
     super();
   }

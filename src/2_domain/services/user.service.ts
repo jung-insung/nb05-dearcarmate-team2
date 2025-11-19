@@ -79,11 +79,9 @@ export class UserService implements IUserService {
     dto: UpdateUserReqDto,
   ): Promise<PersistUserEntityWithCompany> {
     const { body } = dto;
-    const id = 1; // 테스트용
 
     return await this._unitOfWork.do(async (txRepos) => {
-      //const foundUser = await txRepos.user.findUserById(dto.userId);
-      const foundUser = await txRepos.user.findUserById(id);
+      const foundUser = await txRepos.user.findUserById(dto.userId);
       if (!foundUser) {
         throw new BusinessException({
           type: BusinessExceptionType.USER_NOT_EXIST,
@@ -117,8 +115,7 @@ export class UserService implements IUserService {
       }
 
       const updatedUser = UserEntity.updateUser({
-        //id: dto.userId,
-        id,
+        id: dto.userId,
         name: foundUser.name,
         email: foundUser.email,
         employeeNumber: body.employeeNumber,
