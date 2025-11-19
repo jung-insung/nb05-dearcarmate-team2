@@ -8,6 +8,16 @@ export class CompanyRouter extends BaseRouter {
   }
 
   registerCompanyRouter() {
+    this.router.get(
+			"/",
+			this.catch(this._companyController.getCompanyList),
+		);
+
+		this.router.get(
+			"/users",
+			this.catch(this._companyController.getUserList),
+		);
+
     this.router.post("/", this.catch(this._companyController.createCompany));
 
     this.router.patch(

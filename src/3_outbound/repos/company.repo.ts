@@ -7,8 +7,11 @@ import {
   PersistCompanyEntity,
 } from "../../2_domain/entities/company/company.entity";
 import { CompanyMapper } from "../mappers/company.mapper";
+import { UserMapper, PersistUserEntityWithCompany } from "../mappers/user.mapper";
 import {
   ICompanyRepo,
+  CompanyListRepoDto,
+  UserListRepoDto,
   LockType,
 } from "../../2_domain/port/repos/company.repo.interface";
 
@@ -64,6 +67,131 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
     });
 
     return foundCompany ? CompanyMapper.toPersistEntity(foundCompany) : null;
+  }
+
+  async findCompanies(query: CompanyListRepoDto): Promise<{
+		companies: PersistCompanyEntity[];
+		totalItemCount: number;
+	}> {
+		try {
+      const { offset, limit, keyword, searchBy } = query;
+      const queryMode: Prisma.QueryMode = "insensitive";
+
+      let whereCondition: Prisma.CompanyWhereInput = {};
+
+      if (keyword) {
+        switch (searchBy) {
+          case "companyName":
+            whereCondition = { companyName: { contains: keyword, mode: queryMode } };
+            break;
+          case "companyCode":
+            whereCondition = { companyCode: { contains: keyword, mode: queryMode } };
+            break;
+          default:
+            whereCondition = {
+              OR: [
+                { companyName: { contains: keyword, mode: queryMode } },
+                { companyCode: { contains: keyword, mode: queryMode } },
+              ],
+            };
+        }
+      }
+
+      const totalItemCount = await this._prisma.company.count({
+        where: whereCondition,
+      });
+      const records = await this._prisma.company.findMany({
+        skip: offset,
+        take: limit,
+        where: whereCondition,
+        orderBy: {
+          createdAt: "asc",
+        },
+      });
+
+      const companies = records.map((record) => 
+        CompanyMapper.toPersistEntity(record),
+      );
+
+      return { companies, totalItemCount };
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === "P2025") {
+          throw new TechnicalException({
+            type: TechnicalExceptionType.UNKNOWN_SERVER_ERROR,
+            error: err,
+          });
+        }
+      }
+
+      throw err;
+    }
+  }
+	
+	async findUsers(query: UserListRepoDto): Promise<{
+		users: PersistUserEntityWithCompany[];
+		totalItemCount: number;
+	}> {
+    try {
+      const { offset, limit, keyword, searchBy } = query;
+      const queryMode: Prisma.QueryMode = "insensitive";
+
+      let whereCondition: Prisma.UserWhereInput = {};
+
+      if (keyword) {
+        switch (searchBy) {
+          case "companyName":
+            whereCondition = { company: { companyName: { contains: keyword, mode: queryMode } } };
+            break;
+          case "name":
+            whereCondition = { name: { contains: keyword, mode: queryMode } };
+            break;
+          case "email":
+            whereCondition = { email: { contains: keyword, mode: queryMode } };
+            break;
+          default:
+            whereCondition = {
+              OR: [
+                { company: { companyName: { contains: keyword, mode: queryMode } } },
+                { name: { contains: keyword, mode: queryMode } },
+                { email: { contains: keyword, mode: queryMode } },
+              ],
+            };
+        }
+      }
+
+      const totalItemCount = await this._prisma.user.count({
+        where: whereCondition,
+      });
+      const records = await this._prisma.user.findMany({
+        skip: offset,
+        take: limit,
+        where: whereCondition,
+        orderBy: {
+          createdAt: "asc",
+        },
+        include: {
+          company: true,
+        },
+      });
+
+      const users = records.map((record) =>
+        UserMapper.toPersistEntity(record),
+      );
+
+      return { users, totalItemCount };
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === "P2025") {
+          throw new TechnicalException({
+            type: TechnicalExceptionType.UNKNOWN_SERVER_ERROR,
+            error: err,
+          });
+        }
+      }
+
+      throw err;
+    }
   }
 
   async createCompany(entity: NewCompanyEntity): Promise<PersistCompanyEntity> {
@@ -157,6 +285,7 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
           });
         }
       }
+      
       throw err;
     }
   }
