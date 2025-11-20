@@ -82,7 +82,7 @@ export class UserController extends BaseController implements IUserController {
   ): Promise<Response<any>> => {
     const reqDto = this.validateOrThrow(
       deleteUserReqSchema,
-      { userId: req.userId },
+      { params: req.params, userId: req.userId },
       userFieldExceptionMap,
     );
 

@@ -1,5 +1,6 @@
 import { IUserService } from "../../1_inbound/port/services/user.service.interface";
 import {
+  DeleteUserReqDto,
   GetUserReqDto,
   RegisterUserReqDto,
   UpdateUserReqDto,
@@ -168,9 +169,9 @@ export class UserService implements IUserService {
     return foundUser;
   }
 
-  async deleteUser(dto: GetUserReqDto): Promise<void> {
+  async deleteUser(dto: DeleteUserReqDto): Promise<void> {
     await this._unitOfWork.do(async (repos) => {
-      const foundUser = await repos.user.findUserById(dto.userId);
+      const foundUser = await repos.user.findUserById(dto.params.userId);
 
       if (!foundUser) {
         throw new BusinessException({
@@ -178,7 +179,9 @@ export class UserService implements IUserService {
         });
       }
 
-      if (!foundUser.isAdmin) {
+      const foundAdmin = await repos.user.findUserById(dto.userId);
+
+      if (!foundAdmin?.isAdmin) {
         throw new BusinessException({
           type: BusinessExceptionType.NOT_ADMIN
         })
