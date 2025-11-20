@@ -14,7 +14,7 @@ export interface ICustomerConteroller {
 }
 
 export class CustomerController extends BaseController {
-  constructo r(private _customerService: ICustomerService) {
+  constructor(private _customerService: ICustomerService) {
     super();
   }
 
@@ -27,8 +27,8 @@ export class CustomerController extends BaseController {
     );
 
     const newCusotmer = await this._customerService.registCustomer(
-      companyId,
       reqDto,
+      companyId,
     );
 
     res.status(201).json(newCusotmer);
@@ -44,7 +44,7 @@ export class CustomerController extends BaseController {
 
     const updatedCustomer = await this._customerService.updateCustomer(
       customerId,
-      reqDto,
+      reqDto
     );
 
     res.status(200).json(updatedCustomer);
@@ -52,7 +52,7 @@ export class CustomerController extends BaseController {
 
   async deleteCusomer(req: Request, res: Response): Promise<void> {
     const { customerId } = req.params;
-    await this._customerService.deleteCusomer(customerId);
+    await this._customerService.deleteCustomer(customerId);
 
     res.status(200).json({ message: "고객 삭제 성공" });
   }
