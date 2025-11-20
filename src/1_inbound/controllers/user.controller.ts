@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { BaseController, ControllerHandler } from "./base.controller";
 import { userFieldExceptionMap } from "../requests/validater-map";
 import {
@@ -20,7 +20,7 @@ export interface IUserController {
   deleteUserController: ControllerHandler;
 }
 
-export class UserController extends BaseController {
+export class UserController extends BaseController implements IUserController {
   constructor(private _userService: IUserService) {
     super();
   }
@@ -28,7 +28,6 @@ export class UserController extends BaseController {
   signUpUserController = async (
     req: Request,
     res: Response,
-    next: NextFunction,
   ): Promise<Response<any>> => {
     const reqDto = this.validateOrThrow(
       registerUserReqSchema,
@@ -46,7 +45,6 @@ export class UserController extends BaseController {
   updateUserController = async (
     req: Request,
     res: Response,
-    next: NextFunction,
   ): Promise<Response<any>> => {
     const reqDto = this.validateOrThrow(
       updateUserReqSchema,
@@ -64,7 +62,6 @@ export class UserController extends BaseController {
   getUserController = async (
     req: Request,
     res: Response,
-    next: NextFunction,
   ): Promise<Response<any>> => {
     const reqDto = this.validateOrThrow(
       getUserReqSchema,
@@ -82,7 +79,6 @@ export class UserController extends BaseController {
   deleteUserController = async (
     req: Request,
     res: Response,
-    next: NextFunction,
   ): Promise<Response<any>> => {
     const reqDto = this.validateOrThrow(
       deleteUserReqSchema,

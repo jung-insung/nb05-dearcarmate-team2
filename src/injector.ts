@@ -23,6 +23,12 @@ import { NotFoundMiddleware } from "./1_inbound/middlewares/not-found.middleware
 import { BcryptHashManager } from "./3_outbound/managers/bcrypt-hash.manager";
 import { UnitOfWork } from "./3_outbound/unit-of-work";
 import { RepoFactory } from "./3_outbound/repo-factory";
+import { AuthRouter } from "./1_inbound/routers/auth.router";
+import { AuthService } from "./2_domain/services/auth.service";
+import { AuthController } from "./1_inbound/controllers/auth.controller";
+import { TokenUtil } from "./4_shared/utils/token.util";
+import { AuthMiddleware } from "./1_inbound/middlewares/auth.middleware";
+import { CustomerRouter } from "./1_inbound/routers/coustomer.router";
 
 export class Injector {
   private _server: Server;
@@ -38,6 +44,7 @@ export class Injector {
     const prisma = new PrismaClient();
 
     const configUtil = new ConfigUtil();
+    const tokenUtil = new TokenUtil(configUtil);
 
     const bcryptHashManger = new BcryptHashManager(configUtil);
 
@@ -54,16 +61,26 @@ export class Injector {
 
     const unitOfWork = new UnitOfWork(prisma, repoFactory, configUtil);
 
+    const authService = new AuthService(
+      unitOfWork,
+      bcryptHashManger,
+      tokenUtil,
+    );
     const userService = new UserService(unitOfWork, bcryptHashManger);
     const companyService = new CompanyService(unitOfWork);
 
+    const authController = new AuthController(authService);
     const userController = new UserController(userService);
     const companyController = new CompanyController(companyService);
 
-    const userRouter = new UserRouter(userController);
-    const companyRouter = new CompanyRouter(companyController);
+    const authMiddleware = new AuthMiddleware(tokenUtil);
 
+    const authRouter = new AuthRouter(authController);
+    const userRouter = new UserRouter(userController, authMiddleware);
+    const companyRouter = new CompanyRouter(companyController);
+    
     return new Server(
+      authRouter,
       userRouter,
       companyRouter,
       configUtil,

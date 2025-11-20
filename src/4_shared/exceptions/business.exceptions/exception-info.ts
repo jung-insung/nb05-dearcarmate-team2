@@ -15,6 +15,7 @@ export enum BusinessExceptionType {
   IMAGEURL_FORM,
   COMPANYNAME_FORM,
   COMPANYCODE_FORM,
+  REFRESH_FORM,
   INVALID_REQUEST,
   NOT_FOUND,
   EMAIL_DUPLICATE,
@@ -27,6 +28,11 @@ export enum BusinessExceptionType {
   CUSTOMER_NOT_EXIST,
   CUSTOMER_DATA_CHANGED,
   CUSTOMER_DATA_ARLEADY_DELETE,
+  TOKEN_EXPIRED,
+  TOKEN_MISMATCH,
+  INVALID_AUTH,
+  USERID_NOT_EXIST,
+  REFRESHTOKEN_MISMATCH,
 }
 
 export const BusinessExceptionTable: Record<
@@ -98,6 +104,10 @@ export const BusinessExceptionTable: Record<
     statusCode: 400,
     message: "회사코드 양식이 안 맞습니다.",
   },
+  [BusinessExceptionType.REFRESH_FORM]: {
+    statusCode: 400,
+    message: "리플래쉬 토큰 양식이 안 맞습니다.",
+  },
   [BusinessExceptionType.SIGNUP_PASSWORD_MISMATCH]: {
     statusCode: 401,
     message: "비밀번호와 비밀번호 확인이 서로 다릅니다.",
@@ -105,6 +115,14 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.PASSWORD_MISMATCH]: {
     statusCode: 401,
     message: "비밀번호가 일치하지 않습니다.",
+  },
+  [BusinessExceptionType.REFRESHTOKEN_MISMATCH]: {
+    statusCode: 401,
+    message: "리플래쉬 토큰이 일치하지 않습니다.",
+  },
+  [BusinessExceptionType.INVALID_AUTH]: {
+    statusCode: 401,
+    message: "인증이 유효하지 않습니다.",
   },
 
   // 존재 유무
@@ -119,6 +137,9 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.CUSTOMER_NOT_EXIST]: {
     statusCode: 404,
     message: "고객정보가 존재하지 않습니다.",
+  [BusinessExceptionType.USERID_NOT_EXIST]: {
+    statusCode: 404,
+    message: "페이로드에 유저ID가 없습니다.",
   },
 
   // 중복, 충돌
@@ -151,5 +172,13 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.NOT_FOUND]: {
     statusCode: 404,
     message: "클라이언트가 요청한 경로가 없습니다.",
+  },
+  [BusinessExceptionType.TOKEN_EXPIRED]: {
+    statusCode: 401,
+    message: "토큰이 만료되었습니다",
+  },
+  [BusinessExceptionType.TOKEN_MISMATCH]: {
+    statusCode: 401,
+    message: "올바른 토큰이 아닙니다.",
   },
 };

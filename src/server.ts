@@ -10,14 +10,16 @@ import { CompanyRouter } from "./1_inbound/routers/company.router";
 import { CustomerRouter } from "./1_inbound/routers/coustomer.router";
 
 import { NotFoundMiddleware } from "./1_inbound/middlewares/not-found.middleware";
+import { AuthRouter } from "./1_inbound/routers/auth.router";
 
 export class Server {
   private _app;
 
   constructor(
+    private _authRouter: AuthRouter,
     private _userRouter: UserRouter,
     private _companyRouter: CompanyRouter,
-    private _customerRouter: CustomerRouter,
+    // private _customerRouter: CustomerRouter,
     private _configUtil: IConfigUtil,
     private _corsMiddleware: CorsMiddleware,
     private _loggerMiddleware: LoggerMiddleware,
@@ -42,10 +44,10 @@ export class Server {
     this._app.use(this._jsonMiddleware.handler());
 
     // routers
+    this._app.use(this._authRouter.basePath, this._authRouter.router);
     this._app.use(this._userRouter.basePath, this._userRouter.router);
     this._app.use(this._companyRouter.basePath, this._companyRouter.router);
-    this._app.use(this._customerRouter.basePath, this._customerRouter.router);
-
+    // this._app.use(this._customerRouter.basePath, this._customerRouter.router);
     this._app.use(this._notFoundMiddleware.handler());
     this._app.use(this._globalErrorMiddleware.handler);
     this.listen();
