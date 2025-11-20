@@ -7,10 +7,10 @@ import { PersistUserEntityWithCompany } from "../../../3_outbound/mappers/user.m
 export type LockType = "share" | "beta";
 
 interface BaseListRepo {
-	offset: number;
-	limit: number;
-	keyword?: string;
-	searchBy?: string;
+  offset: number;
+  limit: number;
+  keyword?: string;
+  searchBy?: string;
 }
 
 export interface CompanyListRepoDto extends BaseListRepo {}
@@ -30,14 +30,14 @@ export interface ICompanyRepo {
   ): Promise<PersistCompanyEntity | null>;
 
   findCompanies(query: CompanyListRepoDto): Promise<{
-		companies: PersistCompanyEntity[];
-		totalItemCount: number;
-	}>;
+    companies: PersistCompanyEntity[];
+    totalItemCount: number;
+  }>;
 
-	findUsers(query: UserListRepoDto): Promise<{
-		users: PersistUserEntityWithCompany[];
-		totalItemCount: number;
-	}>;
+  findUsers(query: UserListRepoDto): Promise<{
+    users: PersistUserEntityWithCompany[];
+    totalItemCount: number;
+  }>;
 
   createCompany(entity: NewCompanyEntity): Promise<PersistCompanyEntity>;
 

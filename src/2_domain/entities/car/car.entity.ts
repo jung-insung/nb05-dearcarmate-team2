@@ -24,8 +24,9 @@ export type PersistCarRecord = CreateCarData & {
 
 export class CarEntity {
   static fromPersistence(record: PersistCarRecord): CarEntity {
-    throw new Error("Method not implemented.");
+    return new CarEntity(record);
   }
+
   private readonly _id?: number;
   private readonly _companyId: number;
 
@@ -51,6 +52,7 @@ export class CarEntity {
       | Omit<PersistCarRecord, "id" | "createdAt" | "updatedAt">,
   ) {
     this._id = "id" in attrs ? attrs.id : undefined;
+
     this._carNumber = attrs.carNumber;
     this._manufacturer = attrs.manufacturer;
     this._model = attrs.model;
@@ -64,6 +66,7 @@ export class CarEntity {
     this._status = attrs.status;
     this._version = attrs.version;
     this._companyId = attrs.companyId;
+
     this._createdAt = "createdAt" in attrs ? attrs.createdAt : undefined;
     this._updatedAt = "updatedAt" in attrs ? attrs.updatedAt : undefined;
   }
@@ -139,7 +142,11 @@ export class CarEntity {
 
   static update(existing: CarEntity, req: Partial<CreateCarData>): CarEntity {
     const base = existing.toPersistence();
-    const merged = { ...base, ...req, version: existing.version + 1 };
+    const merged = {
+      ...base,
+      ...req,
+      version: existing.version + 1,
+    };
 
     if (req.model || req.manufacturer) {
       merged.type = CarEntity.calculateType(
@@ -152,7 +159,7 @@ export class CarEntity {
   }
 
   private static calculateType(
-    manufacturer: CarManufacturer,
+    _manufacturer: CarManufacturer,
     model: string,
   ): CarType {
     if (["스파크"].includes(model)) return CarType.COMPACT;
@@ -176,6 +183,11 @@ export class CarEntity {
       version: this._version,
       companyId: this._companyId,
     };
+  }
+
+  // updateMany 조건용
+  toUpdateData(): Omit<PersistCarRecord, "id" | "createdAt" | "updatedAt"> {
+    return this.toCreateData();
   }
 
   toPersistence(): PersistCarRecord {

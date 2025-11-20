@@ -17,6 +17,7 @@ import {
 
 export type PersistDBUser = User & {
   company: {
+    id: number;
     companyName: string;
   };
 };
@@ -29,6 +30,7 @@ export class UserRepo extends BaseRepo implements IUserRepo {
     this._includeOption = {
       company: {
         select: {
+          id: true,
           companyName: true,
         },
       },

@@ -2,7 +2,7 @@ import { CarManufacturer } from "@prisma/client";
 import {
   RegisterCarReq,
   UpdateCarReq,
-} from "../../1_inbound/requests/car.request";
+} from "../../1_inbound/requests/car-schema.request";
 import {
   CarEntity,
   PersistCarRecord,

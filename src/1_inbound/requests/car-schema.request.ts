@@ -16,7 +16,9 @@ export const registerCarSchema = z.object({
   accidentDetails: z.string().trim().optional(),
 });
 
-export const updateCarSchema = registerCarSchema.partial();
+export const updateCarSchema = registerCarSchema
+  .partial()
+  .extend({ version: z.number().int().optional() });
 
 export type RegisterCarReq = z.infer<typeof registerCarSchema>;
 export type UpdateCarReq = z.infer<typeof updateCarSchema>;
