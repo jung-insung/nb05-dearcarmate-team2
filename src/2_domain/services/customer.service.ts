@@ -17,7 +17,7 @@ import { BaseService } from "./base.service";
 
 export class CustomerService extends BaseService implements ICustomerService {
   constructor(unitOfWork: IUnitOfWork) {
-    super(unitOfWork)
+    super(unitOfWork);
   }
 
   async registCustomer(params: {
@@ -52,7 +52,7 @@ export class CustomerService extends BaseService implements ICustomerService {
         page,
         pageSize,
         searchBy,
-        keyword
+        keyword,
       });
 
     return {
@@ -122,10 +122,7 @@ export class CustomerService extends BaseService implements ICustomerService {
     }
   }
 
-  async uploadCustomers(params: {
-    userId: number;
-    req: any;
-  }): Promise<void> {
+  async uploadCustomers(params: { userId: number; req: any }): Promise<void> {
     const { userId, req } = params;
     const companyId = await this._getCompanyId(userId);
     await this._unitOfWork.repos.customer.upload({

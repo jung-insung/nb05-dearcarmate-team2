@@ -3,7 +3,8 @@ import { ICompanyController } from "../port/controllers/company.controller.inter
 import { AuthMiddleware } from "../middlewares/auth.middleware";
 
 export class CompanyRouter extends BaseRouter {
-  constructor(private _companyController: ICompanyController,
+  constructor(
+    private _companyController: ICompanyController,
     private _authMiddleware: AuthMiddleware,
   ) {
     super("/companies");
@@ -14,17 +15,20 @@ export class CompanyRouter extends BaseRouter {
     this.router.get(
       "/",
       this._authMiddleware.isUserAuthenticate,
-      this.catch(this._companyController.getCompanyList));
+      this.catch(this._companyController.getCompanyList),
+    );
 
     this.router.get(
       "/users",
       this._authMiddleware.isUserAuthenticate,
-      this.catch(this._companyController.getUserList));
+      this.catch(this._companyController.getUserList),
+    );
 
     this.router.post(
       "/",
       this._authMiddleware.isUserAuthenticate,
-      this.catch(this._companyController.createCompany));
+      this.catch(this._companyController.createCompany),
+    );
 
     this.router.patch(
       "/:companyId",

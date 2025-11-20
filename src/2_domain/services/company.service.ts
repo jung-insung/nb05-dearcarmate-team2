@@ -20,33 +20,31 @@ import { BaseService } from "./base.service";
 
 export class CompanyService extends BaseService implements ICompanyService {
   constructor(unitOfWork: IUnitOfWork) {
-    super(unitOfWork)
+    super(unitOfWork);
   }
 
   async getCompanyList(
     queryDto: CompanyListQueryDto,
-    userId: number
+    userId: number,
   ): Promise<CompanyListResponseDto> {
-
     return await this._unitOfWork.do(async (repos) => {
       const foundUser = await repos.user.findUserById(userId);
 
       if (!foundUser?.isAdmin) {
         throw new BusinessException({
-          type: BusinessExceptionType.NOT_ADMIN
-        })
+          type: BusinessExceptionType.NOT_ADMIN,
+        });
       }
 
       const { page, pageSize, keyword, searchBy } = queryDto;
       const limit = pageSize;
       const offset = (page - 1) * pageSize;
-      const { companies, totalItemCount } =
-        await repos.company.findCompanies({
-          offset,
-          limit,
-          keyword,
-          searchBy,
-        });
+      const { companies, totalItemCount } = await repos.company.findCompanies({
+        offset,
+        limit,
+        keyword,
+        searchBy,
+      });
 
       const totalPages = Math.max(1, Math.ceil(totalItemCount / limit));
 
@@ -65,31 +63,32 @@ export class CompanyService extends BaseService implements ICompanyService {
         totalItemCount: totalItemCount,
         data: companyDtos,
       };
-    })
+    });
   }
 
-  async getUserList(queryDto: UserListQueryDto, userId: number): Promise<UserListResponseDto> {
+  async getUserList(
+    queryDto: UserListQueryDto,
+    userId: number,
+  ): Promise<UserListResponseDto> {
     return await this._unitOfWork.do(async (repos) => {
-
       const foundUser = await repos.user.findUserById(userId);
 
       if (!foundUser?.isAdmin) {
         throw new BusinessException({
-          type: BusinessExceptionType.NOT_ADMIN
-        })
+          type: BusinessExceptionType.NOT_ADMIN,
+        });
       }
       const { page, pageSize, keyword, searchBy } = queryDto;
 
       const limit = pageSize;
       const offset = (page - 1) * pageSize;
 
-      const { users, totalItemCount } =
-        await repos.company.findUsers({
-          offset,
-          limit,
-          keyword,
-          searchBy,
-        });
+      const { users, totalItemCount } = await repos.company.findUsers({
+        offset,
+        limit,
+        keyword,
+        searchBy,
+      });
 
       const totalPages = Math.max(1, Math.ceil(totalItemCount / limit));
 
@@ -112,18 +111,20 @@ export class CompanyService extends BaseService implements ICompanyService {
         totalItemCount: totalItemCount,
         data: userDtos,
       };
-    })
+    });
   }
 
-  async createCompany(dto: CreateCompanyDto, userId: number): Promise<CompanyResponseDto> {
+  async createCompany(
+    dto: CreateCompanyDto,
+    userId: number,
+  ): Promise<CompanyResponseDto> {
     return await this._unitOfWork.do(async (repos) => {
-
       const foundUser = await repos.user.findUserById(userId);
 
       if (!foundUser?.isAdmin) {
         throw new BusinessException({
-          type: BusinessExceptionType.NOT_ADMIN
-        })
+          type: BusinessExceptionType.NOT_ADMIN,
+        });
       }
       const newEntity = CompanyEntity.createNewCom({
         companyName: dto.companyName,
@@ -132,16 +133,19 @@ export class CompanyService extends BaseService implements ICompanyService {
 
       let createdEntity: CompanyResponseDto;
       try {
-        createdEntity =
-          await repos.company.createCompany(newEntity);
+        createdEntity = await repos.company.createCompany(newEntity);
       } catch (err) {
         if (err instanceof TechnicalException) {
-          if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_NAME) {
+          if (
+            err.type === TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_NAME
+          ) {
             throw new BusinessException({
               type: BusinessExceptionType.COMPANY_NAME_DUPLICATE,
             });
           }
-          if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_CODE) {
+          if (
+            err.type === TechnicalExceptionType.UNIQUE_VIOLATION_COMPANY_CODE
+          ) {
             throw new BusinessException({
               type: BusinessExceptionType.COMPANY_CODE_DUPLICATE,
             });
@@ -157,21 +161,21 @@ export class CompanyService extends BaseService implements ICompanyService {
         companyCode: createdEntity.companyCode,
         userCount: createdEntity.userCount,
       };
-    })
+    });
   }
 
   async updateCompany(
     companyId: number,
     dto: UpdateCompanyDto,
-    userId: number
+    userId: number,
   ): Promise<CompanyResponseDto> {
     return await this._unitOfWork.do(async (repos) => {
       const foundUser = await repos.user.findUserById(userId);
 
       if (!foundUser?.isAdmin) {
         throw new BusinessException({
-          type: BusinessExceptionType.NOT_ADMIN
-        })
+          type: BusinessExceptionType.NOT_ADMIN,
+        });
       }
 
       const entity = await repos.company.findById(companyId, "beta");
@@ -227,8 +231,8 @@ export class CompanyService extends BaseService implements ICompanyService {
 
       if (!foundUser?.isAdmin) {
         throw new BusinessException({
-          type: BusinessExceptionType.NOT_ADMIN
-        })
+          type: BusinessExceptionType.NOT_ADMIN,
+        });
       }
       const entity = await repos.company.findById(companyId);
 
@@ -239,6 +243,6 @@ export class CompanyService extends BaseService implements ICompanyService {
       }
 
       await this._unitOfWork.repos.company.deleteCompany(companyId);
-    })
+    });
   }
 }

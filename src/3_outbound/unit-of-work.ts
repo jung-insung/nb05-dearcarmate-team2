@@ -41,7 +41,7 @@ export class UnitOfWork implements IUnitOfWork {
         console.warn(`재시도 ${i}/${maxRetries}회차`);
       }
       try {
-        if(!isTransaction){
+        if (!isTransaction) {
           return await work(this.repos);
         }
 

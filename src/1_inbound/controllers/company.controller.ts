@@ -13,7 +13,8 @@ import { companyFieldExceptionMap } from "../requests/validater-map";
 
 export class CompanyController
   extends BaseController
-  implements ICompanyController {
+  implements ICompanyController
+{
   constructor(private _companyService: ICompanyService) {
     super();
   }
@@ -64,7 +65,7 @@ export class CompanyController
     const updatedCompany = await this._companyService.updateCompany(
       params.companyId,
       body,
-      userId
+      userId,
     );
 
     return res.status(200).json(updatedCompany);

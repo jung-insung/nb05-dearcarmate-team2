@@ -114,6 +114,22 @@ export class CarService extends BaseService implements ICarService {
       carId,
     });
   }
+  async getCarModels() {
+    return [
+      {
+        manufacturer: "기아",
+        model: ["K3", "K5", "K7", "K9", "K8"],
+      },
+      {
+        manufacturer: "현대",
+        model: ["그랜저", "아반떼", "소나타", "투싼", "베뉴"],
+      },
+      {
+        manufacturer: "쉐보레",
+        model: ["스파크", "말리부", "트랙스"],
+      },
+    ];
+  }
   async uploadCars(params: { userId: number; req: any }): Promise<void> {
     const { userId, req } = params;
     const companyId = await this._getCompanyId(userId);

@@ -23,7 +23,7 @@ export class AuthService extends BaseService implements IAuthService {
     private _tokenUtil: ITokenUtil,
     unitOfWork: IUnitOfWork,
   ) {
-    super(unitOfWork)
+    super(unitOfWork);
   }
 
   async loginUser(dto: LoginReqDto): Promise<{
@@ -42,10 +42,10 @@ export class AuthService extends BaseService implements IAuthService {
         }
 
         if (
-          !await foundUser.isPasswordMatch(
+          !(await foundUser.isPasswordMatch(
             body.password,
             this._bcryptHashManager,
-          )
+          ))
         ) {
           throw new BusinessException({
             type: BusinessExceptionType.PASSWORD_MISMATCH,

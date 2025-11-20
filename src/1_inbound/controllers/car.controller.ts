@@ -82,6 +82,10 @@ export class CarController extends BaseController {
 
     return res.json({ message: "차량 삭제 성공" });
   };
+  getCarModels = async (req: Request, res: Response) => {
+    const data = await this._carService.getCarModels();
+    return res.json({ data });
+  };
 
   uploadCars = async (req: Request, res: Response) => {
     await this._carService.uploadCars({

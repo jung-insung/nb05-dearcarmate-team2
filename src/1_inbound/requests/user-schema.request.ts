@@ -95,5 +95,5 @@ export const deleteUserReqSchema = z.object({
   userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
   params: z.object({
     userId: z.coerce.number({ message: "유저 ID는 숫자이어야 합니다." }),
-  })
+  }),
 });
