@@ -5,6 +5,7 @@ import {
 } from "../../1_inbound/requests/car-schema.request";
 import { CarEntity } from "../entities/car/car.entity";
 import { CarMapper } from "../../3_outbound/mappers/car.mapper";
+import { CarCsvUtil } from "../../4_shared/utils/car-csv.util";
 import { IUnitOfWork } from "../port/unit-of-work.interface";
 import { ICarService } from "../../1_inbound/port/services/car.service.interface";
 import { BusinessException } from "../../4_shared/exceptions/business.exceptions/business.exception";
@@ -13,9 +14,9 @@ import { BaseService } from "./base.service";
 
 export class CarService extends BaseService implements ICarService {
   constructor(unitOfWork: IUnitOfWork) {
-    super(unitOfWork)
+    super(unitOfWork);
   }
-  
+
   async registerCar(params: {
     body: RegisterCarReq;
     userId: number;
@@ -72,8 +73,7 @@ export class CarService extends BaseService implements ICarService {
     });
     if (!car) {
       throw new BusinessException({
-        type: BusinessExceptionType.NOT_FOUND,
-        message: "존재하지 않는 차량입니다.",
+        type: BusinessExceptionType.CAR_NOT_EXIST,
       });
     }
     return car;
@@ -91,8 +91,7 @@ export class CarService extends BaseService implements ICarService {
     });
     if (!existing) {
       throw new BusinessException({
-        type: BusinessExceptionType.NOT_FOUND,
-        message: "존재하지 않는 차량입니다.",
+        type: BusinessExceptionType.CAR_NOT_EXIST,
       });
     }
     const updated = CarMapper.toUpdateEntity(existing, body);
@@ -107,8 +106,7 @@ export class CarService extends BaseService implements ICarService {
     });
     if (!existing) {
       throw new BusinessException({
-        type: BusinessExceptionType.NOT_FOUND,
-        message: "존재하지 않는 차량입니다.",
+        type: BusinessExceptionType.CAR_NOT_EXIST,
       });
     }
     await this._unitOfWork.repos.car.delete({
@@ -121,11 +119,35 @@ export class CarService extends BaseService implements ICarService {
     const companyId = await this._getCompanyId(userId);
     const file = req.file;
     if (!file) {
-      // 파일 없으면 그냥 비즈니스 예외 던지기
       throw new BusinessException({
-        type: BusinessExceptionType.INVALID_REQUEST,
-        message: "파일이 업로드되지 않았습니다.",
+        type: BusinessExceptionType.CAR_UPLOAD_FILE_NOT_UPLOADED,
       });
     }
+    // multer 메모리 스토리지를 사용하므로 buffer 사용
+    const content = file.buffer?.toString("utf-8");
+
+    if (!content) {
+      throw new BusinessException({
+        type: BusinessExceptionType.CAR_UPLOAD_FILE_EMPTY,
+      });
+    }
+
+    const rows = CarCsvUtil.parse(content);
+
+    if (rows.length === 0) {
+      throw new BusinessException({
+        type: BusinessExceptionType.CAR_UPLOAD_NO_VALID_DATA,
+      });
+    }
+
+    await this._unitOfWork.do(async (txRepos) => {
+      for (const row of rows) {
+        const entity = CarMapper.toCreateEntity({
+          ...row,
+          companyId,
+        });
+        await txRepos.car.create(entity);
+      }
+    }, false);
   }
 }
