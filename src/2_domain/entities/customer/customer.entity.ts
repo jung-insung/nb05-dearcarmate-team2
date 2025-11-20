@@ -12,7 +12,9 @@ export type NewCustomerEntity = Omit<
   "id" | "createdAt" | "updatedAt" | "contractCount" | "version"
 >;
 
-export type UpdateCustomerEntity = Partial<NewCustomerEntity>;
+export type UpdateCustomerEntity = Partial<NewCustomerEntity> & {
+  version: number;
+};
 
 export interface PersistCustomerEntity extends CustomerEntity {
   id: number;
