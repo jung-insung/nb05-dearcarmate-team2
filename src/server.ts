@@ -10,7 +10,6 @@ import { CompanyRouter } from "./1_inbound/routers/company.router";
 import { CustomerRouter } from "./1_inbound/routers/coustomer.router";
 import { CarRouter } from "./1_inbound/routers/car.router";
 
-
 import { NotFoundMiddleware } from "./1_inbound/middlewares/not-found.middleware";
 import { AuthRouter } from "./1_inbound/routers/auth.router";
 

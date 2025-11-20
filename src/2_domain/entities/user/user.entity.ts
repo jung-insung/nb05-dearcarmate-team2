@@ -7,7 +7,10 @@ export interface NewUserEntity
   companyId: number;
 }
 
-export type NewAdminEntity = Omit<UserEntity, "id" | "createdAt" | "updatedAt" | "imageUrl" |  "companyId"> 
+export type NewAdminEntity = Omit<
+  UserEntity,
+  "id" | "createdAt" | "updatedAt" | "imageUrl" | "companyId"
+>;
 
 export type UpdateUserEntity = Omit<UserEntity, "createdAt" | "updatedAt">;
 
@@ -143,14 +146,14 @@ export class UserEntity {
     }) as NewUserEntity;
   }
 
-  static async createAdmin(params:{
+  static async createAdmin(params: {
     name: string;
     email: string;
     employeeNumber: string;
     phoneNumber: string;
     password: string;
     bcryptHashManager: IBcryptHashManager;
-  }){
+  }) {
     const {
       name,
       email,

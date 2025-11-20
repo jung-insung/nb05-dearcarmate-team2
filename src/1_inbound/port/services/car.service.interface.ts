@@ -33,6 +33,7 @@ export interface ICarService {
   }): Promise<CarEntity>;
 
   deleteCar(params: { userId: number; carId: number }): Promise<void>;
+  getCarModels(): Promise<{ manufacturer: string; model: string[] }[]>;
 
   uploadCars(params: { userId: number; req: any }): Promise<void>;
 }

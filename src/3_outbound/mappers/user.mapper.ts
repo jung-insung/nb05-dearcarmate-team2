@@ -36,7 +36,7 @@ export class UserMapper {
   static toCreateData(entity: NewUserEntity | NewAdminEntity): CreateUserData {
     let companyId: number | undefined;
 
-    if ('companyId' in entity) {
+    if ("companyId" in entity) {
       companyId = entity.companyId;
     }
 

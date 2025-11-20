@@ -19,7 +19,7 @@ export class CustomerController extends BaseController {
   }
 
   async registCustomer(req: Request, res: Response) {
-    const userId = req.userId!
+    const userId = req.userId!;
     const dto = this.validateOrThrow(
       registCustomerSchema,
       { body: req.body },
@@ -35,7 +35,7 @@ export class CustomerController extends BaseController {
   }
 
   async getCustomers(req: Request, res: Response) {
-    const userId = req.userId!
+    const userId = req.userId!;
     const page = Number(req.query.page ?? 1);
     const pageSize = Number(req.query.pageSize ?? 8);
 
@@ -81,7 +81,7 @@ export class CustomerController extends BaseController {
   }
 
   async uploadCustomers(req: Request, res: Response) {
-    const userId = req.userId!
+    const userId = req.userId!;
     await this._customerService.uploadCustomers({ userId, req });
 
     res.status(200).json({ message: "고객 정보가 등록되었습니다" });

@@ -84,7 +84,7 @@ export const updateCompanyReqSchema = z.object({
 
 export const deleteCompanyReqSchema = z.object({
   userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
-  
+
   params: z.object({
     companyId: z.coerce.number({ message: "회사 ID는 숫자여야 합니다." }),
   }),

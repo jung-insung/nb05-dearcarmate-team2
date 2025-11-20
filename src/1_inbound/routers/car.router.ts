@@ -16,6 +16,7 @@ export class CarRouter extends BaseRouter {
     this.router.get("/:carId", this.catch(this._carController.getCar));
     this.router.patch("/:carId", this.catch(this._carController.updateCar));
     this.router.delete("/:carId", this.catch(this._carController.deleteCar));
+    this.router.get("/models", this.catch(this._carController.getCarModels));
 
     // 업로드
     this.router.post(

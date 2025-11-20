@@ -116,7 +116,9 @@ export class UserRepo extends BaseRepo implements IUserRepo {
     return UserMapper.toPersistEntity(foundUser!);
   }
 
-  async create(entity: NewUserEntity | NewAdminEntity): Promise<PersistUserEntityWithCompany> {
+  async create(
+    entity: NewUserEntity | NewAdminEntity,
+  ): Promise<PersistUserEntityWithCompany> {
     try {
       const newUser = await this._prisma.user.create({
         data: {

@@ -11,7 +11,12 @@ import { BusinessExceptionType } from "../../4_shared/exceptions/business.except
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
 import { PersistCompanyEntity } from "../entities/company/company.entity";
-import { NewAdminEntity, NewUserEntity, PersistUserEntity, UserEntity } from "../entities/user/user.entity";
+import {
+  NewAdminEntity,
+  NewUserEntity,
+  PersistUserEntity,
+  UserEntity,
+} from "../entities/user/user.entity";
 import { IBcryptHashManager } from "../port/managers/bcrypt-hash.manager.interface";
 import { IUnitOfWork } from "../port/unit-of-work.interface";
 
@@ -19,7 +24,7 @@ export class UserService implements IUserService {
   constructor(
     private _unitOfWork: IUnitOfWork,
     private _bcryptHashManager: IBcryptHashManager,
-  ) { }
+  ) {}
 
   async signUpUser(
     dto: RegisterUserReqDto,
@@ -38,7 +43,6 @@ export class UserService implements IUserService {
           type: BusinessExceptionType.SIGNUP_PASSWORD_MISMATCH,
         });
       }
-
 
       const { name, email, employeeNumber, phoneNumber, password } = body;
 
@@ -59,7 +63,7 @@ export class UserService implements IUserService {
             if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_EMAIL)
               throw new BusinessException({
                 type: BusinessExceptionType.EMAIL_DUPLICATE,
-              })
+              });
           }
           throw err;
         }
@@ -92,7 +96,7 @@ export class UserService implements IUserService {
             if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_EMAIL)
               throw new BusinessException({
                 type: BusinessExceptionType.EMAIL_DUPLICATE,
-              })
+              });
           }
           throw err;
         }
@@ -183,8 +187,8 @@ export class UserService implements IUserService {
 
       if (!foundAdmin?.isAdmin) {
         throw new BusinessException({
-          type: BusinessExceptionType.NOT_ADMIN
-        })
+          type: BusinessExceptionType.NOT_ADMIN,
+        });
       }
 
       const foundCompany = await repos.company.findById(foundUser.companyId);
