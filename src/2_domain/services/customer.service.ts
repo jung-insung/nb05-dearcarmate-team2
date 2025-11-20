@@ -20,31 +20,40 @@ export class CustomerService extends BaseService implements ICustomerService {
     super(unitOfWork)
   }
 
-
   async registCustomer(params: {
     dto: RegistCustomerReq;
     userId: number;
   }): Promise<CustomerResponseDto> {
     const { dto, userId } = params;
-    const companyId = await this._unitOfWork.repos.user.findUserById(userId)
+
+    const companyId = await this._getCompanyId(userId);
 
     const entity = CustomerMapper.toNewEntity(dto, companyId);
+
     const newCusotmer = await this._unitOfWork.repos.customer.create(entity);
 
     return CustomerMapper.toResponseData(newCusotmer);
   }
 
   async getCustomers(params: {
-    companyId: number;
+    userId: number;
     page: number;
     pageSize: number;
     searchBy?: "name" | "email";
     keyword?: string;
   }): Promise<CustomerListResponseDto> {
-    const { page, pageSize } = params;
+    const { userId, page, pageSize, searchBy, keyword } = params;
+
+    const companyId = await this._getCompanyId(userId);
 
     const { data, totalItemCount } =
-      await this._unitOfWork.repos.customer.findAll(params);
+      await this._unitOfWork.repos.customer.findAll({
+        companyId,
+        page,
+        pageSize,
+        searchBy,
+        keyword
+      });
 
     return {
       currentPage: page,
@@ -114,10 +123,11 @@ export class CustomerService extends BaseService implements ICustomerService {
   }
 
   async uploadCustomers(params: {
-    companyId: number;
+    userId: number;
     req: any;
   }): Promise<void> {
-    const { companyId, req } = params;
+    const { userId, req } = params;
+    const companyId = await this._getCompanyId(userId);
     await this._unitOfWork.repos.customer.upload({
       companyId,
       req,

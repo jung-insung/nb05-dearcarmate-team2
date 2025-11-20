@@ -19,28 +19,28 @@ export class CustomerController extends BaseController {
   }
 
   async registCustomer(req: Request, res: Response) {
-    const { companyId } = req.companyId; // 토큰 추출. 인증 미들웨어에서..
-    const reqDto = this.validateOrThrow(
+    const userId = req.userId!
+    const dto = this.validateOrThrow(
       registCustomerSchema,
       { body: req.body },
       customerFieldExceptionMap,
     );
 
-    const newCusotmer = await this._customerService.registCustomer(
-      reqDto,
-      companyId,
-    );
+    const newCusotmer = await this._customerService.registCustomer({
+      dto,
+      userId,
+    });
 
     res.status(201).json(newCusotmer);
   }
 
   async getCustomers(req: Request, res: Response) {
-    const { companyId } = req.companyId;
+    const userId = req.userId!
     const page = Number(req.query.page ?? 1);
     const pageSize = Number(req.query.pageSize ?? 8);
 
     const customers = await this._customerService.getCustoemrs({
-      companyId,
+      userId,
       page,
       pageSize,
       searchBy: req.query.searchBy,
@@ -59,7 +59,7 @@ export class CustomerController extends BaseController {
 
   async updateCustomer(req: Request, res: Response) {
     const { customerId } = req.params;
-    const reqDto = this.validateOrThrow(
+    const dto = this.validateOrThrow(
       updateCustomerSchema,
       { body: req.body },
       customerFieldExceptionMap,
@@ -67,7 +67,7 @@ export class CustomerController extends BaseController {
 
     const updatedCustomer = await this._customerService.updateCustomer({
       customerId,
-      reqDto,
+      dto,
     });
 
     res.status(200).json(updatedCustomer);
@@ -81,8 +81,8 @@ export class CustomerController extends BaseController {
   }
 
   async uploadCustomers(req: Request, res: Response) {
-    const { companyId } = req.companyId;
-    await this._customerService.uploadCustomers({ companyId, req });
+    const userId = req.userId!
+    await this._customerService.uploadCustomers({ userId, req });
 
     res.status(200).json({ message: "고객 정보가 등록되었습니다" });
   }
