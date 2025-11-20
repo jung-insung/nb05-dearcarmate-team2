@@ -8,40 +8,7 @@ import {
 import { CustomerMapper } from "../mappers/customer.mapper";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
-
-export interface ICustomerRepo {
-  findById(id: number): Promise<PersistCustomerEntity | null>;
-
-  findAll(params: {
-    companyId: number;
-    page: number;
-    pageSize: number;
-    searchBy?: "name" | "email";
-    keyword?: string;
-  }): Promise<PersistCustomerEntites>;
-
-  create(entity: NewCustomerEntity): Promise<PersistCustomerEntity>;
-
-  /**
-   *
-   * @throws {TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED}
-   */
-  update(
-    id: number,
-    entity: UpdateCustomerEntity,
-  ): Promise<PersistCustomerEntity>;
-
-  /**
-   *
-   * @throws {TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED}
-   */
-  delete(id: number): Promise<void>;
-
-  /**
-   *
-   */
-  upload(params: { companyId: number; req: any }): Promise<void>;
-}
+import { ICustomerRepo } from "../../2_domain/port/repos/customer.repo.interface";
 
 export class CustomerRepo implements ICustomerRepo {
   protected _prisma;

@@ -44,6 +44,7 @@ export enum BusinessExceptionType {
   CUSTOMER_NOT_EXIST,
   CUSTOMER_DATA_CHANGED,
   CUSTOMER_DATA_ARLEADY_DELETE,
+  NOT_ADMIN,
 }
 
 export const BusinessExceptionTable: Record<
@@ -236,5 +237,9 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.TOKEN_MISMATCH]: {
     statusCode: 401,
     message: "올바른 토큰이 아닙니다.",
+  },
+  [BusinessExceptionType.NOT_ADMIN]: {
+    statusCode: 403,
+    message: "관리자가 아닙니다.",
   },
 };

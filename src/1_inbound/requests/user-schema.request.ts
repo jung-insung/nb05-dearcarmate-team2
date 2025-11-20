@@ -42,13 +42,13 @@ export const registerUserReqSchema = z.object({
 
     companyName: z
       .string({ message: "회사 이름은 문자열이어야 합니다." })
-      .nonempty({ message: "회사 이름은 필수 입력 항목입니다." })
-      .trim(),
+      .trim()
+      .optional(),
 
     companyCode: z
       .string({ message: "회사 코드는 문자열이어야 합니다." })
-      .nonempty({ message: "회사 코드는 필수 입력 항목입니다." })
-      .trim(),
+      .trim()
+      .optional(),
   }),
 });
 
@@ -93,4 +93,7 @@ export const getUserReqSchema = z.object({
 });
 export const deleteUserReqSchema = z.object({
   userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
+  params: z.object({
+    userId: z.coerce.number({ message: "유저 ID는 숫자이어야 합니다." }),
+  })
 });
