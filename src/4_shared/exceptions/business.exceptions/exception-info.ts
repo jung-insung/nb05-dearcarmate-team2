@@ -136,7 +136,7 @@ export const BusinessExceptionTable: Record<
   },
   [BusinessExceptionType.USERID_NOT_EXIST]: {
     statusCode: 404,
-    message: "페이로드에 유저ID가 없습니다."
+    message: "페이로드에 유저ID가 없습니다.",
   },
   [BusinessExceptionType.CUSTOMER_NOT_EXIST]: {
     statusCode: 404,

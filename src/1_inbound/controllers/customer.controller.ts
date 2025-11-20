@@ -44,7 +44,7 @@ export class CustomerController extends BaseController {
 
     const updatedCustomer = await this._customerService.updateCustomer(
       customerId,
-      reqDto
+      reqDto,
     );
 
     res.status(200).json(updatedCustomer);
