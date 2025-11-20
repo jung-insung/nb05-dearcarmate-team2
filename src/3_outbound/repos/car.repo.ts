@@ -1,7 +1,9 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { CarEntity } from "../../2_domain/entities/car/car.entity";
 import { ICarRepo } from "../../2_domain/port/repos/car.repo.interface";
 import { BaseRepo } from "./base.repo";
+import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
+import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 
 export class CarRepo extends BaseRepo implements ICarRepo {
   constructor(prisma: PrismaClient) {
@@ -70,13 +72,31 @@ export class CarRepo extends BaseRepo implements ICarRepo {
 
   async update(entity: CarEntity): Promise<CarEntity> {
     const data = entity.toUpdateData();
+    const { version, ...rest } = data;
+    const previousVersion = version - 1;
 
-    const record = await this._prisma.car.update({
-      where: { id: entity.id! },
-      data,
-    });
+    try {
+      const record = await this._prisma.car.update({
+        where: { id: entity.id!, version: previousVersion },
+        data: {
+          ...rest,
+          version: { increment: 1 },
+        },
+      });
 
-    return CarEntity.fromPersistence(record);
+      return CarEntity.fromPersistence(record);
+    } catch (err) {
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === "P2025"
+      ) {
+        throw new TechnicalException({
+          type: TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED,
+          error: err,
+        });
+      }
+      throw err;
+    }
   }
 
   async delete(params: { companyId: number; carId: number }): Promise<void> {
