@@ -10,17 +10,19 @@ import {
 export interface ICustomerService {
   /**
    *
+   * 고객 정보 등록
    */
   registCustomer(params: {
     dto: RegistCustomerReq;
-    companyId: number;
+    userId: number;
   }): Promise<CustomerResponseDto>;
 
   /**
    *
+   * 고객 목록 조회
    */
   getCustomers(params: {
-    companyId: number;
+    userId: number;
     page: number;
     pageSize: number;
     searchBy?: "name" | "email";
@@ -28,7 +30,7 @@ export interface ICustomerService {
   }): Promise<CustomerListResponseDto>;
 
   /**
-   *
+   * 고객 상세정보 조회
    */
   getCustomer(customerId: number): Promise<CustomerResponseDto>;
 
@@ -44,12 +46,13 @@ export interface ICustomerService {
 
   /**
    *
-   * @throws {BusinessExceptionType.CUSTOMER_DATA_ARLEADY_DELETE}
+   * 고객 삭제
+   * @throws {BusinessExceptionType.CUSTOMER_DATA_ARLEADY_DELETE} 고객이 이미 삭제되었음
    */
   deleteCustomer(customerId: number): Promise<void>;
 
   /**
    *
    */
-  uploadCustomers(params: { companyId: number; req: any }): Promise<void>;
+  uploadCustomers(params: { userId: number; req: any }): Promise<void>;
 }

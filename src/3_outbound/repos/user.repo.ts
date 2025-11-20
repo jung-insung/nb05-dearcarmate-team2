@@ -1,6 +1,7 @@
 import { Company, Prisma, User } from "@prisma/client";
 import { BasePrismaClient, BaseRepo } from "./base.repo";
 import {
+  NewAdminEntity,
   NewUserEntity,
   UpdateUserEntity,
 } from "../../2_domain/entities/user/user.entity";
@@ -16,10 +17,10 @@ import {
 } from "../../2_domain/port/repos/user.repo.interface";
 
 export type PersistDBUser = User & {
-  company: {
+  company?: {
     id: number;
     companyName: string;
-  };
+  } | null;
 };
 
 export class UserRepo extends BaseRepo implements IUserRepo {
@@ -115,7 +116,7 @@ export class UserRepo extends BaseRepo implements IUserRepo {
     return UserMapper.toPersistEntity(foundUser!);
   }
 
-  async create(entity: NewUserEntity): Promise<PersistUserEntityWithCompany> {
+  async create(entity: NewUserEntity | NewAdminEntity): Promise<PersistUserEntityWithCompany> {
     try {
       const newUser = await this._prisma.user.create({
         data: {

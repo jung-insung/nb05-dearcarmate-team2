@@ -7,6 +7,8 @@ export type UpdateCompanyReqDto = z.infer<typeof updateCompanyReqSchema>;
 export type DeleteCompanyReqDto = z.infer<typeof deleteCompanyReqSchema>;
 
 export const getCompanyListReqSchema = z.object({
+  userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
+
   query: z.object({
     page: z.coerce
       .number({ message: "페이지 번호는 숫자여야 합니다." })
@@ -25,6 +27,8 @@ export const getCompanyListReqSchema = z.object({
 });
 
 export const getUserListReqSchema = z.object({
+  userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
+
   query: z.object({
     page: z.coerce
       .number({ message: "페이지 번호는 숫자여야 합니다." })
@@ -43,6 +47,8 @@ export const getUserListReqSchema = z.object({
 });
 
 export const createCompanyReqSchema = z.object({
+  userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
+
   body: z.object({
     companyName: z
       .string({ message: "회사 이름은 문자열이어야 합니다." })
@@ -57,6 +63,8 @@ export const createCompanyReqSchema = z.object({
 });
 
 export const updateCompanyReqSchema = z.object({
+  userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
+
   params: z.object({
     companyId: z.coerce.number({ message: "회사 ID는 숫자여야 합니다." }),
   }),
@@ -75,6 +83,8 @@ export const updateCompanyReqSchema = z.object({
 });
 
 export const deleteCompanyReqSchema = z.object({
+  userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
+  
   params: z.object({
     companyId: z.coerce.number({ message: "회사 ID는 숫자여야 합니다." }),
   }),

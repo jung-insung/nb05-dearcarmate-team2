@@ -30,8 +30,13 @@ export class CarService implements ICarService {
     }
 
     return user.companyId;
-  }
+import { BaseService } from "./base.service";
 
+export class CarService extends BaseService implements ICarService {
+  constructor(unitOfWork: IUnitOfWork) {
+    super(unitOfWork)
+  }
+  
   async registerCar(params: {
     body: RegisterCarReq;
     userId: number;

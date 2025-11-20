@@ -1,5 +1,7 @@
 export class DeleteUserReqDto {
+  message: string;
+
   constructor() {
-    message: "유저 삭제 성공";
+    this.message = "유저 삭제 성공";
   }
 }
