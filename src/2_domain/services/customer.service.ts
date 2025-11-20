@@ -2,7 +2,7 @@ import {
   RegistCustomerReq,
   UpdateCustomerReq,
 } from "../../1_inbound/requests/customer-schema.request";
-import { CustomerResponseDto } from "../../1_inbound/responses/company/customer.response";
+import { CustomerResponseDto } from "../../1_inbound/responses/customer/customer.response";
 import { CustomerMapper } from "../../3_outbound/mappers/customer.mapper";
 import { BusinessException } from "../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
