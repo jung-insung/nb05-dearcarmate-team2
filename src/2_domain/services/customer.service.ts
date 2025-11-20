@@ -18,7 +18,7 @@ export interface ICustomerService {
     dto: RegistCustomerReq,
     companyId: number,
   ): Promise<CustomerResponseDto>;
-  
+
   /**
    * @param customerId
    * @param dto

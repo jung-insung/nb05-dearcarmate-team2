@@ -23,76 +23,72 @@ export class CompanyService implements ICompanyService {
   async getCompanyList(
     queryDto: CompanyListQueryDto,
   ): Promise<CompanyListResponseDto> {
-    return await this._unitOfWork.do(async (txRepos) => {
-      const { page, pageSize, keyword, searchBy } = queryDto;
-      const limit = pageSize;
-      const offset = (page - 1) * pageSize;
+    const { page, pageSize, keyword, searchBy } = queryDto;
+    const limit = pageSize;
+    const offset = (page - 1) * pageSize;
 
-      const { companies, totalItemCount } = await txRepos.company.findCompanies(
-        {
-          offset,
-          limit,
-          keyword,
-          searchBy,
-        },
-      );
-
-      const totalPages = Math.max(1, Math.ceil(totalItemCount / limit));
-
-      const companyDtos: CompanyItemDto[] = companies.map((entity) => {
-        return {
-          id: entity.id,
-          companyName: entity.companyName,
-          companyCode: entity.companyCode,
-          userCount: entity.userCount,
-        };
-      });
-
-      return {
-        currentPage: page,
-        totalPages: totalPages,
-        totalItemCount: totalItemCount,
-        data: companyDtos,
-      };
-    });
-  }
-
-  async getUserList(queryDto: UserListQueryDto): Promise<UserListResponseDto> {
-    return await this._unitOfWork.do(async (txRepos) => {
-      const { page, pageSize, keyword, searchBy } = queryDto;
-
-      const limit = pageSize;
-      const offset = (page - 1) * pageSize;
-
-      const { users, totalItemCount } = await txRepos.company.findUsers({
+    const { companies, totalItemCount } =
+      await this._unitOfWork.repos.company.findCompanies({
         offset,
         limit,
         keyword,
         searchBy,
       });
 
-      const totalPages = Math.max(1, Math.ceil(totalItemCount / limit));
+    const totalPages = Math.max(1, Math.ceil(totalItemCount / limit));
 
-      const userDtos: UserItemDto[] = users.map((entity) => {
-        return {
-          id: entity.id,
-          name: entity.name,
-          email: entity.email,
-          employeeNumber: entity.employeeNumber,
-          phoneNumber: entity.phoneNumber,
-          company: {
-            companyName: entity.company.companyName,
-          },
-        };
-      });
-
+    const companyDtos: CompanyItemDto[] = companies.map((entity) => {
       return {
-        currentPage: page,
-        totalPages: totalPages,
-        totalItemCount: totalItemCount,
-        data: userDtos,
+        id: entity.id,
+        companyName: entity.companyName,
+        companyCode: entity.companyCode,
+        userCount: entity.userCount,
       };
     });
+
+    return {
+      currentPage: page,
+      totalPages: totalPages,
+      totalItemCount: totalItemCount,
+      data: companyDtos,
+    };
+  }
+
+  async getUserList(queryDto: UserListQueryDto): Promise<UserListResponseDto> {
+    const { page, pageSize, keyword, searchBy } = queryDto;
+
+    const limit = pageSize;
+    const offset = (page - 1) * pageSize;
+
+    const { users, totalItemCount } =
+      await this._unitOfWork.repos.company.findUsers({
+        offset,
+        limit,
+        keyword,
+        searchBy,
+      });
+
+    const totalPages = Math.max(1, Math.ceil(totalItemCount / limit));
+
+    const userDtos: UserItemDto[] = users.map((entity) => {
+      return {
+        id: entity.id,
+        name: entity.name,
+        email: entity.email,
+        employeeNumber: entity.employeeNumber,
+        phoneNumber: entity.phoneNumber,
+        company: {
+          companyName: entity.company.companyName,
+        },
+      };
+    });
+
+    return {
+      currentPage: page,
+      totalPages: totalPages,
+      totalItemCount: totalItemCount,
+      data: userDtos,
+    };
   }
 
   async createCompany(dto: CreateCompanyDto): Promise<CompanyResponseDto> {
