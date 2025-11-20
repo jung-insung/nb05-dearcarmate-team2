@@ -29,7 +29,6 @@ export class CustomerService extends BaseService implements ICustomerService {
     const companyId = await this._getCompanyId(userId);
 
     const entity = CustomerMapper.toNewEntity(dto, companyId);
-
     const newCusotmer = await this._unitOfWork.repos.customer.create(entity);
 
     return CustomerMapper.toResponseData(newCusotmer);
