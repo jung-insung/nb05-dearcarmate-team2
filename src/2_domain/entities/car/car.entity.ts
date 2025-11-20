@@ -52,7 +52,6 @@ export class CarEntity {
       | Omit<PersistCarRecord, "id" | "createdAt" | "updatedAt">,
   ) {
     this._id = "id" in attrs ? attrs.id : undefined;
-
     this._carNumber = attrs.carNumber;
     this._manufacturer = attrs.manufacturer;
     this._model = attrs.model;
@@ -66,7 +65,6 @@ export class CarEntity {
     this._status = attrs.status;
     this._version = attrs.version;
     this._companyId = attrs.companyId;
-
     this._createdAt = "createdAt" in attrs ? attrs.createdAt : undefined;
     this._updatedAt = "updatedAt" in attrs ? attrs.updatedAt : undefined;
   }
