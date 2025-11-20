@@ -9,30 +9,13 @@ import { IUnitOfWork } from "../port/unit-of-work.interface";
 import { ICarService } from "../../1_inbound/port/services/car.service.interface";
 import { BusinessException } from "../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
+import { BaseService } from "./base.service";
 
-export class CarService implements ICarService {
-  constructor(private readonly _unitOfWork: IUnitOfWork) {}
-
-  private async _getCompanyId(userId: number) {
-    const user = await this._unitOfWork.repos.user.findUserById(userId);
-
-    if (!user) {
-      throw new BusinessException({
-        type: BusinessExceptionType.NOT_FOUND,
-        message: "존재하지 않는 사용자입니다.",
-      });
-    }
-
-    if (!user.companyId) {
-      throw new BusinessException({
-        type: BusinessExceptionType.COMPANY_NOT_EXIST,
-        message: "사용자에 소속된 회사 정보를 찾을 수 없습니다.",
-      });
-    }
-
-    return user.companyId;
+export class CarService extends BaseService implements ICarService {
+  constructor(unitOfWork: IUnitOfWork) {
+    super(unitOfWork)
   }
-
+  
   async registerCar(params: {
     body: RegisterCarReq;
     userId: number;

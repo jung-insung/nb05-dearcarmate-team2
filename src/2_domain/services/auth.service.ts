@@ -10,18 +10,21 @@ import { BusinessExceptionType } from "../../4_shared/exceptions/business.except
 import { ITokenUtil } from "../../4_shared/utils/token.util";
 import { IBcryptHashManager } from "../port/managers/bcrypt-hash.manager.interface";
 import { IUnitOfWork } from "../port/unit-of-work.interface";
+import { BaseService } from "./base.service";
 
 export type TokenPair = {
   accessToken: string;
   refreshToken: string;
 };
 
-export class AuthService implements IAuthService {
+export class AuthService extends BaseService implements IAuthService {
   constructor(
-    private _unitOfWork: IUnitOfWork,
     private _bcryptHashManager: IBcryptHashManager,
     private _tokenUtil: ITokenUtil,
-  ) { }
+    unitOfWork: IUnitOfWork,
+  ) {
+    super(unitOfWork)
+  }
 
   async loginUser(dto: LoginReqDto): Promise<{
     foundUser: PersistUserEntityWithCompany;

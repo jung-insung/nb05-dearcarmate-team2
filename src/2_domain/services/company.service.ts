@@ -16,9 +16,12 @@ import { BusinessExceptionType } from "../../4_shared/exceptions/business.except
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 import { IUnitOfWork } from "../port/unit-of-work.interface";
+import { BaseService } from "./base.service";
 
-export class CompanyService implements ICompanyService {
-  constructor(private _unitOfWork: IUnitOfWork) { }
+export class CompanyService extends BaseService implements ICompanyService {
+  constructor(unitOfWork: IUnitOfWork) {
+    super(unitOfWork)
+  }
 
   async getCompanyList(
     queryDto: CompanyListQueryDto,

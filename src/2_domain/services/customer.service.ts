@@ -13,15 +13,21 @@ import { BusinessExceptionType } from "../../4_shared/exceptions/business.except
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
 import { IUnitOfWork } from "../port/unit-of-work.interface";
+import { BaseService } from "./base.service";
 
-export class CustomerService implements ICustomerService {
-  constructor(private _unitOfWork: IUnitOfWork) {}
+export class CustomerService extends BaseService implements ICustomerService {
+  constructor(unitOfWork: IUnitOfWork) {
+    super(unitOfWork)
+  }
+
 
   async registCustomer(params: {
     dto: RegistCustomerReq;
-    companyId: number;
+    userId: number;
   }): Promise<CustomerResponseDto> {
-    const { dto, companyId } = params;
+    const { dto, userId } = params;
+    const companyId = await this._unitOfWork.repos.user.findUserById(userId)
+
     const entity = CustomerMapper.toNewEntity(dto, companyId);
     const newCusotmer = await this._unitOfWork.repos.customer.create(entity);
 
