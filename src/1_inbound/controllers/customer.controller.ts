@@ -37,7 +37,7 @@ export class CustomerController extends BaseController {
   async getCustomers(req: Request, res: Response) {
     const { companyId } = req.companyId;
     const page = Number(req.query.page ?? 1);
-    const pageSize = Number(req.query.pageSize ?? 10);
+    const pageSize = Number(req.query.pageSize ?? 8);
 
     const customers = await this._customerService.getCustoemrs({
       companyId,
