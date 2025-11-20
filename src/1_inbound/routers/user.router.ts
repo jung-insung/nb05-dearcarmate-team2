@@ -31,5 +31,11 @@ export class UserRouter extends BaseRouter {
       this._authMiddleware.isUserAuthenticate,
       this.catch(this._userController.deleteUserController),
     );
+
+    this.router.delete(
+      "/:userId",
+      this._authMiddleware.isUserAuthenticate,
+      this.catch(this._userController.deleteUserController),
+    );
   }
 }

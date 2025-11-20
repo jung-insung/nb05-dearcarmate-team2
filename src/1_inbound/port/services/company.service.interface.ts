@@ -7,7 +7,8 @@ interface BaseListQueryDto {
   searchBy?: string;
 }
 
-export interface CompanyListQueryDto extends BaseListQueryDto {}
+export interface CompanyListQueryDto extends BaseListQueryDto {
+}
 export interface CompanyItemDto {
   id: number;
   companyName: string;
@@ -21,7 +22,8 @@ export interface CompanyListResponseDto {
   data: CompanyItemDto[];
 }
 
-export interface UserListQueryDto extends BaseListQueryDto {}
+export interface UserListQueryDto extends BaseListQueryDto {
+}
 export interface UserItemDto {
   id: number;
   name: string;
@@ -51,12 +53,20 @@ export interface UpdateCompanyDto {
 export interface ICompanyService {
   getCompanyList(
     queryDto: CompanyListQueryDto,
+  userId: number,
   ): Promise<CompanyListResponseDto>;
-  getUserList(queryDto: UserListQueryDto): Promise<UserListResponseDto>;
-  createCompany(dto: CreateCompanyDto): Promise<CompanyResponseDto>;
+  getUserList(
+    queryDto: UserListQueryDto,
+    userId: number,
+  ): Promise<UserListResponseDto>;
+  createCompany(
+    dto: CreateCompanyDto,
+    userId: number,
+  ): Promise<CompanyResponseDto>;
   updateCompany(
     companyId: number,
     dto: UpdateCompanyDto,
+    userId: number,
   ): Promise<CompanyResponseDto>;
-  deleteCompany(companyId: number): Promise<void>;
+  deleteCompany(companyId: number, userId: number): Promise<void>;
 }
