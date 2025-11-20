@@ -7,5 +7,5 @@ export interface IRepos {
   user: IUserRepo;
   company: ICompanyRepo;
   car: ICarRepo;
-  customer: ICustomerRepo;
+  // customer: ICustomerRepo
 }

@@ -6,7 +6,7 @@ import { TechnicalException } from "../../4_shared/exceptions/technical.exceptio
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 
 export class CarRepo extends BaseRepo implements ICarRepo {
-  constructor(prisma: PrismaClient) {
+  constructor(prisma: PrismaClient | Prisma.TransactionClient) {
     super(prisma);
   }
 

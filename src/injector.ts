@@ -6,18 +6,22 @@ import { LoggerMiddleware } from "./1_inbound/middlewares/logger.middleware";
 
 import { UserRouter } from "./1_inbound/routers/user.router";
 import { CompanyRouter } from "./1_inbound/routers/company.router";
+import { CarRouter } from "./1_inbound/routers/car.router";
 
 import { UserRepo } from "./3_outbound/repos/user.repo";
 import { CompanyRepo } from "./3_outbound/repos/company.repo";
+import { CarRepo } from "./3_outbound/repos/car.repo";
 
 import { ConfigUtil } from "./4_shared/utils/config.util";
 import { Server } from "./server";
 
 import { UserService } from "./2_domain/services/user.service";
 import { CompanyService } from "./2_domain/services/company.service";
+import { CarService } from "./2_domain/services/car.service";
 
 import { UserController } from "./1_inbound/controllers/user.controller";
 import { CompanyController } from "./1_inbound/controllers/company.controller";
+import { CarController } from "./1_inbound/controllers/car.controller";
 
 import { NotFoundMiddleware } from "./1_inbound/middlewares/not-found.middleware";
 import { BcryptHashManager } from "./3_outbound/managers/bcrypt-hash.manager";
@@ -57,6 +61,7 @@ export class Injector {
     const repoFactory = new RepoFactory({
       user: (prisma) => new UserRepo(prisma),
       company: (prisma) => new CompanyRepo(prisma),
+      car: (prisma) => new CarRepo(prisma),
     });
 
     const unitOfWork = new UnitOfWork(prisma, repoFactory, configUtil);
@@ -68,21 +73,25 @@ export class Injector {
     );
     const userService = new UserService(unitOfWork, bcryptHashManger);
     const companyService = new CompanyService(unitOfWork);
+    const carService = new CarService(unitOfWork);
 
     const authController = new AuthController(authService);
     const userController = new UserController(userService);
     const companyController = new CompanyController(companyService);
+    const carController = new CarController(carService);
 
     const authMiddleware = new AuthMiddleware(tokenUtil);
 
     const authRouter = new AuthRouter(authController);
     const userRouter = new UserRouter(userController, authMiddleware);
     const companyRouter = new CompanyRouter(companyController);
+    const carRouter = new CarRouter(carController);
 
     return new Server(
       authRouter,
       userRouter,
       companyRouter,
+      carRouter,
       configUtil,
       corsMiddleware,
       loggerMiddleware,
