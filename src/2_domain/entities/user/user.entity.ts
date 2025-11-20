@@ -7,6 +7,8 @@ export interface NewUserEntity
   companyId: number;
 }
 
+export type NewAdminEntity = Omit<UserEntity, "id" | "createdAt" | "updatedAt" | "imageUrl" |  "companyId"> 
+
 export type UpdateUserEntity = Omit<UserEntity, "createdAt" | "updatedAt">;
 
 export interface PersistUserEntity extends UserEntity {
@@ -32,7 +34,6 @@ export class UserEntity {
   private _imageUrl?: string;
   private _isAdmin: boolean;
   private _version: number;
-  private _isModified: boolean;
   private _refreshToken?: string;
   private readonly _createdAt?: Date;
   private readonly _updatedAt?: Date;
@@ -62,7 +63,6 @@ export class UserEntity {
     this._imageUrl = attrs.imageUrl;
     this._isAdmin = attrs.isAdmin;
     this._version = attrs.version;
-    this._isModified = false;
     this._refreshToken = attrs.refreshToken;
     this._createdAt = attrs.createdAt;
     this._updatedAt = attrs.updatedAt;
@@ -104,9 +104,6 @@ export class UserEntity {
   get version() {
     return this._version;
   }
-  get isModified() {
-    return this._isModified;
-  }
   get refreshToken() {
     return this._refreshToken;
   }
@@ -144,6 +141,36 @@ export class UserEntity {
       isAdmin: false,
       version: 1,
     }) as NewUserEntity;
+  }
+
+  static async createAdmin(params:{
+    name: string;
+    email: string;
+    employeeNumber: string;
+    phoneNumber: string;
+    password: string;
+    bcryptHashManager: IBcryptHashManager;
+  }){
+    const {
+      name,
+      email,
+      employeeNumber,
+      phoneNumber,
+      password,
+      bcryptHashManager,
+    } = params;
+
+    this.checkPasswordRule(password);
+    const hashedPassword = await bcryptHashManager.hash(password);
+    return new UserEntity({
+      name,
+      email,
+      employeeNumber,
+      phoneNumber,
+      password: hashedPassword,
+      isAdmin: true,
+      version: 1,
+    }) as NewAdminEntity;
   }
 
   static updateUser(params: {

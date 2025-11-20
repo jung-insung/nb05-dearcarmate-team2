@@ -1,5 +1,6 @@
 import { PersistUserEntityWithCompany } from "../../../3_outbound/mappers/user.mapper";
 import {
+  NewAdminEntity,
   NewUserEntity,
   PersistUserEntity,
   UpdateUserEntity,
@@ -16,7 +17,7 @@ export interface IUserRepo {
   /**
    * @throws TechnicalException UNIQUE_VIOLATION_EMAIL
    */
-  create(entity: NewUserEntity): Promise<PersistUserEntityWithCompany>;
+  create(entity: NewUserEntity | NewAdminEntity): Promise<PersistUserEntityWithCompany>;
 
   /**
    * @throws Error lockType이 유효하지 않은 값일 경우

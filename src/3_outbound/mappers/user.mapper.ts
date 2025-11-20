@@ -1,4 +1,5 @@
 import {
+  NewAdminEntity,
   NewUserEntity,
   PersistUserEntity,
   UpdateUserEntity,
@@ -7,7 +8,7 @@ import {
 import { PersistDBUser } from "../repos/user.repo";
 
 export type CreateUserData = {
-  companyId: number;
+  companyId?: number;
   name: string;
   email: string;
   employeeNumber: string;
@@ -32,9 +33,15 @@ export interface PersistUserEntityWithCompany extends PersistUserEntity {
 }
 
 export class UserMapper {
-  static toCreateData(entity: NewUserEntity): CreateUserData {
+  static toCreateData(entity: NewUserEntity | NewAdminEntity): CreateUserData {
+    let companyId: number | undefined;
+
+    if ('companyId' in entity) {
+      companyId = entity.companyId;
+    }
+
     const createUserData: CreateUserData = {
-      companyId: entity.companyId,
+      companyId,
       name: entity.name,
       email: entity.email,
       employeeNumber: entity.employeeNumber,
@@ -60,7 +67,7 @@ export class UserMapper {
   static toPersistEntity(record: PersistDBUser): PersistUserEntityWithCompany {
     const entity = new UserEntity({
       id: record.id,
-      companyId: record.companyId,
+      companyId: record.companyId || undefined,
       name: record.name,
       email: record.email,
       employeeNumber: record.employeeNumber,
@@ -74,7 +81,9 @@ export class UserMapper {
       updatedAt: record.updatedAt,
     });
 
-    (entity as PersistUserEntityWithCompany).company = record.company;
+    (entity as PersistUserEntityWithCompany).company = record.company
+      ? { companyName: record.company.companyName }
+      : { companyName: "" };
 
     return entity as PersistUserEntityWithCompany;
   }

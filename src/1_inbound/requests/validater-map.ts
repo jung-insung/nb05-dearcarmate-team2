@@ -19,6 +19,7 @@ export const userFieldExceptionMap: Record<string, BusinessExceptionType> = {
 };
 
 export const companyFieldExceptionMap: Record<string, BusinessExceptionType> = {
+  userId: BusinessExceptionType.USERID_FORM,
   companyId: BusinessExceptionType.COMPANYID_FORM,
   companyName: BusinessExceptionType.COMPANYNAME_FORM,
   companyCode: BusinessExceptionType.COMPANYCODE_FORM,

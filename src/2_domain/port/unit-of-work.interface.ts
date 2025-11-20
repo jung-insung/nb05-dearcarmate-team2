@@ -6,6 +6,7 @@ export interface IUnitOfWork {
   do<T>(
     work: (txRepos: IRepos) => Promise<T>,
     isOptimistic?: boolean,
+    isTransaction?: boolean,
     isolationLevel?: "ReadCommitted" | "RepeatableRead" | "Serializable",
   ): Promise<T>;
 }
