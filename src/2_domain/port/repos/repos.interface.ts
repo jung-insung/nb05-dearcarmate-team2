@@ -6,6 +6,6 @@ import { ICarRepo } from "./car.repo.interface";
 export interface IRepos {
   user: IUserRepo;
   company: ICompanyRepo;
-  car: ICarRepo;
-  customer: ICustomerRepo;
+  //car: ICarRepo;
+  //customer: ICustomerRepo;
 }

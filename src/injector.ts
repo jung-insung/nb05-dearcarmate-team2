@@ -77,7 +77,7 @@ export class Injector {
 
     const authRouter = new AuthRouter(authController);
     const userRouter = new UserRouter(userController, authMiddleware);
-    const companyRouter = new CompanyRouter(companyController);
+    const companyRouter = new CompanyRouter(companyController, authMiddleware);
 
     return new Server(
       authRouter,

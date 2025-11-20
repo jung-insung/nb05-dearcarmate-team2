@@ -21,7 +21,7 @@ export class AuthService implements IAuthService {
     private _unitOfWork: IUnitOfWork,
     private _bcryptHashManager: IBcryptHashManager,
     private _tokenUtil: ITokenUtil,
-  ) {}
+  ) { }
 
   async loginUser(dto: LoginReqDto): Promise<{
     foundUser: PersistUserEntityWithCompany;
@@ -39,10 +39,10 @@ export class AuthService implements IAuthService {
         }
 
         if (
-          !(await foundUser.isPasswordMatch(
+          !await foundUser.isPasswordMatch(
             body.password,
             this._bcryptHashManager,
-          ))
+          )
         ) {
           throw new BusinessException({
             type: BusinessExceptionType.PASSWORD_MISMATCH,

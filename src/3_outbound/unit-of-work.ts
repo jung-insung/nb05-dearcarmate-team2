@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import { IRepos } from "../2_domain/port/repos/repos.interface";
 import { IUnitOfWork } from "../2_domain/port/unit-of-work.interface";
 import { IConfigUtil } from "../4_shared/port/config.util.interface";
-import { boolean } from "zod";
 import { RepoFactory } from "./repo-factory";
 import { TechnicalException } from "../4_shared/exceptions/technical.exceptions/technical.exception";
 import { TechnicalExceptionType } from "../4_shared/exceptions/technical.exceptions/exception-info";
@@ -23,8 +22,9 @@ export class UnitOfWork implements IUnitOfWork {
   }
 
   async do<T>(
-    work: (teRepos: IRepos) => Promise<T>,
+    work: (repos: IRepos) => Promise<T>,
     isOptimistic: boolean = true,
+    isTransaction: boolean = false,
     isolationLevel:
       | "ReadCommitted"
       | "RepeatableRead"
@@ -41,6 +41,10 @@ export class UnitOfWork implements IUnitOfWork {
         console.warn(`재시도 ${i}/${maxRetries}회차`);
       }
       try {
+        if(!isTransaction){
+          return await work(this.repos);
+        }
+
         return await this._prismaClient.$transaction(
           async (tx) => {
             const txRepos: IRepos = this._repoFactory.create(tx);
