@@ -36,7 +36,7 @@ export class UserService implements IUserService {
           type: BusinessExceptionType.SIGNUP_PASSWORD_MISMATCH,
         });
       }
-
+      
       const foundCompany = await txRepos.company.findCompanyByCompanyCode(
         body.companyCode,
       );
@@ -45,10 +45,6 @@ export class UserService implements IUserService {
           type: BusinessExceptionType.COMPANY_NOT_EXIST,
         });
       }
-
-      foundCompany.increaseUserCount();
-      await txRepos.company.updateCompany(foundCompany);
-
       const { name, email, employeeNumber, phoneNumber, password } = body;
       const newUser = await UserEntity.createUser({
         name,
@@ -60,7 +56,11 @@ export class UserService implements IUserService {
         companyId: foundCompany.id,
       });
 
+      foundCompany.increaseUserCount();
+      
+      
       try {
+        await txRepos.company.updateCompany(foundCompany);
         return await txRepos.user.create(newUser);
       } catch (err) {
         if (err instanceof TechnicalException) {
