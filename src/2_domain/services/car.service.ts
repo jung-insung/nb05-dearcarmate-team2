@@ -9,6 +9,27 @@ import { IUnitOfWork } from "../port/unit-of-work.interface";
 import { ICarService } from "../../1_inbound/port/services/car.service.interface";
 import { BusinessException } from "../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
+import { CarCsvUtil } from "../../4_shared/utils/car-csv.util";
+
+export class CarService implements ICarService {
+  constructor(private readonly _unitOfWork: IUnitOfWork) {}
+
+  private async _getCompanyId(userId: number) {
+    const user = await this._unitOfWork.repos.user.findUserById(userId);
+
+    if (!user) {
+      throw new BusinessException({
+        type: BusinessExceptionType.USER_NOT_EXIST,
+      });
+    }
+
+    if (!user.companyId) {
+      throw new BusinessException({
+        type: BusinessExceptionType.COMPANY_NOT_EXIST,
+      });
+    }
+
+    return user.companyId;
 import { BaseService } from "./base.service";
 
 export class CarService extends BaseService implements ICarService {
@@ -84,8 +105,7 @@ export class CarService extends BaseService implements ICarService {
 
     if (!car) {
       throw new BusinessException({
-        type: BusinessExceptionType.NOT_FOUND,
-        message: "존재하지 않는 차량입니다.",
+        type: BusinessExceptionType.CAR_NOT_EXIST,
       });
     }
 
@@ -108,8 +128,7 @@ export class CarService extends BaseService implements ICarService {
 
     if (!existing) {
       throw new BusinessException({
-        type: BusinessExceptionType.NOT_FOUND,
-        message: "존재하지 않는 차량입니다.",
+        type: BusinessExceptionType.CAR_NOT_EXIST,
       });
     }
 
@@ -130,8 +149,7 @@ export class CarService extends BaseService implements ICarService {
 
     if (!existing) {
       throw new BusinessException({
-        type: BusinessExceptionType.NOT_FOUND,
-        message: "존재하지 않는 차량입니다.",
+        type: BusinessExceptionType.CAR_NOT_EXIST,
       });
     }
 
@@ -146,11 +164,36 @@ export class CarService extends BaseService implements ICarService {
 
     const file = req.file;
     if (!file) {
-      // 파일 없으면 그냥 비즈니스 예외 던지기
       throw new BusinessException({
-        type: BusinessExceptionType.INVALID_REQUEST,
-        message: "파일이 업로드되지 않았습니다.",
+        type: BusinessExceptionType.CAR_UPLOAD_FILE_NOT_UPLOADED,
       });
     }
+
+    // multer 메모리 스토리지를 사용하므로 buffer 사용
+    const content = file.buffer?.toString("utf-8");
+
+    if (!content) {
+      throw new BusinessException({
+        type: BusinessExceptionType.CAR_UPLOAD_FILE_EMPTY,
+      });
+    }
+
+    const rows = CarCsvUtil.parse(content);
+
+    if (rows.length === 0) {
+      throw new BusinessException({
+        type: BusinessExceptionType.CAR_UPLOAD_NO_VALID_DATA,
+      });
+    }
+
+    await this._unitOfWork.do(async (txRepos) => {
+      for (const row of rows) {
+        const entity = CarMapper.toCreateEntity({
+          ...row,
+          companyId,
+        });
+        await txRepos.car.create(entity);
+      }
+    }, false);
   }
 }
