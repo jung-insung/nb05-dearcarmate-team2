@@ -175,8 +175,8 @@ export const BusinessExceptionTable: Record<
     message: "고객정보가 존재하지 않습니다.",
   },
   [BusinessExceptionType.CAR_NOT_EXIST]: {
-    statusCode:404,
-    message: "차량이 존재하지 않습니다."
+    statusCode: 404,
+    message: "차량이 존재하지 않습니다.",
   },
 
   // 중복, 충돌

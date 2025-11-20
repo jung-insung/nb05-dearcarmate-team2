@@ -13,32 +13,47 @@ import { BusinessExceptionType } from "../../4_shared/exceptions/business.except
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
 import { IUnitOfWork } from "../port/unit-of-work.interface";
+import { BaseService } from "./base.service";
 
-export class CustomerService implements ICustomerService {
-  constructor(private _unitOfWork: IUnitOfWork) {}
+export class CustomerService extends BaseService implements ICustomerService {
+  constructor(unitOfWork: IUnitOfWork) {
+    super(unitOfWork)
+  }
 
   async registCustomer(params: {
     dto: RegistCustomerReq;
-    companyId: number;
+    userId: number;
   }): Promise<CustomerResponseDto> {
-    const { dto, companyId } = params;
+    const { dto, userId } = params;
+
+    const companyId = await this._getCompanyId(userId);
+
     const entity = CustomerMapper.toNewEntity(dto, companyId);
+
     const newCusotmer = await this._unitOfWork.repos.customer.create(entity);
 
     return CustomerMapper.toResponseData(newCusotmer);
   }
 
   async getCustomers(params: {
-    companyId: number;
+    userId: number;
     page: number;
     pageSize: number;
     searchBy?: "name" | "email";
     keyword?: string;
   }): Promise<CustomerListResponseDto> {
-    const { page, pageSize } = params;
+    const { userId, page, pageSize, searchBy, keyword } = params;
+
+    const companyId = await this._getCompanyId(userId);
 
     const { data, totalItemCount } =
-      await this._unitOfWork.repos.customer.findAll(params);
+      await this._unitOfWork.repos.customer.findAll({
+        companyId,
+        page,
+        pageSize,
+        searchBy,
+        keyword
+      });
 
     return {
       currentPage: page,
@@ -108,10 +123,11 @@ export class CustomerService implements ICustomerService {
   }
 
   async uploadCustomers(params: {
-    companyId: number;
+    userId: number;
     req: any;
   }): Promise<void> {
-    const { companyId, req } = params;
+    const { userId, req } = params;
+    const companyId = await this._getCompanyId(userId);
     await this._unitOfWork.repos.customer.upload({
       companyId,
       req,
