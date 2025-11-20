@@ -164,7 +164,7 @@ export class CarService implements ICarService {
       });
     }
 
-    // multer 메모리 스토리지를 사용하므로 buffer 사용
+    // multer 메모리 스토리지를 사용하므로 buffer
     const content = file.buffer?.toString("utf-8");
 
     if (!content) {
