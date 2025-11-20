@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import {
   NewCustomerEntity,
+  PersistCustomerEntites,
   PersistCustomerEntity,
   UpdateCustomerEntity,
 } from "../../2_domain/entities/customer/customer.entity";
@@ -10,12 +11,19 @@ import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exce
 
 export interface ICustomerRepo {
   findById(id: number): Promise<PersistCustomerEntity | null>;
+
+  findAll(params: {
+    companyId: number;
+    page: number;
+    pageSize: number;
+    searchBy?: "name" | "email";
+    keyword?: string;
+  }): Promise<PersistCustomerEntites>;
+
   create(entity: NewCustomerEntity): Promise<PersistCustomerEntity>;
 
   /**
    *
-   * @param id
-   * @param entity
    * @throws {TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED}
    */
   update(
@@ -25,10 +33,14 @@ export interface ICustomerRepo {
 
   /**
    *
-   * @param id
    * @throws {TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED}
    */
   delete(id: number): Promise<void>;
+
+  /**
+   *
+   */
+  upload(params: { companyId: number; req: any }): Promise<void>;
 }
 
 export class CustomerRepo implements ICustomerRepo {
@@ -42,6 +54,37 @@ export class CustomerRepo implements ICustomerRepo {
       where: { id },
     });
     return record ? CustomerMapper.toPersistEntity(record) : null;
+  }
+
+  async findAll(params: {
+    companyId: number;
+    page: number;
+    pageSize: number;
+    searchBy?: "name" | "email";
+    keyword?: string;
+  }): Promise<PersistCustomerEntites> {
+    const { companyId, page, pageSize, searchBy, keyword } = params;
+
+    const where: Record<string, any> = { companyId };
+
+    if (keyword && searchBy) {
+      where[searchBy] = { contains: keyword };
+    }
+
+    const [records, totalItemCount] = await Promise.all([
+      this._prisma.customer.findMany({
+        where,
+        skip: (page > 0 ? page - 1 : 0) * pageSize,
+        take: pageSize,
+        orderBy: { createdAt: "desc" },
+      }),
+      this._prisma.customer.count({ where }),
+    ]);
+
+    return {
+      totalItemCount,
+      data: records.map((record) => CustomerMapper.toPersistEntity(record)),
+    };
   }
 
   async create(entity: NewCustomerEntity): Promise<PersistCustomerEntity> {
@@ -79,10 +122,6 @@ export class CustomerRepo implements ICustomerRepo {
     }
   }
 
-  async find() {}
-
-  async findAll() {}
-
   async delete(id: number): Promise<void> {
     try {
       await this._prisma.customer.delete({
@@ -101,5 +140,5 @@ export class CustomerRepo implements ICustomerRepo {
     }
   }
 
-  async uploadFileData() {}
+  async upload() {}
 }
