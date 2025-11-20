@@ -12,3 +12,10 @@ export interface CustomerResponseDto {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface CustomerListResponseDto {
+  currentPage: number;
+  totalPages: number;
+  totalItemCount: number;
+  data: CustomerResponseDto[];
+}

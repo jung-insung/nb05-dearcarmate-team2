@@ -22,6 +22,11 @@ export interface PersistCustomerEntity extends CustomerEntity {
   updatedAt: Date;
 }
 
+export interface PersistCustomerEntites {
+  totalItemCount: number;
+  data: PersistCustomerEntity[];
+}
+
 export class CustomerEntity {
   private readonly _id?: number;
   private _name: string;
