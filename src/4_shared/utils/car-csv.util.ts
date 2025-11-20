@@ -24,9 +24,10 @@ function normalizeManufacturer(raw: string): string {
     return v;
   }
 
-  throw new BusinessException({ type: BusinessExceptionType.INVALID_MANUFACTURER });
+  throw new BusinessException({
+    type: BusinessExceptionType.INVALID_MANUFACTURER,
+  });
 }
-
 
 // 문자열 => 숫자로
 function toNumber(value: string, errorType: BusinessExceptionType): number {
@@ -43,11 +44,15 @@ export class CarCsvUtil {
       .filter(Boolean);
 
     if (lines.length === 0) {
-      throw new BusinessException({ type: BusinessExceptionType.CAR_UPLOAD_FILE_EMPTY });
+      throw new BusinessException({
+        type: BusinessExceptionType.CAR_UPLOAD_FILE_EMPTY,
+      });
     }
 
     if (lines.length <= 1) {
-      throw new BusinessException({ type: BusinessExceptionType.CAR_UPLOAD_NO_VALID_DATA });
+      throw new BusinessException({
+        type: BusinessExceptionType.CAR_UPLOAD_NO_VALID_DATA,
+      });
     }
 
     const header = lines[0].split(",").map((h) => h.trim());
@@ -64,7 +69,9 @@ export class CarCsvUtil {
     ];
 
     if (header.length < expected.length) {
-      throw new BusinessException({ type: BusinessExceptionType.CAR_UPLOAD_INVALID_CSV_HEADER });
+      throw new BusinessException({
+        type: BusinessExceptionType.CAR_UPLOAD_INVALID_CSV_HEADER,
+      });
     }
 
     const result: RegisterCarReq[] = [];
@@ -73,7 +80,9 @@ export class CarCsvUtil {
       const row = lines[i].split(",");
 
       if (row.length < expected.length) {
-        throw new BusinessException({ type: BusinessExceptionType.CAR_UPLOAD_NO_VALID_DATA });
+        throw new BusinessException({
+          type: BusinessExceptionType.CAR_UPLOAD_NO_VALID_DATA,
+        });
       }
 
       const [
@@ -95,7 +104,10 @@ export class CarCsvUtil {
         yearStr,
         BusinessExceptionType.INVALID_MANUFACTURINGYEAR,
       );
-      const mileage = toNumber(mileageStr, BusinessExceptionType.INVALID_MILEAGE);
+      const mileage = toNumber(
+        mileageStr,
+        BusinessExceptionType.INVALID_MILEAGE,
+      );
       const price = toNumber(priceStr, BusinessExceptionType.INVALID_PRICE);
       const accidentCount = toNumber(
         accidentStr || "0",
@@ -119,7 +131,9 @@ export class CarCsvUtil {
     }
 
     if (result.length === 0) {
-      throw new BusinessException({ type: BusinessExceptionType.CAR_UPLOAD_NO_VALID_DATA });
+      throw new BusinessException({
+        type: BusinessExceptionType.CAR_UPLOAD_NO_VALID_DATA,
+      });
     }
 
     return result;
