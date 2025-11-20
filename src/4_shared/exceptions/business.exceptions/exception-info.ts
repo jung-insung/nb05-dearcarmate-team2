@@ -37,6 +37,10 @@ export enum BusinessExceptionType {
   INVALID_ACCIDENTCOUNT,
   INVALID_EXPLANATION,
   INVALID_ACCIDENTDETAILS,
+  CAR_UPLOAD_FILE_NOT_UPLOADED,
+  CAR_UPLOAD_FILE_EMPTY,
+  CAR_UPLOAD_INVALID_CSV_HEADER,
+  CAR_UPLOAD_NO_VALID_DATA,
   CUSTOMER_NOT_EXIST,
   CUSTOMER_DATA_CHANGED,
   CUSTOMER_DATA_ARLEADY_DELETE,
@@ -155,6 +159,22 @@ export const BusinessExceptionTable: Record<
     statusCode: 404,
     message: "사고 상세 설명 형식이 올바르지 않습니다.",
   },
+  [BusinessExceptionType.CAR_UPLOAD_FILE_NOT_UPLOADED]: {
+    statusCode: 400,
+    message: "파일이 업로드되지 않았습니다.",
+  },
+  [BusinessExceptionType.CAR_UPLOAD_FILE_EMPTY]: {
+    statusCode: 400,
+    message: "업로드된 파일이 비어 있습니다.",
+  },
+  [BusinessExceptionType.CAR_UPLOAD_INVALID_CSV_HEADER]: {
+    statusCode: 400,
+    message: "CSV 헤더 형식이 올바르지 않습니다.",
+  },
+  [BusinessExceptionType.CAR_UPLOAD_NO_VALID_DATA]: {
+    statusCode: 400,
+    message: "유효한 차량 데이터가 존재하지 않습니다.",
+  },
 
   // 존재 유무
   [BusinessExceptionType.COMPANY_NOT_EXIST]: {
@@ -174,8 +194,8 @@ export const BusinessExceptionTable: Record<
     message: "고객정보가 존재하지 않습니다.",
   },
   [BusinessExceptionType.CAR_NOT_EXIST]: {
-    statusCode:404,
-    message: "차량이 존재하지 않습니다."
+    statusCode: 404,
+    message: "존재하지 않는 차량입니다.",
   },
 
   // 중복, 충돌
