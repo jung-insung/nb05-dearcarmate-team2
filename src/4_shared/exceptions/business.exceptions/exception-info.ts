@@ -27,6 +27,7 @@ export enum BusinessExceptionType {
   INVALID_AUTH,
   USERID_NOT_EXIST,
   REFRESHTOKEN_MISMATCH,
+  CAR_NOT_EXIST,
   INVALID_CAR_NUMBER,
   INVALID_MANUFACTURER,
   INVALID_MODEL,
@@ -164,6 +165,10 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.USERID_NOT_EXIST]: {
     statusCode: 404,
     message: "페이로드에 유저ID가 없습니다.",
+  },
+  [BusinessExceptionType.CAR_NOT_EXIST]: {
+    statusCode:404,
+    message: "차량이 존재하지 않습니다."
   },
 
   // 중복, 충돌
