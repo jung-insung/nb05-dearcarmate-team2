@@ -67,9 +67,9 @@ export class Injector {
     const unitOfWork = new UnitOfWork(prisma, repoFactory, configUtil);
 
     const authService = new AuthService(
-      unitOfWork,
       bcryptHashManger,
       tokenUtil,
+      unitOfWork,
     );
     const userService = new UserService(unitOfWork, bcryptHashManger);
     const companyService = new CompanyService(unitOfWork);
