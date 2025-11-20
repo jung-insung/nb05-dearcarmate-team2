@@ -1,9 +1,6 @@
 export enum BusinessExceptionType {
   BAD_REQUEST,
   PASSWORD_TOO_LONG,
-  INVALID_CAR_NUMBER,
-  INVALID_MILEAGE,
-  INVALID_PRICE,
   NAME_TOO_LONG,
   USERID_FORM,
   EMAIL_FORM,
@@ -30,6 +27,16 @@ export enum BusinessExceptionType {
   INVALID_AUTH,
   USERID_NOT_EXIST,
   REFRESHTOKEN_MISMATCH,
+  CAR_NOT_EXIST,
+  INVALID_CAR_NUMBER,
+  INVALID_MANUFACTURER,
+  INVALID_MODEL,
+  INVALID_MANUFACTURINGYEAR,
+  INVALID_MILEAGE,
+  INVALID_PRICE,
+  INVALID_ACCIDENTCOUNT,
+  INVALID_EXPLANATION,
+  INVALID_ACCIDENTDETAILS,
   CUSTOMER_NOT_EXIST,
   CUSTOMER_DATA_CHANGED,
   CUSTOMER_DATA_ARLEADY_DELETE,
@@ -47,18 +54,6 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.PASSWORD_TOO_LONG]: {
     statusCode: 404,
     message: "비밀번호가 너무 깁니다.",
-  },
-  [BusinessExceptionType.INVALID_CAR_NUMBER]: {
-    statusCode: 404,
-    message: "존재하지 않는 차량번호입니다.",
-  },
-  [BusinessExceptionType.INVALID_MILEAGE]: {
-    statusCode: 404,
-    message: "입력하신 주행 거리가 비정상적입니다.",
-  },
-  [BusinessExceptionType.INVALID_PRICE]: {
-    statusCode: 404,
-    message: "가격은 0이상이어야 합니다.",
   },
   [BusinessExceptionType.NAME_TOO_LONG]: {
     statusCode: 404,
@@ -124,6 +119,42 @@ export const BusinessExceptionTable: Record<
     statusCode: 401,
     message: "인증이 유효하지 않습니다.",
   },
+  [BusinessExceptionType.INVALID_CAR_NUMBER]: {
+    statusCode: 404,
+    message: "올바르지 않은 차량번호 형식입니다.",
+  },
+  [BusinessExceptionType.INVALID_MANUFACTURER]: {
+    statusCode: 404,
+    message: "제조사가 올바르지 않습니다.",
+  },
+  [BusinessExceptionType.INVALID_MODEL]: {
+    statusCode: 404,
+    message: "모델명이 올바르지 않습니다.",
+  },
+  [BusinessExceptionType.INVALID_MANUFACTURINGYEAR]: {
+    statusCode: 404,
+    message: "제조년도가 올바르지 않습니다.",
+  },
+  [BusinessExceptionType.INVALID_MILEAGE]: {
+    statusCode: 404,
+    message: "주행거리는 0이상이어야 합니다.",
+  },
+  [BusinessExceptionType.INVALID_PRICE]: {
+    statusCode: 404,
+    message: "가격은 0이상이어야 합니다.",
+  },
+  [BusinessExceptionType.INVALID_ACCIDENTCOUNT]: {
+    statusCode: 404,
+    message: "사고 횟수는 0이상이어야 합니다.",
+  },
+  [BusinessExceptionType.INVALID_EXPLANATION]: {
+    statusCode: 404,
+    message: "차량 설명 형식이 올바르지 않습니다.",
+  },
+  [BusinessExceptionType.INVALID_ACCIDENTDETAILS]: {
+    statusCode: 404,
+    message: "사고 상세 설명 형식이 올바르지 않습니다.",
+  },
 
   // 존재 유무
   [BusinessExceptionType.COMPANY_NOT_EXIST]: {
@@ -141,6 +172,10 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.CUSTOMER_NOT_EXIST]: {
     statusCode: 404,
     message: "고객정보가 존재하지 않습니다.",
+  },
+  [BusinessExceptionType.CAR_NOT_EXIST]: {
+    statusCode:404,
+    message: "차량이 존재하지 않습니다."
   },
 
   // 중복, 충돌
