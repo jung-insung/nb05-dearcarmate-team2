@@ -3,7 +3,6 @@ import { BaseController } from "./base.controller";
 
 import { ICarService } from "../port/services/car.service.interface";
 import { CarResDto, CarListResDto } from "../responses/car.res.dto";
-import { carFieldExceptionMap } from "../requests/validater-map";
 import {
   registerCarSchema,
   updateCarSchema,

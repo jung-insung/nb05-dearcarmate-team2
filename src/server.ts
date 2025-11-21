@@ -21,7 +21,7 @@ export class Server {
     private _userRouter: UserRouter,
     private _companyRouter: CompanyRouter,
     // private _customerRouter: CustomerRouter,
-    //private _carRouter: CarRouter,
+    private _carRouter: CarRouter,
     private _configUtil: IConfigUtil,
     private _corsMiddleware: CorsMiddleware,
     private _loggerMiddleware: LoggerMiddleware,
@@ -49,6 +49,7 @@ export class Server {
     this._app.use(this._authRouter.basePath, this._authRouter.router);
     this._app.use(this._userRouter.basePath, this._userRouter.router);
     this._app.use(this._companyRouter.basePath, this._companyRouter.router);
+    this._app.use(this._carRouter.basePath, this._carRouter.router);
 
     this._app.use(this._notFoundMiddleware.handler());
     this._app.use(this._globalErrorMiddleware.handler);
