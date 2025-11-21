@@ -21,6 +21,18 @@ export class CarRouter extends BaseRouter {
       this.catch(this._carController.registerCar),
     );
     this.router.get(
+      "/models",
+      this._authMiddleware.isUserAuthenticate,
+      this.catch(this._carController.getCarModels),
+    );
+    // 업로드
+    this.router.post(
+      "/upload",
+      upload.single("file"),
+      this._authMiddleware.isUserAuthenticate,
+      this.catch(this._carController.uploadCars),
+    );
+    this.router.get(
       "",
       this._authMiddleware.isUserAuthenticate,
       this.catch(this._carController.getCars),
@@ -39,18 +51,6 @@ export class CarRouter extends BaseRouter {
       "/:carId",
       this._authMiddleware.isUserAuthenticate,
       this.catch(this._carController.deleteCar),
-    );
-    this.router.get(
-      "/models",
-      this._authMiddleware.isUserAuthenticate,
-      this.catch(this._carController.getCarModels),
-    );
-    // 업로드
-    this.router.post(
-      "/upload",
-      upload.single("file"),
-      this._authMiddleware.isUserAuthenticate,
-      this.catch(this._carController.uploadCars),
     );
   }
 }
