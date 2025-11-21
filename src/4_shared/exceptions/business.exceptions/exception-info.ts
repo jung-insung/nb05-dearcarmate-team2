@@ -48,12 +48,13 @@ export enum BusinessExceptionType {
   CUSTOMER_NAME_FORM,
   CUSTOMER_PHONENUMBER_FORM,
   CUSTOMER_EMAIL_FORM,
-  CUSTOMER_KEYWORD_ERR
+  CUSTOMER_KEYWORD_ERR,
+  VALIDATION_ERROR,
 }
 
 export const BusinessExceptionTable: Record<
   BusinessExceptionType,
-  { statusCode: number; message: string }
+  { statusCode: number; message?: string }
 > = {
   // 형식 오류
   [BusinessExceptionType.BAD_REQUEST]: {
@@ -182,19 +183,22 @@ export const BusinessExceptionTable: Record<
   },
   [BusinessExceptionType.CUSTOMER_NAME_FORM]: {
     statusCode: 400,
-    message: "이름을 다시 입력해주세요"
+    message: "이름을 다시 입력해주세요",
   },
   [BusinessExceptionType.CUSTOMER_PHONENUMBER_FORM]: {
     statusCode: 400,
-    message: "전화번호를 다시 입력해주세요"
+    message: "전화번호를 다시 입력해주세요",
   },
   [BusinessExceptionType.CUSTOMER_EMAIL_FORM]: {
     statusCode: 400,
-    message: "이메일을 다시 입력해주세요"
+    message: "이메일을 다시 입력해주세요",
   },
   [BusinessExceptionType.CUSTOMER_KEYWORD_ERR]: {
     statusCode: 400,
     message: "키워드를 다시 입력해주세요",
+  },
+  [BusinessExceptionType.VALIDATION_ERROR]: {
+    statusCode: 400,
   },
 
   // 존재 유무
@@ -218,7 +222,6 @@ export const BusinessExceptionTable: Record<
     statusCode: 404,
     message: "존재하지 않는 차량입니다.",
   },
-  
 
   // 중복, 충돌
   [BusinessExceptionType.EMAIL_DUPLICATE]: {

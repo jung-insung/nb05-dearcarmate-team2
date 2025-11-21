@@ -21,11 +21,7 @@ export class CustomerController extends BaseController {
 
   async registCustomer(req: Request, res: Response) {
     const userId = req.userId!;
-    const dto = this.validateOrThrow(
-      registCustomerSchema,
-      { body: req.body },
-      customerFieldExceptionMap,
-    );
+    const dto = this.validateOrThrow(registCustomerSchema, { body: req.body });
 
     const newCusotmer = await this._customerService.registCustomer({
       dto,
@@ -36,13 +32,11 @@ export class CustomerController extends BaseController {
   }
 
   async getCustomers(req: Request, res: Response) {
-    const userId = req.userId!
+    const userId = req.userId!;
 
-    const query = this.validateOrThrow(
-      getCustomersQuerySchema,
-      { query: req.query },
-      customerFieldExceptionMap,
-    );
+    const query = this.validateOrThrow(getCustomersQuerySchema, {
+      query: req.query,
+    });
 
     const { page, pageSize, searchBy, keyword } = query;
 
@@ -58,7 +52,8 @@ export class CustomerController extends BaseController {
   }
 
   async getCustomer(req: Request, res: Response) {
-    const { customerId } = req.params;
+    let { customerId } = req.params;
+
     const customer = await this._customerService.getCustomer(customerId);
 
     return res.status(200).json(customer);
@@ -66,11 +61,7 @@ export class CustomerController extends BaseController {
 
   async updateCustomer(req: Request, res: Response) {
     const { customerId } = req.params;
-    const dto = this.validateOrThrow(
-      updateCustomerSchema,
-      { body: req.body },
-      customerFieldExceptionMap,
-    );
+    const dto = this.validateOrThrow(updateCustomerSchema, { body: req.body });
 
     const updatedCustomer = await this._customerService.updateCustomer({
       customerId,

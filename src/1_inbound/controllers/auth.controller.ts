@@ -6,7 +6,6 @@ import {
   loginReqSchema,
   refreshAccessTokenReqSchema,
 } from "../requests/auth-schema.request";
-import { authFieldExceptionMap } from "../requests/validater-map";
 import { LoginUserResDto } from "../responses/auth/login-user.res.dto";
 import { RefreshAccessTokenResDto } from "../responses/auth/refresh-acess-token.res.dto";
 
@@ -21,11 +20,7 @@ export class AuthController extends BaseController implements IAuthController {
   }
 
   login = async (req: Request, res: Response): Promise<Response<any>> => {
-    const reqDto = this.validateOrThrow(
-      loginReqSchema,
-      { body: req.body },
-      authFieldExceptionMap,
-    );
+    const reqDto = this.validateOrThrow(loginReqSchema, { body: req.body });
 
     const { foundUser: loginUser, tokens } =
       await this._authService.loginUser(reqDto);
@@ -39,11 +34,9 @@ export class AuthController extends BaseController implements IAuthController {
     req: Request,
     res: Response,
   ): Promise<Response<any>> => {
-    const reqDto = this.validateOrThrow(
-      refreshAccessTokenReqSchema,
-      { body: req.body },
-      authFieldExceptionMap,
-    );
+    const reqDto = this.validateOrThrow(refreshAccessTokenReqSchema, {
+      body: req.body,
+    });
 
     const tokens = await this._authService.refreshAccessToken(reqDto);
 

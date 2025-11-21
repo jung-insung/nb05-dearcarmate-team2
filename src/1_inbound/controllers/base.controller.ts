@@ -19,21 +19,16 @@ export class BaseController {
       params?: unknown;
       userId?: number; //인증 jwt 페이로드로 들어오는 값
     },
-    exceptionMap: Record<string, BusinessExceptionType>,
   ) {
     const result = schema.safeParse(data);
     if (!result.success) {
       const issue = result.error.issues[0]; // 첫번째 형식 에러 먼저 처리
-      const field = issue.path[0] as string;
-      const matched =
-        exceptionMap[field] || BusinessExceptionType.INVALID_REQUEST;
 
       throw new BusinessException({
-        type: matched,
+        type: BusinessExceptionType.VALIDATION_ERROR,
         message: issue.message,
       });
     }
-
     return result.data;
   }
 }

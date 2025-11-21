@@ -15,11 +15,7 @@ export class CarController extends BaseController {
   }
 
   registerCar = async (req: Request, res: Response) => {
-    const body = this.validateOrThrow(
-      registerCarSchema,
-      req.body,
-      carFieldExceptionMap,
-    );
+    const body = this.validateOrThrow(registerCarSchema, req.body);
 
     const entity = await this._carService.registerCar({
       body,
@@ -56,11 +52,7 @@ export class CarController extends BaseController {
   };
 
   updateCar = async (req: Request, res: Response) => {
-    const body = this.validateOrThrow(
-      updateCarSchema,
-      req.body,
-      carFieldExceptionMap,
-    );
+    const body = this.validateOrThrow(updateCarSchema, req.body);
     const carId = Number(req.params.carId);
 
     const entity = await this._carService.updateCar({
