@@ -80,7 +80,7 @@ export class CustomerService extends BaseService implements ICustomerService {
     dto: UpdateCustomerReq;
   }): Promise<CustomerResponseDto> {
     const { customerId, dto } = params;
-    
+
     return await this._unitOfWork.do(async (txRepos) => {
       const customer = await txRepos.customer.findById(customerId);
 
@@ -109,7 +109,7 @@ export class CustomerService extends BaseService implements ICustomerService {
         }
         throw err;
       }
-    })
+    });
   }
 
   async deleteCustomer(customerId: number): Promise<void> {
@@ -133,8 +133,8 @@ export class CustomerService extends BaseService implements ICustomerService {
 
     if (!file) {
       throw new BusinessException({
-        type: BusinessExceptionType.CUSTOMER_FILE_NOT_UPLOAD
-      })
+        type: BusinessExceptionType.CUSTOMER_FILE_NOT_UPLOAD,
+      });
     }
     const content = file.buffer?.toString("utf-8");
 
@@ -160,6 +160,5 @@ export class CustomerService extends BaseService implements ICustomerService {
         await txRepos.customer.create(entity);
       }
     }, false);
-
   }
 }

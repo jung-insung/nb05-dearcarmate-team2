@@ -1,5 +1,9 @@
 import { RegistCustomerReq } from "../../1_inbound/requests/customer-schema.request";
-import { CustomerAgeGroup, CustomerGender, CustomerRegion } from "../../2_domain/entities/customer/customer.enum";
+import {
+  CustomerAgeGroup,
+  CustomerGender,
+  CustomerRegion,
+} from "../../2_domain/entities/customer/customer.enum";
 import { BusinessException } from "../exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../exceptions/business.exceptions/exception-info";
 
@@ -65,23 +69,23 @@ function normalizeRegion(raw: string): CustomerRegion | undefined {
   }
 
   const map: Record<string, CustomerRegion> = {
-    "서울": CustomerRegion.SEOUL,
-    "경기": CustomerRegion.GYEONGGI,
-    "인천": CustomerRegion.INCHEON,
-    "강원": CustomerRegion.GANGWON,
-    "충북": CustomerRegion.CHUNGBUK,
-    "충남": CustomerRegion.CHUNGNAM,
-    "세종": CustomerRegion.SEJONG,
-    "대전": CustomerRegion.DAEJEON,
-    "전북": CustomerRegion.JEONBUK,
-    "전남": CustomerRegion.JEONNAM,
-    "광주": CustomerRegion.GWANGJU,
-    "경북": CustomerRegion.GYEONGBUK,
-    "경남": CustomerRegion.GYEONGNAM,
-    "대구": CustomerRegion.DAEGU,
-    "울산": CustomerRegion.ULSAN,
-    "부산": CustomerRegion.BUSAN,
-    "제주": CustomerRegion.JEJU,
+    서울: CustomerRegion.SEOUL,
+    경기: CustomerRegion.GYEONGGI,
+    인천: CustomerRegion.INCHEON,
+    강원: CustomerRegion.GANGWON,
+    충북: CustomerRegion.CHUNGBUK,
+    충남: CustomerRegion.CHUNGNAM,
+    세종: CustomerRegion.SEJONG,
+    대전: CustomerRegion.DAEJEON,
+    전북: CustomerRegion.JEONBUK,
+    전남: CustomerRegion.JEONNAM,
+    광주: CustomerRegion.GWANGJU,
+    경북: CustomerRegion.GYEONGBUK,
+    경남: CustomerRegion.GYEONGNAM,
+    대구: CustomerRegion.DAEGU,
+    울산: CustomerRegion.ULSAN,
+    부산: CustomerRegion.BUSAN,
+    제주: CustomerRegion.JEJU,
   };
 
   const ko = raw.trim();
@@ -110,7 +114,15 @@ export class CustomerCSVUtil {
       });
     }
     const header = lines[0].split(",").map((h) => h.trim());
-    const expected = ["name", "gender", "phoneNumber", "email", "ageGroup", "region", "memo"]
+    const expected = [
+      "name",
+      "gender",
+      "phoneNumber",
+      "email",
+      "ageGroup",
+      "region",
+      "memo",
+    ];
 
     if (header.length < expected.length) {
       throw new BusinessException({
@@ -118,7 +130,7 @@ export class CustomerCSVUtil {
       });
     }
 
-    const result: RegistCustomerReq[] = []
+    const result: RegistCustomerReq[] = [];
     for (let i = 1; i < lines.length; i++) {
       const row = lines[i].split(",");
 
@@ -127,7 +139,15 @@ export class CustomerCSVUtil {
           type: BusinessExceptionType.CUSTOMER_UPLOAD_INVALID_CSV_HEADER,
         });
       }
-      const [name, rawGender, phoneNumber, email, rawAgeGroup, rawRegion, memo] = row
+      const [
+        name,
+        rawGender,
+        phoneNumber,
+        email,
+        rawAgeGroup,
+        rawRegion,
+        memo,
+      ] = row;
 
       if (!name)
         throw new BusinessException({
@@ -157,7 +177,7 @@ export class CustomerCSVUtil {
           ageGroup,
           region,
           memo,
-        }
+        },
       });
     }
 
