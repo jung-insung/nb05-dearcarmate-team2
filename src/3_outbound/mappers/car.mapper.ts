@@ -72,19 +72,37 @@ export class CarMapper {
   static toResponse(entity: CarEntity) {
     const p = entity.toPersistence();
 
+    const MANUFACTURER_MAP: Record<string, string> = {
+      KIA: "기아",
+      HYUNDAI: "현대",
+      CHEVROLET: "쉐보레",
+    };
+
+    const TYPE_MAP: Record<string, string> = {
+      SEDAN: "세단",
+      COMPACT: "경차",
+      SUV: "SUV",
+    };
+
+    const STATUS_MAP: Record<string, string> = {
+      POSSESSION: "possession",
+      CONTRACT_PROCEEDING: "contractProceeding",
+      CONTRACT_COMPLETED: "contractCompleted",
+    };
+
     return {
       id: p.id,
       carNumber: p.carNumber,
-      manufacturer: p.manufacturer,
+      manufacturer: MANUFACTURER_MAP[p.manufacturer] ?? p.manufacturer,
       model: p.model,
-      type: p.type,
+      type: TYPE_MAP[p.type] ?? p.type,
       manufacturingYear: p.manufacturingYear,
       mileage: p.mileage,
       price: p.price,
       accidentCount: p.accidentCount,
       explanation: p.explanation,
       accidentDetails: p.accidentDetails,
-      status: p.status,
+      status: STATUS_MAP[p.status] ?? p.status,
     };
   }
 }

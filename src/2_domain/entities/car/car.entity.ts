@@ -160,9 +160,18 @@ export class CarEntity {
     _manufacturer: CarManufacturer,
     model: string,
   ): CarType {
-    if (["스파크"].includes(model)) return CarType.COMPACT;
-    if (["K3", "K5", "K7", "K8", "K9"].includes(model)) return CarType.SEDAN;
-    return CarType.SUV;
+    if (["스파크", "모닝"].includes(model)) return CarType.COMPACT;
+
+    if (
+      ["K3", "K5", "K7", "K8", "K9", "그랜저", "아반떼", "소나타"].includes(
+        model,
+      )
+    )
+      return CarType.SEDAN;
+
+    if (["투싼", "스포티지", "싼타페"].includes(model)) return CarType.SUV;
+
+    return CarType.SEDAN;
   }
 
   toCreateData(): CreateCarData {
