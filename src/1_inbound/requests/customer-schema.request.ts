@@ -67,5 +67,13 @@ export const registCustomerSchema = z.object({
 
 export const updateCustomerSchema = registCustomerSchema.partial();
 
+export const getCustomersQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(8),
+  searchBy: z.enum(["name", "email"]).optional(),
+  keyword: z.string().trim().min(1).optional(),
+});
+
 export type RegistCustomerReq = z.infer<typeof registCustomerSchema>;
 export type UpdateCustomerReq = z.infer<typeof updateCustomerSchema>;
+export type getCustomersQueryReq = z.infer<typeof getCustomersQuerySchema>;
