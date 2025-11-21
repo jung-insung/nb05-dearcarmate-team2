@@ -2,7 +2,7 @@ import {
   RegistCustomerReq,
   UpdateCustomerReq,
 } from "../../1_inbound/requests/customer-schema.request";
-import { CustomerResponseDto } from "../../1_inbound/response/customer.response";
+import { CustomerResponseDto } from "../../1_inbound/responses/customer/customer.response";
 import {
   CustomerEntity,
   NewCustomerEntity,
@@ -33,10 +33,12 @@ export interface CustomerReocrd {
 
 //DTO -> Entity
 export class CustomerMapper {
-  static toNewEntity(
+  static toNewEntity(params: {
     dto: RegistCustomerReq,
     companyId: number,
+  }
   ): NewCustomerEntity {
+    const { dto, companyId } = params
     const { ...customer } = dto.body;
 
     return CustomerEntity.createNew({
@@ -50,6 +52,34 @@ export class CustomerMapper {
       companyId,
     });
   }
+
+  // CSV 용
+  static toNewEntities(params: {
+  row: {
+    name: string;
+    gender?: string;
+    phoneNumber: string;
+    email: string;
+    ageGroup?: string;
+    region?: string;
+    memo?: any;
+  };
+  companyId: number;
+}): NewCustomerEntity {
+  const { row, companyId } = params;
+
+  return CustomerEntity.createNew({
+    name: row.name,
+    gender: (row.gender as CustomerGender) ?? CustomerGender.MALE,
+    phoneNumber: row.phoneNumber,
+    ageGroup: row.ageGroup as CustomerAgeGroup | undefined,
+    region: row.region as CustomerRegion | undefined,
+    email: row.email,
+    memo: row.memo,
+    companyId,
+  });
+}
+
 
   static toUpdateEntity(
     currentEntity: PersistCustomerEntity,

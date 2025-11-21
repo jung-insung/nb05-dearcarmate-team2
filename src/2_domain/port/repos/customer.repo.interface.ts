@@ -32,9 +32,4 @@ export interface ICustomerRepo {
    * @throws {TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED}
    */
   delete(id: number): Promise<void>;
-
-  /**
-   *
-   */
-  upload(params: { companyId: number; req: any }): Promise<void>;
 }

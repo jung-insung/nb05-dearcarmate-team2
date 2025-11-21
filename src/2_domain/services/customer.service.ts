@@ -12,6 +12,7 @@ import { BusinessException } from "../../4_shared/exceptions/business.exceptions
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
+import { CustomerCSVUtil } from "../../4_shared/utils/customer-csv.util";
 import { IUnitOfWork } from "../port/unit-of-work.interface";
 import { BaseService } from "./base.service";
 
@@ -28,7 +29,7 @@ export class CustomerService extends BaseService implements ICustomerService {
 
     const companyId = await this._getCompanyId(userId);
 
-    const entity = CustomerMapper.toNewEntity(dto, companyId);
+    const entity = CustomerMapper.toNewEntity({ dto, companyId });
     const newCusotmer = await this._unitOfWork.repos.customer.create(entity);
 
     return CustomerMapper.toResponseData(newCusotmer);
@@ -79,32 +80,36 @@ export class CustomerService extends BaseService implements ICustomerService {
     dto: UpdateCustomerReq;
   }): Promise<CustomerResponseDto> {
     const { customerId, dto } = params;
-    const customer = await this._unitOfWork.repos.customer.findById(customerId);
+    
+    return await this._unitOfWork.do(async (txRepos) => {
+      const customer = await txRepos.customer.findById(customerId);
 
-    if (!customer) {
-      throw new BusinessException({
-        type: BusinessExceptionType.CUSTOMER_NOT_EXIST,
-      });
-    }
-
-    const entity = CustomerMapper.toUpdateEntity(customer, dto);
-
-    try {
-      const updatedCustomer = await this._unitOfWork.repos.customer.update(
-        customerId,
-        entity,
-      );
-      return CustomerMapper.toResponseData(updatedCustomer);
-    } catch (err) {
-      if (err instanceof TechnicalException) {
-        if (err.type === TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED) {
-          throw new BusinessException({
-            type: BusinessExceptionType.CUSTOMER_DATA_CHANGED,
-          });
-        }
+      if (!customer) {
+        throw new BusinessException({
+          type: BusinessExceptionType.CUSTOMER_NOT_EXIST,
+        });
       }
-      throw err;
-    }
+
+      const entity = CustomerMapper.toUpdateEntity(customer, dto);
+
+      try {
+        const updatedCustomer = await txRepos.customer.update(
+          customerId,
+          entity,
+        );
+
+        return CustomerMapper.toResponseData(updatedCustomer);
+      } catch (err) {
+        if (err instanceof TechnicalException) {
+          if (err.type === TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED) {
+            throw new BusinessException({
+              type: BusinessExceptionType.CUSTOMER_DATA_CHANGED,
+            });
+          }
+        }
+        throw err;
+      }
+    })
   }
 
   async deleteCustomer(customerId: number): Promise<void> {
@@ -124,9 +129,37 @@ export class CustomerService extends BaseService implements ICustomerService {
   async uploadCustomers(params: { userId: number; req: any }): Promise<void> {
     const { userId, req } = params;
     const companyId = await this._getCompanyId(userId);
-    await this._unitOfWork.repos.customer.upload({
-      companyId,
-      req,
-    });
+    const file = req.file;
+
+    if (!file) {
+      throw new BusinessException({
+        type: BusinessExceptionType.CUSTOMER_FILE_NOT_UPLOAD
+      })
+    }
+    const content = file.buffer?.toString("utf-8");
+
+    if (!content) {
+      throw new BusinessException({
+        type: BusinessExceptionType.CUSTOMER_UPLOAD_FILE_EMPTY,
+      });
+    }
+
+    const rows = CustomerCSVUtil.parse(content);
+
+    if (rows.length === 0) {
+      throw new BusinessException({
+        type: BusinessExceptionType.CUSTOMER_FILE_DATAFORM_INCOREECT,
+      });
+    }
+    await this._unitOfWork.do(async (txRepos) => {
+      for (const row of rows) {
+        const entity = CustomerMapper.toNewEntities({
+          row,
+          companyId,
+        });
+        await txRepos.customer.create(entity);
+      }
+    }, false);
+
   }
 }
