@@ -106,6 +106,4 @@ export class CustomerRepo implements ICustomerRepo {
       }
     }
   }
-
-  async upload() {}
 }
