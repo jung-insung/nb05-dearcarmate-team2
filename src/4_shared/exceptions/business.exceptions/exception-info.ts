@@ -58,7 +58,7 @@ export enum BusinessExceptionType {
   CUSTOMER_CSV_INVALID_REGION,
   CUSTOMER_CSV_INVALID_NAME,
   CUSTOMER_CSV_INVALID_EMAIL,
-  CUSTOMER_CSV_INVALID_PHONENUMBER
+  CUSTOMER_CSV_INVALID_PHONENUMBER,
 }
 
 export const BusinessExceptionTable: Record<
@@ -208,43 +208,43 @@ export const BusinessExceptionTable: Record<
   },
   [BusinessExceptionType.CUSTOMER_FILE_NOT_UPLOAD]: {
     statusCode: 400,
-    message: "파일이 업로드 되지 않았습니다. 다시 시도해 주세요"
+    message: "파일이 업로드 되지 않았습니다. 다시 시도해 주세요",
   },
   [BusinessExceptionType.CUSTOMER_UPLOAD_FILE_EMPTY]: {
     statusCode: 400,
-    message: "파일이 비어있습니다."
+    message: "파일이 비어있습니다.",
   },
   [BusinessExceptionType.CUSTOMER_FILE_DATAFORM_INCOREECT]: {
     statusCode: 400,
-    message: "데이터를 저장할 수 없습니다. 파일을 확인해주세요."
+    message: "데이터를 저장할 수 없습니다. 파일을 확인해주세요.",
   },
   [BusinessExceptionType.CUSTOMER_UPLOAD_INVALID_CSV_HEADER]: {
     statusCode: 400,
-    message: "데이터 형식이 올바르지 않습니다."
+    message: "데이터 형식이 올바르지 않습니다.",
   },
   [BusinessExceptionType.CUSTOMER_CSV_INVALID_GENDER]: {
     statusCode: 400,
-    message: "gender 데이터 형식이 올바르지 않습니다."
+    message: "gender 데이터 형식이 올바르지 않습니다.",
   },
   [BusinessExceptionType.CUSTOMER_CSV_INVALID_AGEGROUP]: {
     statusCode: 400,
-    message: "agegroup 데이터 형식이 올바르지 않습니다."
+    message: "agegroup 데이터 형식이 올바르지 않습니다.",
   },
   [BusinessExceptionType.CUSTOMER_CSV_INVALID_REGION]: {
     statusCode: 400,
-    message: "region 데이터 형식이 올바르지 않습니다."
+    message: "region 데이터 형식이 올바르지 않습니다.",
   },
   [BusinessExceptionType.CUSTOMER_CSV_INVALID_NAME]: {
     statusCode: 400,
-    message: "name 데이터 형식이 올바르지 않습니다."
+    message: "name 데이터 형식이 올바르지 않습니다.",
   },
   [BusinessExceptionType.CUSTOMER_CSV_INVALID_EMAIL]: {
     statusCode: 400,
-    message: "email 데이터 형식이 올바르지 않습니다."
+    message: "email 데이터 형식이 올바르지 않습니다.",
   },
   [BusinessExceptionType.CUSTOMER_CSV_INVALID_PHONENUMBER]: {
     statusCode: 400,
-    message: "Phonenumber 데이터 형식이 올바르지 않습니다."
+    message: "Phonenumber 데이터 형식이 올바르지 않습니다.",
   },
 
   // 존재 유무
@@ -268,7 +268,6 @@ export const BusinessExceptionTable: Record<
     statusCode: 404,
     message: "존재하지 않는 차량입니다.",
   },
-
 
   // 중복, 충돌
   [BusinessExceptionType.EMAIL_DUPLICATE]: {

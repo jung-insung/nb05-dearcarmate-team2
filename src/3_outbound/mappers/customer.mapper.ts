@@ -34,11 +34,10 @@ export interface CustomerReocrd {
 //DTO -> Entity
 export class CustomerMapper {
   static toNewEntity(params: {
-    dto: RegistCustomerReq,
-    companyId: number,
-  }
-  ): NewCustomerEntity {
-    const { dto, companyId } = params
+    dto: RegistCustomerReq;
+    companyId: number;
+  }): NewCustomerEntity {
+    const { dto, companyId } = params;
     const { ...customer } = dto.body;
 
     return CustomerEntity.createNew({
@@ -55,31 +54,30 @@ export class CustomerMapper {
 
   // CSV 용
   static toNewEntities(params: {
-  row: {
-    name: string;
-    gender?: string;
-    phoneNumber: string;
-    email: string;
-    ageGroup?: string;
-    region?: string;
-    memo?: any;
-  };
-  companyId: number;
-}): NewCustomerEntity {
-  const { row, companyId } = params;
+    row: {
+      name: string;
+      gender?: string;
+      phoneNumber: string;
+      email: string;
+      ageGroup?: string;
+      region?: string;
+      memo?: any;
+    };
+    companyId: number;
+  }): NewCustomerEntity {
+    const { row, companyId } = params;
 
-  return CustomerEntity.createNew({
-    name: row.name,
-    gender: (row.gender as CustomerGender) ?? CustomerGender.MALE,
-    phoneNumber: row.phoneNumber,
-    ageGroup: row.ageGroup as CustomerAgeGroup | undefined,
-    region: row.region as CustomerRegion | undefined,
-    email: row.email,
-    memo: row.memo,
-    companyId,
-  });
-}
-
+    return CustomerEntity.createNew({
+      name: row.name,
+      gender: (row.gender as CustomerGender) ?? CustomerGender.MALE,
+      phoneNumber: row.phoneNumber,
+      ageGroup: row.ageGroup as CustomerAgeGroup | undefined,
+      region: row.region as CustomerRegion | undefined,
+      email: row.email,
+      memo: row.memo,
+      companyId,
+    });
+  }
 
   static toUpdateEntity(
     currentEntity: PersistCustomerEntity,
