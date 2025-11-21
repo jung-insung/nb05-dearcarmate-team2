@@ -84,11 +84,6 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
 
       if (keyword) {
         switch (searchBy) {
-          case "companyName":
-            whereCondition = {
-              companyName: { contains: keyword, mode: queryMode },
-            };
-            break;
           case "companyCode":
             whereCondition = {
               companyCode: { contains: keyword, mode: queryMode },
@@ -96,10 +91,7 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
             break;
           default:
             whereCondition = {
-              OR: [
-                { companyName: { contains: keyword, mode: queryMode } },
-                { companyCode: { contains: keyword, mode: queryMode } },
-              ],
+              companyName: { contains: keyword, mode: queryMode },
             };
         }
       }
@@ -147,11 +139,6 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
 
       if (keyword) {
         switch (searchBy) {
-          case "companyName":
-            whereCondition = {
-              company: { companyName: { contains: keyword, mode: queryMode } },
-            };
-            break;
           case "name":
             whereCondition = { name: { contains: keyword, mode: queryMode } };
             break;
@@ -160,15 +147,7 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
             break;
           default:
             whereCondition = {
-              OR: [
-                {
-                  company: {
-                    companyName: { contains: keyword, mode: queryMode },
-                  },
-                },
-                { name: { contains: keyword, mode: queryMode } },
-                { email: { contains: keyword, mode: queryMode } },
-              ],
+              company: { companyName: { contains: keyword, mode: queryMode } },
             };
         }
       }
