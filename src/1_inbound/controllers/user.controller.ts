@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { BaseController, ControllerHandler } from "./base.controller";
-import { userFieldExceptionMap } from "../requests/validater-map";
 import {
   deleteUserReqSchema,
   getUserReqSchema,
@@ -29,11 +28,9 @@ export class UserController extends BaseController implements IUserController {
     req: Request,
     res: Response,
   ): Promise<Response<any>> => {
-    const reqDto = this.validateOrThrow(
-      registerUserReqSchema,
-      { body: req.body },
-      userFieldExceptionMap,
-    );
+    const reqDto = this.validateOrThrow(registerUserReqSchema, {
+      body: req.body,
+    });
 
     const newUser = await this._userService.signUpUser(reqDto);
 
@@ -46,11 +43,10 @@ export class UserController extends BaseController implements IUserController {
     req: Request,
     res: Response,
   ): Promise<Response<any>> => {
-    const reqDto = this.validateOrThrow(
-      updateUserReqSchema,
-      { body: req.body, userId: req.userId },
-      userFieldExceptionMap,
-    );
+    const reqDto = this.validateOrThrow(updateUserReqSchema, {
+      body: req.body,
+      userId: req.userId,
+    });
 
     const updatedUser = await this._userService.updateUser(reqDto);
 
@@ -63,11 +59,9 @@ export class UserController extends BaseController implements IUserController {
     req: Request,
     res: Response,
   ): Promise<Response<any>> => {
-    const reqDto = this.validateOrThrow(
-      getUserReqSchema,
-      { userId: req.userId },
-      userFieldExceptionMap,
-    );
+    const reqDto = this.validateOrThrow(getUserReqSchema, {
+      userId: req.userId,
+    });
 
     const getUser = await this._userService.getUser(reqDto);
 
@@ -80,11 +74,10 @@ export class UserController extends BaseController implements IUserController {
     req: Request,
     res: Response,
   ): Promise<Response<any>> => {
-    const reqDto = this.validateOrThrow(
-      deleteUserReqSchema,
-      { params: req.params, userId: req.userId },
-      userFieldExceptionMap,
-    );
+    const reqDto = this.validateOrThrow(deleteUserReqSchema, {
+      params: req.params,
+      userId: req.userId,
+    });
 
     await this._userService.deleteUser(reqDto);
 

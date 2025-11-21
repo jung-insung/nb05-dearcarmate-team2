@@ -9,7 +9,7 @@ export class CarRouter extends BaseRouter {
   constructor(
     private readonly _carController: CarController,
     private readonly _authMiddleware: AuthMiddleware,
-) {
+  ) {
     super("/cars");
     this.setRoutes();
   }

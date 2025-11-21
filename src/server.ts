@@ -49,7 +49,7 @@ export class Server {
     this._app.use(this._authRouter.basePath, this._authRouter.router);
     this._app.use(this._userRouter.basePath, this._userRouter.router);
     this._app.use(this._companyRouter.basePath, this._companyRouter.router);
-    
+
     this._app.use(this._notFoundMiddleware.handler());
     this._app.use(this._globalErrorMiddleware.handler);
     this.listen();

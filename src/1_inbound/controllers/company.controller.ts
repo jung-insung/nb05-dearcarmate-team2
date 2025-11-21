@@ -9,7 +9,6 @@ import {
   updateCompanyReqSchema,
   deleteCompanyReqSchema,
 } from "../requests/company-schema.request";
-import { companyFieldExceptionMap } from "../requests/validater-map";
 
 export class CompanyController
   extends BaseController
@@ -20,11 +19,10 @@ export class CompanyController
   }
 
   getCompanyList = async (req: Request, res: Response) => {
-    const { query, userId } = this.validateOrThrow(
-      getCompanyListReqSchema,
-      { query: req.query, userId: req.userId },
-      companyFieldExceptionMap,
-    );
+    const { query, userId } = this.validateOrThrow(getCompanyListReqSchema, {
+      query: req.query,
+      userId: req.userId,
+    });
 
     const result = await this._companyService.getCompanyList(query, userId);
 
@@ -32,11 +30,10 @@ export class CompanyController
   };
 
   getUserList = async (req: Request, res: Response) => {
-    const { query, userId } = this.validateOrThrow(
-      getUserListReqSchema,
-      { query: req.query, userId: req.userId },
-      companyFieldExceptionMap,
-    );
+    const { query, userId } = this.validateOrThrow(getUserListReqSchema, {
+      query: req.query,
+      userId: req.userId,
+    });
 
     const result = await this._companyService.getUserList(query, userId);
 
@@ -44,11 +41,10 @@ export class CompanyController
   };
 
   createCompany = async (req: Request, res: Response) => {
-    const { body, userId } = this.validateOrThrow(
-      createCompanyReqSchema,
-      { body: req.body, userId: req.userId },
-      companyFieldExceptionMap,
-    );
+    const { body, userId } = this.validateOrThrow(createCompanyReqSchema, {
+      body: req.body,
+      userId: req.userId,
+    });
 
     const newCompany = await this._companyService.createCompany(body, userId);
 
@@ -59,7 +55,6 @@ export class CompanyController
     const { params, body, userId } = this.validateOrThrow(
       updateCompanyReqSchema,
       { params: req.params, body: req.body, userId: req.userId },
-      companyFieldExceptionMap,
     );
 
     const updatedCompany = await this._companyService.updateCompany(
@@ -72,11 +67,10 @@ export class CompanyController
   };
 
   deleteCompany = async (req: Request, res: Response) => {
-    const { params, userId } = this.validateOrThrow(
-      deleteCompanyReqSchema,
-      { params: req.params, userId: req.userId },
-      companyFieldExceptionMap,
-    );
+    const { params, userId } = this.validateOrThrow(deleteCompanyReqSchema, {
+      params: req.params,
+      userId: req.userId,
+    });
 
     await this._companyService.deleteCompany(params.companyId, userId);
 
