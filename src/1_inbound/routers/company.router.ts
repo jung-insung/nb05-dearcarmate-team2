@@ -7,13 +7,13 @@ export class CompanyRouter extends BaseRouter {
     private _companyController: ICompanyController,
     private _authMiddleware: AuthMiddleware,
   ) {
-    super("/admin");
+    super("/companies");
     this.registerCompanyRouter();
   }
 
   registerCompanyRouter() {
     this.router.get(
-      "/companies",
+      "/",
       this._authMiddleware.isUserAuthenticate,
       this.catch(this._companyController.getCompanyList),
     );
@@ -25,19 +25,19 @@ export class CompanyRouter extends BaseRouter {
     );
 
     this.router.post(
-      "/companies",
+      "/",
       this._authMiddleware.isUserAuthenticate,
       this.catch(this._companyController.createCompany),
     );
 
     this.router.patch(
-      "/companies/:companyId",
+      "/:companyId",
       this._authMiddleware.isUserAuthenticate,
       this.catch(this._companyController.updateCompany),
     );
 
     this.router.delete(
-      "/companies/:companyId",
+      "/:companyId",
       this._authMiddleware.isUserAuthenticate,
       this.catch(this._companyController.deleteCompany),
     );
