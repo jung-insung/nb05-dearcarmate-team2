@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { BaseController, ControllerHandler } from "./base.controller";
 import {
+  getCustomersQuerySchema,
   registCustomerSchema,
   updateCustomerSchema,
 } from "../requests/customer-schema.request";
@@ -35,16 +36,22 @@ export class CustomerController extends BaseController {
   }
 
   async getCustomers(req: Request, res: Response) {
-    const userId = req.userId!;
-    const page = Number(req.query.page ?? 1);
-    const pageSize = Number(req.query.pageSize ?? 8);
+    const userId = req.userId!
 
-    const customers = await this._customerService.getCustoemrs({
+    const query = this.validateOrThrow(
+      getCustomersQuerySchema,
+      { query: req.query },
+      customerFieldExceptionMap,
+    );
+
+    const { page, pageSize, searchBy, keyword } = query;
+
+    const customers = await this._customerService.getCustomers({
       userId,
       page,
       pageSize,
-      searchBy: req.query.searchBy,
-      keyword: req.query.keyword,
+      searchBy,
+      keyword,
     });
 
     return res.status(200).json(customers);

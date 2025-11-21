@@ -45,6 +45,10 @@ export enum BusinessExceptionType {
   CUSTOMER_DATA_CHANGED,
   CUSTOMER_DATA_ARLEADY_DELETE,
   NOT_ADMIN,
+  CUSTOMER_NAME_FORM,
+  CUSTOMER_PHONENUMBER_FORM,
+  CUSTOMER_EMAIL_FORM,
+  CUSTOMER_KEYWORD_ERR
 }
 
 export const BusinessExceptionTable: Record<
@@ -176,6 +180,22 @@ export const BusinessExceptionTable: Record<
     statusCode: 400,
     message: "유효한 차량 데이터가 존재하지 않습니다.",
   },
+  [BusinessExceptionType.CUSTOMER_NAME_FORM]: {
+    statusCode: 400,
+    message: "이름을 다시 입력해주세요"
+  },
+  [BusinessExceptionType.CUSTOMER_PHONENUMBER_FORM]: {
+    statusCode: 400,
+    message: "전화번호를 다시 입력해주세요"
+  },
+  [BusinessExceptionType.CUSTOMER_EMAIL_FORM]: {
+    statusCode: 400,
+    message: "이메일을 다시 입력해주세요"
+  },
+  [BusinessExceptionType.CUSTOMER_KEYWORD_ERR]: {
+    statusCode: 400,
+    message: "키워드를 다시 입력해주세요",
+  },
 
   // 존재 유무
   [BusinessExceptionType.COMPANY_NOT_EXIST]: {
@@ -198,6 +218,7 @@ export const BusinessExceptionTable: Record<
     statusCode: 404,
     message: "존재하지 않는 차량입니다.",
   },
+  
 
   // 중복, 충돌
   [BusinessExceptionType.EMAIL_DUPLICATE]: {

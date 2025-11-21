@@ -30,7 +30,21 @@ export const companyFieldExceptionMap: Record<string, BusinessExceptionType> = {
 };
 
 export const customerFieldExceptionMap: Record<string, BusinessExceptionType> =
-  {};
+{
+  name: BusinessExceptionType.CUSTOMER_NAME_FORM, 
+  gender: BusinessExceptionType.BAD_REQUEST,
+  phoneNumber: BusinessExceptionType.CUSTOMER_PHONENUMBER_FORM,
+  ageGroup: BusinessExceptionType.BAD_REQUEST,
+  region : BusinessExceptionType.BAD_REQUEST,
+  email: BusinessExceptionType.CUSTOMER_EMAIL_FORM,
+  memo: BusinessExceptionType.BAD_REQUEST,
+  page: BusinessExceptionType.BAD_REQUEST,
+  pageSize: BusinessExceptionType.BAD_REQUEST,
+  searchBy: BusinessExceptionType.BAD_REQUEST,
+  keyword: BusinessExceptionType.CUSTOMER_KEYWORD_ERR,
+
+}
+  ;
 
 export const carFieldExceptionMap: Record<string, BusinessExceptionType> = {
   carNumber: BusinessExceptionType.INVALID_CAR_NUMBER,
