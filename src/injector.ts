@@ -7,9 +7,11 @@ import { LoggerMiddleware } from "./1_inbound/middlewares/logger.middleware";
 import { UserRouter } from "./1_inbound/routers/user.router";
 import { CompanyRouter } from "./1_inbound/routers/company.router";
 import { CarRouter } from "./1_inbound/routers/car.router";
+import { CustomerRouter } from "./1_inbound/routers/coustomer.router";
 
 import { UserRepo } from "./3_outbound/repos/user.repo";
 import { CompanyRepo } from "./3_outbound/repos/company.repo";
+import { CustomerRepo } from "./3_outbound/repos/customer.repo";
 import { CarRepo } from "./3_outbound/repos/car.repo";
 
 import { ConfigUtil } from "./4_shared/utils/config.util";
@@ -18,10 +20,12 @@ import { Server } from "./server";
 import { UserService } from "./2_domain/services/user.service";
 import { CompanyService } from "./2_domain/services/company.service";
 import { CarService } from "./2_domain/services/car.service";
+import { CustomerService } from "./2_domain/services/customer.service";
 
 import { UserController } from "./1_inbound/controllers/user.controller";
 import { CompanyController } from "./1_inbound/controllers/company.controller";
 import { CarController } from "./1_inbound/controllers/car.controller";
+import { CustomerController } from "./1_inbound/controllers/customer.controller";
 
 import { NotFoundMiddleware } from "./1_inbound/middlewares/not-found.middleware";
 import { BcryptHashManager } from "./3_outbound/managers/bcrypt-hash.manager";
@@ -32,7 +36,6 @@ import { AuthService } from "./2_domain/services/auth.service";
 import { AuthController } from "./1_inbound/controllers/auth.controller";
 import { TokenUtil } from "./4_shared/utils/token.util";
 import { AuthMiddleware } from "./1_inbound/middlewares/auth.middleware";
-import { CustomerRouter } from "./1_inbound/routers/coustomer.router";
 
 export class Injector {
   private _server: Server;
@@ -62,6 +65,7 @@ export class Injector {
       user: (prisma) => new UserRepo(prisma),
       company: (prisma) => new CompanyRepo(prisma),
       car: (prisma) => new CarRepo(prisma),
+      customer: (prisma) => new CustomerRepo(prisma),
     });
 
     const unitOfWork = new UnitOfWork(prisma, repoFactory, configUtil);
@@ -73,25 +77,32 @@ export class Injector {
     );
     const userService = new UserService(unitOfWork, bcryptHashManger);
     const companyService = new CompanyService(unitOfWork);
-    const carService = new CarService(unitOfWork);
+    //const carService = new CarService(unitOfWork);
+    const customerService = new CustomerService(unitOfWork);
 
     const authController = new AuthController(authService);
     const userController = new UserController(userService);
     const companyController = new CompanyController(companyService);
-    const carController = new CarController(carService);
+    //const carController = new CarController(carService);
+    const customerController = new CustomerController(customerService);
 
     const authMiddleware = new AuthMiddleware(tokenUtil);
 
     const authRouter = new AuthRouter(authController);
     const userRouter = new UserRouter(userController, authMiddleware);
     const companyRouter = new CompanyRouter(companyController, authMiddleware);
-    const carRouter = new CarRouter(carController, authMiddleware);
+    //const carRouter = new CarRouter(carController);
+    const customerRouter = new CustomerRouter(
+      customerController,
+      authMiddleware,
+    );
 
     return new Server(
       authRouter,
       userRouter,
       companyRouter,
-      carRouter,
+      customerRouter,
+      // carRouter,
       configUtil,
       corsMiddleware,
       loggerMiddleware,

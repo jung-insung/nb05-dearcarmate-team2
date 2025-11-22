@@ -5,14 +5,7 @@ import {
   registCustomerSchema,
   updateCustomerSchema,
 } from "../requests/customer-schema.request";
-import { customerFieldExceptionMap } from "../requests/validater-map";
 import { ICustomerService } from "../port/services/customer.service.interface";
-
-export interface ICustomerConteroller {
-  registCustomer: ControllerHandler;
-  updateCustomer: ControllerHandler;
-  deleteCusomer: ControllerHandler;
-}
 
 export class CustomerController extends BaseController {
   constructor(private _customerService: ICustomerService) {
@@ -52,15 +45,14 @@ export class CustomerController extends BaseController {
   }
 
   async getCustomer(req: Request, res: Response) {
-    let { customerId } = req.params;
-
+    const customerId = Number(req.params.customerId);
     const customer = await this._customerService.getCustomer(customerId);
 
     return res.status(200).json(customer);
   }
 
   async updateCustomer(req: Request, res: Response) {
-    const { customerId } = req.params;
+    const customerId = Number(req.params.customerId);
     const dto = this.validateOrThrow(updateCustomerSchema, { body: req.body });
 
     const updatedCustomer = await this._customerService.updateCustomer({
@@ -72,7 +64,7 @@ export class CustomerController extends BaseController {
   }
 
   async deleteCusomer(req: Request, res: Response) {
-    const { customerId } = req.params;
+    const customerId = Number(req.params.customerId);
     await this._customerService.deleteCustomer(customerId);
 
     res.status(200).json({ message: "고객 삭제 성공" });

@@ -9,11 +9,11 @@ import { CustomerMapper } from "../mappers/customer.mapper";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 import { ICustomerRepo } from "../../2_domain/port/repos/customer.repo.interface";
+import { BaseRepo } from "./base.repo";
 
-export class CustomerRepo implements ICustomerRepo {
-  protected _prisma;
-  constructor(_prisma: PrismaClient) {
-    this._prisma = _prisma;
+export class CustomerRepo extends BaseRepo implements ICustomerRepo {
+  constructor(prisma: PrismaClient | Prisma.TransactionClient) {
+    super(prisma);
   }
 
   async findById(id: number): Promise<PersistCustomerEntity | null> {

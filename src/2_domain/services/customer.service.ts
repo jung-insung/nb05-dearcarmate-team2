@@ -154,7 +154,7 @@ export class CustomerService extends BaseService implements ICustomerService {
     await this._unitOfWork.do(async (txRepos) => {
       for (const row of rows) {
         const entity = CustomerMapper.toNewEntities({
-          row,
+          row: row.body,
           companyId,
         });
         await txRepos.customer.create(entity);
