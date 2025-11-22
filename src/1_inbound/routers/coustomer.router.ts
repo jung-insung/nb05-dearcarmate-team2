@@ -1,6 +1,9 @@
 import { CustomerController } from "../controllers/customer.controller";
 import { AuthMiddleware } from "../middlewares/auth.middleware";
 import { BaseRouter } from "./base.router";
+import multer from "multer";
+
+const upload = multer();
 
 export class CustomerRouter extends BaseRouter {
   constructor(
@@ -44,6 +47,7 @@ export class CustomerRouter extends BaseRouter {
 
     this.router.post(
       "/uplaod",
+      upload.single("file"),
       this._authMiddleware.isUserAuthenticate,
       this.catch(this._customerController.uploadCustomers),
     );
