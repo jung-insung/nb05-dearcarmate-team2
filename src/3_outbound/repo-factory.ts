@@ -17,6 +17,7 @@ export class RepoFactory {
       user: this._repoGenerators.user(prismaClient),
       company: this._repoGenerators.company(prismaClient),
       car: this._repoGenerators.car(prismaClient),
+      customer: this._repoGenerators.customer(prismaClient),
     };
   }
 }

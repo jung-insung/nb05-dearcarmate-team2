@@ -59,6 +59,7 @@ export enum BusinessExceptionType {
   CUSTOMER_CSV_INVALID_NAME,
   CUSTOMER_CSV_INVALID_EMAIL,
   CUSTOMER_CSV_INVALID_PHONENUMBER,
+  VALIDATION_ERROR,
 }
 
 export const BusinessExceptionTable: Record<
@@ -245,6 +246,9 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.CUSTOMER_CSV_INVALID_PHONENUMBER]: {
     statusCode: 400,
     message: "Phonenumber 데이터 형식이 올바르지 않습니다.",
+  },
+  [BusinessExceptionType.VALIDATION_ERROR]: {
+    statusCode: 404,
   },
 
   // 존재 유무
