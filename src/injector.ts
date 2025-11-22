@@ -77,13 +77,13 @@ export class Injector {
     );
     const userService = new UserService(unitOfWork, bcryptHashManger);
     const companyService = new CompanyService(unitOfWork);
-    //const carService = new CarService(unitOfWork);
+    const carService = new CarService(unitOfWork);
     const customerService = new CustomerService(unitOfWork);
 
     const authController = new AuthController(authService);
     const userController = new UserController(userService);
     const companyController = new CompanyController(companyService);
-    //const carController = new CarController(carService);
+    const carController = new CarController(carService);
     const customerController = new CustomerController(customerService);
 
     const authMiddleware = new AuthMiddleware(tokenUtil);
@@ -91,7 +91,7 @@ export class Injector {
     const authRouter = new AuthRouter(authController);
     const userRouter = new UserRouter(userController, authMiddleware);
     const companyRouter = new CompanyRouter(companyController, authMiddleware);
-    //const carRouter = new CarRouter(carController);
+    const carRouter = new CarRouter(carController, authMiddleware);
     const customerRouter = new CustomerRouter(
       customerController,
       authMiddleware,
@@ -102,7 +102,7 @@ export class Injector {
       userRouter,
       companyRouter,
       customerRouter,
-      // carRouter,
+      carRouter,
       configUtil,
       corsMiddleware,
       loggerMiddleware,

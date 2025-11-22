@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { BaseController, ControllerHandler } from "./base.controller";
+import { BaseController } from "./base.controller";
 import {
   getCustomersQuerySchema,
   registCustomerSchema,
@@ -12,7 +12,7 @@ export class CustomerController extends BaseController {
     super();
   }
 
-  async registCustomer(req: Request, res: Response) {
+  registCustomer = async (req: Request, res: Response) => {
     const userId = req.userId!;
     const dto = this.validateOrThrow(registCustomerSchema, { body: req.body });
 
@@ -22,9 +22,9 @@ export class CustomerController extends BaseController {
     });
 
     res.status(201).json(newCusotmer);
-  }
+  };
 
-  async getCustomers(req: Request, res: Response) {
+  getCustomers = async (req: Request, res: Response) => {
     const userId = req.userId!;
 
     const query = this.validateOrThrow(getCustomersQuerySchema, {
@@ -42,16 +42,16 @@ export class CustomerController extends BaseController {
     });
 
     return res.status(200).json(customers);
-  }
+  };
 
-  async getCustomer(req: Request, res: Response) {
+  getCustomer = async (req: Request, res: Response) => {
     const customerId = Number(req.params.customerId);
     const customer = await this._customerService.getCustomer(customerId);
 
     return res.status(200).json(customer);
-  }
+  };
 
-  async updateCustomer(req: Request, res: Response) {
+  updateCustomer = async (req: Request, res: Response) => {
     const customerId = Number(req.params.customerId);
     const dto = this.validateOrThrow(updateCustomerSchema, { body: req.body });
 
@@ -61,19 +61,19 @@ export class CustomerController extends BaseController {
     });
 
     res.status(200).json(updatedCustomer);
-  }
+  };
 
-  async deleteCusomer(req: Request, res: Response) {
+  deleteCusomer = async (req: Request, res: Response) => {
     const customerId = Number(req.params.customerId);
     await this._customerService.deleteCustomer(customerId);
 
     res.status(200).json({ message: "고객 삭제 성공" });
-  }
+  };
 
-  async uploadCustomers(req: Request, res: Response) {
+  uploadCustomers = async (req: Request, res: Response) => {
     const userId = req.userId!;
     await this._customerService.uploadCustomers({ userId, req });
 
     res.status(200).json({ message: "고객 정보가 등록되었습니다" });
-  }
+  };
 }
