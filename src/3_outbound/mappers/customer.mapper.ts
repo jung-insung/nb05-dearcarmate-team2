@@ -38,14 +38,14 @@ export class CustomerMapper {
     companyId: number;
   }): NewCustomerEntity {
     const { dto, companyId } = params;
-    const { ...customer } = dto.body;
+    const customer = dto.body;
 
     return CustomerEntity.createNew({
       name: customer.name,
-      gender: (customer.gender as CustomerGender) ?? CustomerGender.MALE,
+      gender: customer.gender ?? CustomerGender.MALE,
       phoneNumber: customer.phoneNumber,
-      ageGroup: customer.ageGroup as CustomerAgeGroup | undefined,
-      region: customer.region as CustomerRegion | undefined,
+      ageGroup: customer.ageGroup,
+      region: customer.region,
       email: customer.email,
       memo: customer.memo,
       companyId,
@@ -86,6 +86,7 @@ export class CustomerMapper {
     const { ...customer } = dto.body;
 
     return CustomerEntity.update({
+      id: currentEntity.id,
       name: customer.name ?? currentEntity.name,
       gender: customer.gender
         ? (customer.gender as CustomerGender)
@@ -93,8 +94,10 @@ export class CustomerMapper {
       phoneNumber: customer.phoneNumber ?? currentEntity.phoneNumber,
       ageGroup: customer.ageGroup
         ? (customer.ageGroup as CustomerAgeGroup)
-        : undefined,
-      region: customer.region ? (customer.region as CustomerRegion) : undefined,
+        : currentEntity.ageGroup,
+      region: customer.region
+        ? (customer.region as CustomerRegion)
+        : currentEntity.region,
       email: customer.email ?? currentEntity.email,
       memo: customer.memo ?? currentEntity.memo,
       companyId: currentEntity.companyId,
@@ -102,8 +105,22 @@ export class CustomerMapper {
     });
   }
 
+  //entity -> db
+  static toPersistence(entity: NewCustomerEntity) {
+    return {
+      name: entity.name,
+      gender: entity.gender,
+      phoneNumber: entity.phoneNumber,
+      ageGroup: entity.ageGroup,
+      region: entity.region,
+      email: entity.email,
+      memo: entity.memo,
+      companyId: entity.companyId,
+    };
+  }
+
   //DB -> Entity
-  static toPersistEntity(record: any): PersistCustomerEntity {
+  static fromPersistence(record: any): PersistCustomerEntity {
     const domainRecord: CustomerReocrd = {
       id: record.id,
       name: record.name,

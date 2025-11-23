@@ -31,7 +31,6 @@ export class CustomerService extends BaseService implements ICustomerService {
 
     const entity = CustomerMapper.toNewEntity({ dto, companyId });
     const newCusotmer = await this._unitOfWork.repos.customer.create(entity);
-
     return CustomerMapper.toResponseData(newCusotmer);
   }
 
@@ -55,11 +54,13 @@ export class CustomerService extends BaseService implements ICustomerService {
         keyword,
       });
 
+    const resData = data.map(CustomerMapper.toResponseData);
+
     return {
       currentPage: page,
       totalPages: Math.ceil(totalItemCount / pageSize),
       totalItemCount,
-      data,
+      resData,
     };
   }
 
@@ -81,35 +82,38 @@ export class CustomerService extends BaseService implements ICustomerService {
   }): Promise<CustomerResponseDto> {
     const { customerId, dto } = params;
 
-    return await this._unitOfWork.do(async (txRepos) => {
-      const customer = await txRepos.customer.findById(customerId);
+    return await this._unitOfWork.do(
+      async (txRepos) => {
+        const customer = await txRepos.customer.findById(customerId);
 
-      if (!customer) {
-        throw new BusinessException({
-          type: BusinessExceptionType.CUSTOMER_NOT_EXIST,
-        });
-      }
-
-      const entity = CustomerMapper.toUpdateEntity(customer, dto);
-
-      try {
-        const updatedCustomer = await txRepos.customer.update(
-          customerId,
-          entity,
-        );
-
-        return CustomerMapper.toResponseData(updatedCustomer);
-      } catch (err) {
-        if (err instanceof TechnicalException) {
-          if (err.type === TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED) {
-            throw new BusinessException({
-              type: BusinessExceptionType.CUSTOMER_DATA_CHANGED,
-            });
-          }
+        if (!customer) {
+          throw new BusinessException({
+            type: BusinessExceptionType.CUSTOMER_NOT_EXIST,
+          });
         }
-        throw err;
-      }
-    });
+        const entity = CustomerMapper.toUpdateEntity(customer, dto);
+
+        try {
+          const updatedCustomer = await txRepos.customer.update(
+            customerId,
+            entity,
+          );
+
+          return CustomerMapper.toResponseData(updatedCustomer);
+        } catch (err) {
+          if (err instanceof TechnicalException) {
+            if (err.type === TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED) {
+              throw new BusinessException({
+                type: BusinessExceptionType.CUSTOMER_DATA_CHANGED,
+              });
+            }
+          }
+          throw err;
+        }
+      },
+      true,
+      false,
+    );
   }
 
   async deleteCustomer(customerId: number): Promise<void> {

@@ -17,5 +17,5 @@ export interface CustomerListResponseDto {
   currentPage: number;
   totalPages: number;
   totalItemCount: number;
-  data: CustomerResponseDto[];
+  resData: CustomerResponseDto[];
 }
