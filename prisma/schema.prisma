@@ -163,8 +163,9 @@ model Contract {
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
   company  Company  @relation(fields: [companyId], references: [id])
 
-  meeting           Meeting[]
-  contractDocuments ContractDocument[]
+  meeting Meeting[]
+
+  documents ContractDocument[]
 }
 
 model Meeting {
@@ -195,16 +196,13 @@ enum AlarmTime {
 
 
 model ContractDocument {
-  id         Int @id @default(autoincrement())
-  contractId Int
-
+  id        Int      @id @default(autoincrement())
   fileName  String
-  filePath  String
-  fileSize  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  contract Contract? @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  contractId Int
+  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
 }
 
 model Dashboard {

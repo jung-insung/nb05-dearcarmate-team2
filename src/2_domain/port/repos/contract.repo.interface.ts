@@ -1,3 +1,4 @@
+import { ContractDocPagination } from "../../services/contractDoc.service";
 import { ContractStatus } from "../../entities/contract/contract.enum";
 import { PersistContractEntity } from "../../entities/contract/contract.entity";
 
@@ -16,4 +17,8 @@ export interface IContractRepo {
   findAll(
     query: ContractListRepoDto,
   ): Promise<{ contracts: PersistContractEntity[]; totalItemCount: number }>;
+}
+
+export interface IContractRepo{
+  getContracts(pagination: ContractDocPagination):
 }
