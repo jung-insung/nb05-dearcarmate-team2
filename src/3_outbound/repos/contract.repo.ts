@@ -1,3 +1,4 @@
+import { ContractDocPagination } from "../../2_domain/services/contractDoc.service";
 import { Prisma, ContractStatus as PrismaContractStatus } from "@prisma/client";
 import { BasePrismaClient, BaseRepo } from "./base.repo";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
@@ -19,9 +20,16 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     meeting: true,
     contractDocuments: true,
   };
+  private _includeOptionForDoc: Prisma.ContractInclude;
 
   constructor(prisma: BasePrismaClient) {
     super(prisma);
+    this._includeOptionForDoc = {
+      user: true,
+      car: true,
+      customer: true,
+      documents: true
+    }
   }
 
   private _toPrismaStatus(status: ContractStatus): PrismaContractStatus {
@@ -93,4 +101,35 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       throw err;
     }
   }
+
+
+  // | ContractPagination 추가할 것
+  async getContracts(pagination: ContractDocPagination) {
+    let whereCondition: Prisma.ContractWhereInput = {};
+
+    switch (pagination.searchBy) {
+      case "userName":
+        whereCondition.user = { name: { contains: pagination.keyword } };
+        break;
+      case "carNumber":
+        whereCondition.car = { carNumber: { contains: pagination.keyword } };
+        break;
+      case "contractName":
+        whereCondition.OR = [
+          { car: { model: { contains: pagination.keyword } } },
+          { customer: { name: { contains: pagination.keyword } } }
+        ]
+        break;
+    }
+
+    const contracts = await this._prisma.contract.findMany({
+      where: whereCondition,
+      include: this._includeOptionForDoc,
+      skip: (pagination.page - 1) * pagination.pageSize,
+      take: pagination.pageSize,
+      orderBy: { createdAt: "desc" }
+    });
+
+  }
 }
+

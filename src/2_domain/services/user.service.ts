@@ -19,12 +19,15 @@ import {
 } from "../entities/user/user.entity";
 import { IBcryptHashManager } from "../port/managers/bcrypt-hash.manager.interface";
 import { IUnitOfWork } from "../port/unit-of-work.interface";
+import { BaseService } from "./base.service";
 
-export class UserService implements IUserService {
+export class UserService extends BaseService implements IUserService {
   constructor(
-    private _unitOfWork: IUnitOfWork,
+    unitOfWork: IUnitOfWork,
     private _bcryptHashManager: IBcryptHashManager,
-  ) {}
+  ) {
+    super(unitOfWork);
+  }
 
   async signUpUser(
     dto: RegisterUserReqDto,

@@ -36,6 +36,7 @@ import { AuthService } from "./2_domain/services/auth.service";
 import { AuthController } from "./1_inbound/controllers/auth.controller";
 import { TokenUtil } from "./4_shared/utils/token.util";
 import { AuthMiddleware } from "./1_inbound/middlewares/auth.middleware";
+import { ContractDocRepo } from "./3_outbound/repos/contract-doc.repo";
 
 export class Injector {
   private _server: Server;
@@ -66,6 +67,7 @@ export class Injector {
       company: (prisma) => new CompanyRepo(prisma),
       car: (prisma) => new CarRepo(prisma),
       customer: (prisma) => new CustomerRepo(prisma),
+      contract: (prisma) => new ContractDocRepo(prisma),
     });
 
     const unitOfWork = new UnitOfWork(prisma, repoFactory, configUtil);
