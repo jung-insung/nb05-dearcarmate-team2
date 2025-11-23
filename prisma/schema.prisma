@@ -144,14 +144,6 @@ model Car {
   @@index([model])
 }
 
-enum ContractStatus {
-  CAR_INSPECTION    @map("carInspection")
-  PRICE_NEGOTIATION @map("priceNegotiation")
-  CONTRACT_DRAFT    @map("contractDraft")
-  SUCCESSFUL        @map("Successful")
-  FAILED            @map("FAILED")
-}
-
 model Contract {
   id         Int @id @default(autoincrement())
   userId     Int
@@ -159,7 +151,7 @@ model Contract {
   customerId Int
   companyId  Int
 
-  contractStatus ContractStatus @default(CAR_INSPECTION)
+  status         ContractStatus @default(CAR_INSPECTION)
   resolutionDate DateTime?
   contractPrice  Int
   version        Int            @default(1)
@@ -176,25 +168,31 @@ model Contract {
 }
 
 model Meeting {
-  id         Int      @id @default(autoincrement())
+  id         Int         @id @default(autoincrement())
   contractId Int
   date       DateTime
-  version    Int      @default(1)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  version    Int         @default(1)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt  
+  
+  alarms     AlarmTime[]
 
-  alarm Alarm[]
+  contract   Contract    @relation(fields: [contractId], references: [id], onDelete: Cascade)
 }
 
-model Alarm {
-  time      DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  meetingId Int     @id
-  meeting   Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+enum ContractStatus {
+  CAR_INSPECTION       @map("carInspection")
+  PRICE_NEGOTIATION    @map("priceNegotiation")
+  CONTRACT_DRAFT       @map("contractDraft")
+  CONTRACT_SUCCESSFUL  @map("contractSuccessful")
+  CONTRACT_FAILED      @map("contractFailed")
 }
+
+enum AlarmTime {
+  DAY_BEFORE_9AM  @map("dayBefore9am")
+  ON_DAY_9AM      @map("onDay9am")
+}
+
 
 model ContractDocument {
   id         Int @id @default(autoincrement())
