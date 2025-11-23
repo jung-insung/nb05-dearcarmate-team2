@@ -46,7 +46,7 @@ export class CustomerRouter extends BaseRouter {
     );
 
     this.router.post(
-      "/uplaod",
+      "/upload",
       upload.single("file"),
       this._authMiddleware.isUserAuthenticate,
       this.catch(this._customerController.uploadCustomers),

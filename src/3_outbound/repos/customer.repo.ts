@@ -9,10 +9,10 @@ import { CustomerMapper } from "../mappers/customer.mapper";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 import { ICustomerRepo } from "../../2_domain/port/repos/customer.repo.interface";
-import { BaseRepo } from "./base.repo";
+import { BasePrismaClient, BaseRepo } from "./base.repo";
 
 export class CustomerRepo extends BaseRepo implements ICustomerRepo {
-  constructor(prisma: PrismaClient | Prisma.TransactionClient) {
+  constructor(prisma: BasePrismaClient) {
     super(prisma);
   }
 
@@ -20,7 +20,7 @@ export class CustomerRepo extends BaseRepo implements ICustomerRepo {
     const record = await this._prisma.customer.findUnique({
       where: { id },
     });
-    return record ? CustomerMapper.toPersistEntity(record) : null;
+    return record ? CustomerMapper.fromPersistence(record) : null;
   }
 
   async findAll(params: {
@@ -50,14 +50,15 @@ export class CustomerRepo extends BaseRepo implements ICustomerRepo {
 
     return {
       totalItemCount,
-      data: records.map((record) => CustomerMapper.toPersistEntity(record)),
+      data: records.map((record) => CustomerMapper.fromPersistence(record)),
     };
   }
 
   async create(entity: NewCustomerEntity): Promise<PersistCustomerEntity> {
     try {
-      const newRecord = await this._prisma.customer.create({ data: entity });
-      return CustomerMapper.toPersistEntity(newRecord);
+      const data = CustomerMapper.toPersistence(entity);
+      const newRecord = await this._prisma.customer.create({ data });
+      return CustomerMapper.fromPersistence(newRecord);
     } catch (err) {
       throw err;
     }
@@ -68,14 +69,15 @@ export class CustomerRepo extends BaseRepo implements ICustomerRepo {
     entity: UpdateCustomerEntity,
   ): Promise<PersistCustomerEntity> {
     try {
+      const data = CustomerMapper.toPersistence(entity);
       const updateRecord = await this._prisma.customer.update({
         where: { id, version: entity.version },
         data: {
-          ...entity,
+          ...data,
           version: { increment: 1 },
         },
       });
-      return CustomerMapper.toPersistEntity(updateRecord);
+      return CustomerMapper.fromPersistence(updateRecord);
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
         if (err.code === "P2025") {

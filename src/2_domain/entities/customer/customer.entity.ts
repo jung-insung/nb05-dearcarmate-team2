@@ -12,7 +12,8 @@ export type NewCustomerEntity = Omit<
   "id" | "createdAt" | "updatedAt" | "contractCount" | "version"
 >;
 
-export type UpdateCustomerEntity = Partial<NewCustomerEntity> & {
+export type UpdateCustomerEntity = CustomerEntity & {
+  id: number;
   version: number;
 };
 
@@ -148,6 +149,7 @@ export class CustomerEntity {
   }
 
   static update(params: {
+    id: number;
     name: string;
     gender: CustomerGender;
     phoneNumber: string;
@@ -159,6 +161,7 @@ export class CustomerEntity {
     companyId: number;
   }): UpdateCustomerEntity {
     const {
+      id,
       name,
       gender,
       phoneNumber,
@@ -170,7 +173,8 @@ export class CustomerEntity {
       version,
     } = params;
 
-    return new CustomerEntity({
+    const entity = new CustomerEntity({
+      id,
       name,
       gender,
       phoneNumber,
@@ -179,8 +183,10 @@ export class CustomerEntity {
       email,
       memo,
       companyId,
-      version: version + 1,
+      version: version,
     });
+
+    return entity as UpdateCustomerEntity;
   }
 
   static createPersist(record: CustomerReocrd): PersistCustomerEntity {
