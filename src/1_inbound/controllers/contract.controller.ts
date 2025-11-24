@@ -2,9 +2,7 @@ import { Request, Response } from "express";
 import { BaseController } from "./base.controller";
 import { IContractService } from "../port/services/contract.service.interface";
 import { IContractController } from "../port/controllers/contract.controller.interface";
-import {
-  getContractListReqSchema,
-} from "../requests/contract-schema.request";
+import { getContractListReqSchema } from "../requests/contract-schema.request";
 
 export class ContractController
   extends BaseController
@@ -32,14 +30,16 @@ export class ContractController
   };
 
   getContractCustomers = async (req: Request, res: Response) => {
-    const result = await this._contractService.getContractCustomers(req.userId!);
+    const result = await this._contractService.getContractCustomers(
+      req.userId!,
+    );
 
     return res.json(result);
   };
-  
+
   getContractUsers = async (req: Request, res: Response) => {
     const result = await this._contractService.getContractUsers(req.userId!);
-    
+
     return res.json(result);
   };
 }

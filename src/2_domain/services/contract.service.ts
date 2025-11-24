@@ -19,7 +19,7 @@ export class ContractService extends BaseService implements IContractService {
 
   async getContracts(
     userId: number,
-    query: ContractListQueryDto
+    query: ContractListQueryDto,
   ): Promise<ContractListResponseDto> {
     const companyId = await this._getCompanyId(userId);
     const { page, pageSize, keyword, searchBy } = query;
@@ -40,8 +40,8 @@ export class ContractService extends BaseService implements IContractService {
 
       response[status] = {
         totalItemCount,
-        data: contracts.map((c) =>
-          new ContractResponseDto(ContractMapper.toResponse(c))
+        data: contracts.map(
+          (c) => new ContractResponseDto(ContractMapper.toResponse(c)),
         ),
       };
     }

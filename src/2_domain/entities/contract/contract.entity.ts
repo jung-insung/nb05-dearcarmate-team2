@@ -36,7 +36,9 @@ export class ContractEntity {
     this._customerId = attrs.customerId;
     this._companyId = attrs.companyId;
     this._status = attrs.status;
-    this._resolutionDate = attrs.resolutionDate ? new Date(attrs.resolutionDate) : null;
+    this._resolutionDate = attrs.resolutionDate
+      ? new Date(attrs.resolutionDate)
+      : null;
     this._contractPrice = attrs.contractPrice;
     this._version = attrs.version ?? 1;
     this._meetings = attrs.meetings?.map((m) => new MeetingEntity(m)) ?? [];
@@ -109,7 +111,9 @@ export class ContractEntity {
       this._status = params.status;
     }
     if (params.resolutionDate !== undefined) {
-      this._resolutionDate = params.resolutionDate ? new Date(params.resolutionDate) : null;
+      this._resolutionDate = params.resolutionDate
+        ? new Date(params.resolutionDate)
+        : null;
     }
     if (params.contractPrice !== undefined) {
       this._contractPrice = params.contractPrice;
