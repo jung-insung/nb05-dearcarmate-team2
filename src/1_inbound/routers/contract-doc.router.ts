@@ -3,24 +3,23 @@ import { AuthMiddleware } from "../middlewares/auth.middleware";
 import { MulterMiddleware } from "../middlewares/multer.middleware";
 import { BaseRouter } from "./base.router";
 
-export class ContractDocRouter extends BaseRouter{
+export class ContractDocRouter extends BaseRouter {
   constructor(
-    private _contractDocController : ContractDocController,
-    private _authMiddleware : AuthMiddleware,
-    private _MulterMiddleware: MulterMiddleware
-
+    private _contractDocController: ContractDocController,
+    private _authMiddleware: AuthMiddleware,
+    private _MulterMiddleware: MulterMiddleware,
   ) {
     super("/contractDocuments");
     this.registerContractDocRouter();
   }
-  
+
   registerContractDocRouter() {
     this.router.get(
       "/",
       this._authMiddleware.isUserAuthenticate,
-      this.catch(this._contractDocController.getContractDocAfterUpload)
+      this.catch(this._contractDocController.getContractDocAfterUpload),
     );
-    
+
     // this.router.get(
     //   "/darft",
     //   this._authMiddleware.isUserAuthenticate,

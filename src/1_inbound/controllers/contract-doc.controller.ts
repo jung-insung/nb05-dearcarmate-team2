@@ -5,9 +5,7 @@ import { contractDocListReqSchema } from "../requests/contract-doc-schema.reques
 import { contractDocListResDto } from "../responses/contract-doc/contract-doc-list.res.dto";
 
 export class ContractDocController extends BaseController {
-  constructor(
-    private _ContractDocService: IContractDocService,
-  ) {
+  constructor(private _ContractDocService: IContractDocService) {
     super();
   }
 
@@ -17,14 +15,14 @@ export class ContractDocController extends BaseController {
   ): Promise<Response<any>> => {
     const reqDto = this.validateOrThrow(contractDocListReqSchema, {
       userId: req.userId,
-      query: req.query
-    })
+      query: req.query,
+    });
 
-    const contractDocList = await this._ContractDocService.getContractForDocView(reqDto);
-    
+    const contractDocList =
+      await this._ContractDocService.getContractForDocView(reqDto);
+
     const resDto = new contractDocListResDto(contractDocList);
     return res.json(resDto);
-
   };
 
   // getContractDocAfterAdd = async (
@@ -32,7 +30,7 @@ export class ContractDocController extends BaseController {
   //   res: Response,
   // ): Promise<Response<any>> => {
   //   const contractDocList = this._ContractDocService.contractDocList(reqDto);
-    
+
   //   const resDto = new contractDocListResDto(contractDocList);
   //   return res.json(resDto);
   // };
@@ -46,7 +44,7 @@ export class ContractDocController extends BaseController {
   //     body: req.body
   //   })
   //   const contractDocList = this._ContractDocService.contractDocList(reqDto);
-    
+
   //   const resDto = new contractDocListResDto(contractDocList);
   //   return res.json(resDto);
   // };
@@ -56,7 +54,7 @@ export class ContractDocController extends BaseController {
   //   res: Response,
   // ): Promise<Response<any>> => {
   //   const contractDocList = this._ContractDocService.contractDocList(reqDto);
-    
+
   //   const resDto = new contractDocListResDto(contractDocList);
   //   return res.json(resDto);
   // };

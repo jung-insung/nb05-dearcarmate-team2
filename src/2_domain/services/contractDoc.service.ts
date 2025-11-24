@@ -6,7 +6,9 @@ import { IUnitOfWork } from "../port/unit-of-work.interface";
 import { BaseService } from "./base.service";
 
 export interface IContractDocService {
-  getContractForDocView(dto: ContractDocListReqDto): Promise<ContractDocViewReturn>;
+  getContractForDocView(
+    dto: ContractDocListReqDto,
+  ): Promise<ContractDocViewReturn>;
 }
 
 export type ContractDocPagination = {
@@ -14,13 +16,18 @@ export type ContractDocPagination = {
   pageSize: number;
   searchBy: "contractName" | "userName" | "carNumber";
   keyword?: string;
-}
-export class ContractDocService extends BaseService implements IContractDocService {
+};
+export class ContractDocService
+  extends BaseService
+  implements IContractDocService
+{
   constructor(unitOfWork: IUnitOfWork) {
     super(unitOfWork);
   }
 
-  async getContractForDocView(dto: ContractDocListReqDto): Promise<ContractDocViewReturn> {
+  async getContractForDocView(
+    dto: ContractDocListReqDto,
+  ): Promise<ContractDocViewReturn> {
     return this._unitOfWork.do(async (repos) => {
       const foundUser = await repos.user.findUserById(dto.userId);
 
@@ -30,15 +37,17 @@ export class ContractDocService extends BaseService implements IContractDocServi
         });
       }
 
-      const foundContractDocs = await repos.contract.getContractsForDocView(dto.query)
-      
-      if(foundContractDocs.data.length < 1) {
+      const foundContractDocs = await repos.contract.getContractsForDocView(
+        dto.query,
+      );
+
+      if (foundContractDocs.data.length < 1) {
         throw new BusinessException({
-          type: BusinessExceptionType.CONTRACTFORDOC_NOT_EXIST
+          type: BusinessExceptionType.CONTRACTFORDOC_NOT_EXIST,
         });
       }
 
       return foundContractDocs;
-    })
+    });
   }
 }
