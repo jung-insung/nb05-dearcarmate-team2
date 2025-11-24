@@ -43,21 +43,43 @@ export class ContractEntity {
     this._contractDocuments = attrs.contractDocuments ?? [];
   }
 
-  get id() { return this._id; }
-  get userId() { return this._userId; }
-  get carId() { return this._carId; }
-  get customerId() { return this._customerId; }
-  get companyId() { return this._companyId; }
-  get status() { return this._status; }
-  get resolutionDate() { return this._resolutionDate; }
-  get contractPrice() { return this._contractPrice; }
-  get version() { return this._version; }
-  get meetings() { return this._meetings; }
-  get contractDocuments() { return this._contractDocuments; }
+  get id() {
+    return this._id;
+  }
+  get userId() {
+    return this._userId;
+  }
+  get carId() {
+    return this._carId;
+  }
+  get customerId() {
+    return this._customerId;
+  }
+  get companyId() {
+    return this._companyId;
+  }
+  get status() {
+    return this._status;
+  }
+  get resolutionDate() {
+    return this._resolutionDate;
+  }
+  get contractPrice() {
+    return this._contractPrice;
+  }
+  get version() {
+    return this._version;
+  }
+  get meetings() {
+    return this._meetings;
+  }
+  get contractDocuments() {
+    return this._contractDocuments;
+  }
 
   static createNew(params: NewContractEn): ContractEntity {
     const { meetings, ...otherParams } = params;
-	const contract = new ContractEntity({
+    const contract = new ContractEntity({
       ...otherParams,
       status: ContractStatus.CAR_INSPECTION,
     });
@@ -65,7 +87,7 @@ export class ContractEntity {
     if (meetings && meetings.length > 0) {
       contract.replaceMeetings(meetings);
     }
-    
+
     return contract;
   }
 
@@ -74,14 +96,24 @@ export class ContractEntity {
   }
 
   update(params: ContractUpdateEn): void {
-    if (params.userId) this._userId = params.userId;
-    if (params.customerId) this._customerId = params.customerId;
-    if (params.carId) this._carId = params.carId;
-    if (params.status) this._status = params.status;
+    if (params.userId) {
+      this._userId = params.userId;
+    }
+    if (params.customerId) {
+      this._customerId = params.customerId;
+    }
+    if (params.carId) {
+      this._carId = params.carId;
+    }
+    if (params.status) {
+      this._status = params.status;
+    }
     if (params.resolutionDate !== undefined) {
       this._resolutionDate = params.resolutionDate ? new Date(params.resolutionDate) : null;
     }
-    if (params.contractPrice !== undefined) this._contractPrice = params.contractPrice;
+    if (params.contractPrice !== undefined) {
+      this._contractPrice = params.contractPrice;
+    }
     if (params.meetings) {
       this.replaceMeetings(params.meetings);
     }
@@ -90,12 +122,11 @@ export class ContractEntity {
   private replaceMeetings(meetingParams: NewMeetingParams[]) {
     if (meetingParams.length > 3) {
       throw new BusinessException({
-        message: "미팅은 최대 3개까지만 생성 가능합니다.",
-        type: BusinessExceptionType.BAD_REQUEST,
+        type: BusinessExceptionType.MEETING_COUNT,
       });
     }
     this._meetings = meetingParams.map((params) =>
-      MeetingEntity.createNew(params)
+      MeetingEntity.createNew(params),
     );
   }
 
@@ -110,16 +141,8 @@ export class ContractEntity {
       contractPrice: this._contractPrice,
     };
   }
-  
+
   toUpdateData(): ContractUpdateData {
-    return {
-      userId: this._userId,
-      carId: this._carId,
-      customerId: this._customerId,
-      companyId: this._companyId,
-      status: this._status,
-      resolutionDate: this._resolutionDate,
-      contractPrice: this._contractPrice,
-    };
+    return this.toCreateData();
   }
 }
