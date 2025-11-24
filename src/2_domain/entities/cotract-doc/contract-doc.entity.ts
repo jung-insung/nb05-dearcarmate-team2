@@ -6,7 +6,10 @@ export interface PersistContractDocEntity extends ContractDocEntity {
   updatedat: Date;
 }
 
-export type NewContractDocEntity = Omit<ContractDocEntity, "id" | "createdAt" | "updatedAt">;
+export type NewContractDocEntity = Omit<
+  ContractDocEntity,
+  "id" | "createdAt" | "updatedAt"
+>;
 
 export class ContractDocEntity {
   private readonly _id?: number;
@@ -44,5 +47,4 @@ export class ContractDocEntity {
   get updatedAt() {
     return this._updatedAt;
   }
-
 }

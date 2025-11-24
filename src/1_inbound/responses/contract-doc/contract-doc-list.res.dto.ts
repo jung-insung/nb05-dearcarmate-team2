@@ -17,23 +17,21 @@ export class contractDocListResDto {
   public totalItemCount: number;
   public data: ContractDocViewDto[];
 
-  constructor(
-    contractDocs :  ContractDocViewReturn
-  ) {
+  constructor(contractDocs: ContractDocViewReturn) {
     this.currentPage = contractDocs.pagination.currentPage;
     this.totalPages = contractDocs.pagination.totalPages;
-    this.totalItemCount = contractDocs.pagination.totalItemCount
-    this.data = contractDocs.data.map(contractDoc => ({
+    this.totalItemCount = contractDocs.pagination.totalItemCount;
+    this.data = contractDocs.data.map((contractDoc) => ({
       id: contractDoc.id,
       contractName: contractDoc.contractName,
-			resolutionDate: contractDoc.resolutionDate,
-			documentCount : contractDoc.documentCount,
-			userName: contractDoc.userName,
-			carNumber: contractDoc.carNumber,
-      documents: contractDoc.documents.map(document => ({
+      resolutionDate: contractDoc.resolutionDate,
+      documentCount: contractDoc.documentCount,
+      userName: contractDoc.userName,
+      carNumber: contractDoc.carNumber,
+      documents: contractDoc.documents.map((document) => ({
         id: document.id,
-        fileName: document.fileName
-      }))
+        fileName: document.fileName,
+      })),
     }));
   }
 }

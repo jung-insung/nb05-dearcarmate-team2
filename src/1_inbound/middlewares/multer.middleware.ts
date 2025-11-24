@@ -8,13 +8,16 @@ export class MulterMiddleware {
     this.upload = multer({ storage: multer.memoryStorage() });
   }
 
-  contractDocUploadHandler = (req: Request, res: Response, next: NextFunction) => {
+  contractDocUploadHandler = (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
-      req.body.fileName = req.file ? req.file.originalname : null
+      req.body.fileName = req.file ? req.file.originalname : null;
       next();
-
     } catch (err) {
       next(err);
     }
-  }
+  };
 }

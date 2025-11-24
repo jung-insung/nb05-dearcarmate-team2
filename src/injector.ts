@@ -75,7 +75,7 @@ export class Injector {
       car: (prisma) => new CarRepo(prisma),
       customer: (prisma) => new CustomerRepo(prisma),
       contract: (prisma) => new ContractRepo(prisma),
-      contractDoc: (prisma) => new ContractDocRepo(prisma)
+      contractDoc: (prisma) => new ContractDocRepo(prisma),
     });
 
     const unitOfWork = new UnitOfWork(prisma, repoFactory, configUtil);
@@ -106,7 +106,11 @@ export class Injector {
       customerController,
       authMiddleware,
     );
-    const contractDocRouter = new ContractDocRouter(contractDocController, authMiddleware, multerMiddleware)
+    const contractDocRouter = new ContractDocRouter(
+      contractDocController,
+      authMiddleware,
+      multerMiddleware,
+    );
 
     return new Server(
       authRouter,

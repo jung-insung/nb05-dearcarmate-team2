@@ -55,7 +55,6 @@ export class Server {
     this._app.use(this._customerRouter.basePath, this._customerRouter.router);
     this._app.use(this._contractDoc.basePath, this._contractDoc.router);
 
-
     this._app.use(this._notFoundMiddleware.handler());
     this._app.use(this._globalErrorMiddleware.handler);
     this.listen();

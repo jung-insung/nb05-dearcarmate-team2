@@ -1,3 +1,1 @@
-export interface IContractDocRepo {
-
-}
+export interface IContractDocRepo {}
