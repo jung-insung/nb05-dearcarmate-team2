@@ -10,7 +10,7 @@ export interface MeetingEn {
 
 export type NewMeetingParams = {
   date: Date | string;
-  alarms?: (AlarmTime | string)[]; 
+  alarms?: (AlarmTime | string)[];
 };
 
 export interface ContractDocumentEn {
@@ -33,25 +33,30 @@ export interface ContractEn {
   version?: number;
 }
 
-export interface ContractUpdateEn {
-	userId?: number;
-    customerId?: number;
-    carId?: number;
-    status?: ContractStatus;
-    resolutionDate?: Date | string | null;
-    contractPrice?: number;
-    meetings?: NewMeetingParams[];
-}
-
 export type ContractApiInput = {
   carId: number;
   customerId: number;
   meetings?: NewMeetingParams[];
 };
 
+export interface ContractUpdateEn {
+  userId?: number;
+  customerId?: number;
+  carId?: number;
+  status?: ContractStatus;
+  resolutionDate?: Date | string | null;
+  contractPrice?: number;
+  meetings?: NewMeetingParams[];
+}
+
 export type NewContractEn = Omit<
   ContractEn,
-  "id" | "status" | "resolutionDate" | "version" | "meetings" | "contractDocuments"
+  | "id"
+  | "status"
+  | "resolutionDate"
+  | "version"
+  | "meetings"
+  | "contractDocuments"
 > & {
   meetings?: NewMeetingParams[];
 };
@@ -64,7 +69,7 @@ export interface PersistContractEn extends ContractEn {
 }
 
 export interface ContractRecord extends PersistContractEn {
-  meeting?: (Omit<MeetingEn, 'alarms'> & { alarms: AlarmTime[] })[]; 
+  meeting?: (Omit<MeetingEn, "alarms"> & { alarms: AlarmTime[] })[];
   contractDocuments?: ContractDocumentEn[];
   user?: { id: number; name: string };
   customer?: { id: number; name: string };

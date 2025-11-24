@@ -18,8 +18,12 @@ export class MeetingEntity {
     this._version = attrs.version ?? 1;
   }
 
-  get date() { return this._date; }
-  get alarms() { return this._alarms; }
+  get date() {
+    return this._date;
+  }
+  get alarms() {
+    return this._alarms;
+  }
 
   static createNew(params: NewMeetingParams): MeetingEntity {
     const meetingDate = new Date(params.date);
@@ -29,8 +33,11 @@ export class MeetingEntity {
     const alarms: AlarmTime[] = [];
     if (params.alarms && params.alarms.length > 0) {
       for (const alarmInput of params.alarms) {
-        const alarmEnum = this.convertDateToAlarmEnum(meetingDate, new Date(alarmInput));
-        
+        const alarmEnum = this.convertDateToAlarmEnum(
+          meetingDate,
+          new Date(alarmInput),
+        );
+
         if (alarmEnum) {
           alarms.push(alarmEnum);
         }
@@ -43,7 +50,10 @@ export class MeetingEntity {
     });
   }
 
-  private static convertDateToAlarmEnum(meetingDate: Date, alarmDate: Date): AlarmTime | undefined {
+  private static convertDateToAlarmEnum(
+    meetingDate: Date,
+    alarmDate: Date,
+  ): AlarmTime | undefined {
     const alarmTime = alarmDate.getTime();
 
     const onDay9am = new Date(meetingDate);
@@ -59,7 +69,7 @@ export class MeetingEntity {
     if (alarmTime === dayBefore9am.getTime()) {
       return AlarmTime.DAY_BEFORE_9AM;
     }
-	return undefined;
+    return undefined;
   }
 
   private static validateMeetingTime(meetingDate: Date): void {

@@ -1,23 +1,18 @@
 import { ContractEntity } from "../../2_domain/entities/contract/contract.entity";
 import { AlarmTime } from "../../2_domain/entities/contract/contract.enum";
 import {
-  ContractCreateData,
-  ContractDocumentEn,
-  ContractUpdateData,
-  MeetingEn,
-  PersistContractEn,
   ContractRecord,
+  MeetingEn,
 } from "../../2_domain/entities/contract/contract.entity.util";
-
 
 export class ContractMapper {
   static toCreateData(entity: ContractEntity) {
     const contractData = entity.toCreateData();
-    
+
     const meetingsData = entity.meetings.map((m) => ({
       date: m.date,
       version: 1,
-      alarms: m.alarms, 
+      alarms: m.alarms,
     }));
 
     return {
@@ -28,11 +23,11 @@ export class ContractMapper {
 
   static toUpdateData(entity: ContractEntity) {
     const contractData = entity.toUpdateData();
-    
+
     const meetingsData = entity.meetings.map((m) => ({
       date: m.date,
       version: 1,
-      alarms: m.alarms, 
+      alarms: m.alarms,
     }));
 
     return {
@@ -64,7 +59,7 @@ export class ContractMapper {
       user?: { id: number; name: string };
       customer?: { id: number; name: string };
       car?: { id: number; model: string };
-    }
+    },
   ) {
     return {
       id: entity.id,
@@ -73,8 +68,8 @@ export class ContractMapper {
       contractPrice: entity.contractPrice,
       meetings: entity.meetings.map((m) => ({
         date: m.date,
-        alarms: m.alarms.map(alarmEnum => 
-          this.calculateAlarmTime(m.date, alarmEnum)
+        alarms: m.alarms.map((alarmEnum) =>
+          this.calculateAlarmTime(m.date, alarmEnum),
         ),
       })),
 
@@ -82,7 +77,7 @@ export class ContractMapper {
         id: d.id,
         fileName: d.fileName,
       })),
-      
+
       user: relations?.user ?? { id: entity.userId },
       customer: relations?.customer ?? { id: entity.customerId },
       car: relations?.car ?? { id: entity.carId },

@@ -1,5 +1,6 @@
 export enum BusinessExceptionType {
   BAD_REQUEST,
+  MEETING_COUNT,
   PASSWORD_TOO_LONG,
   NAME_TOO_LONG,
   USERID_FORM,
@@ -70,6 +71,10 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.BAD_REQUEST]: {
     statusCode: 400,
     message: "잘못된 요청입니다.",
+  },
+  [BusinessExceptionType.MEETING_COUNT]: {
+    statusCode: 404,
+    message: "미팅은 최대 3개까지만 생성 가능합니다.",
   },
   [BusinessExceptionType.PASSWORD_TOO_LONG]: {
     statusCode: 404,
