@@ -37,7 +37,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     customer: { select: { id: true, name: true, email: true } },
     car: { select: { id: true, model: true, carNumber: true } },
     meeting: true,
-    contractDocuments: true,
+    documents: true,
   };
 
   private _includeOptionForDoc: Prisma.ContractInclude;
