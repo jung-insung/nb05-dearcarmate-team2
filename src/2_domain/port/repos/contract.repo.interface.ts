@@ -1,7 +1,5 @@
 import { ContractStatus } from "../../entities/contract/contract.enum";
-import {
-  PersistContractEntity,
-} from "../../entities/contract/contract.entity";
+import { PersistContractEntity } from "../../entities/contract/contract.entity";
 
 export type LockType = "share" | "beta";
 

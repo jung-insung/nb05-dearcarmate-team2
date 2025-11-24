@@ -6,9 +6,7 @@ import {
   ContractListRepoDto,
   IContractRepo,
 } from "../../2_domain/port/repos/contract.repo.interface";
-import {
-  PersistContractEntity,
-} from "../../2_domain/entities/contract/contract.entity";
+import { PersistContractEntity } from "../../2_domain/entities/contract/contract.entity";
 import { ContractMapper } from "../mappers/contract.mapper";
 import { ContractStatus } from "../../2_domain/entities/contract/contract.enum";
 import { ContractRecord } from "../../2_domain/entities/contract/contract.entity.util";
@@ -47,41 +45,41 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     query: ContractListRepoDto,
   ): Promise<{ contracts: PersistContractEntity[]; totalItemCount: number }> {
     try {
-    const { offset, limit, keyword, searchBy, companyId, status } = query;
+      const { offset, limit, keyword, searchBy, companyId, status } = query;
 
-    const where: Prisma.ContractWhereInput = { companyId };
+      const where: Prisma.ContractWhereInput = { companyId };
 
-    if (status) {
-      where.status = this._toPrismaStatus(status);
-    }
-
-    if (keyword) {
-      if (searchBy === "customerName") {
-        where.customer = { name: { contains: keyword } };
-      } else if (searchBy === "userName") {
-        where.user = { name: { contains: keyword } };
+      if (status) {
+        where.status = this._toPrismaStatus(status);
       }
-    }
 
-    const totalItemCount = await this._prisma.contract.count({ where });
-    
-    const records = await this._prisma.contract.findMany({
-      where,
-      skip: offset,
-      take: limit,
-      orderBy: { createdAt: "desc" },
-      include: this._includeOption,
-    });
+      if (keyword) {
+        if (searchBy === "customerName") {
+          where.customer = { name: { contains: keyword } };
+        } else if (searchBy === "userName") {
+          where.user = { name: { contains: keyword } };
+        }
+      }
 
-    return {
-      contracts: records.map(
-        (r) =>
-          ContractMapper.toPersistEntity(
-            r as unknown as ContractRecord
-          ) as PersistContractEntity
-      ),
-      totalItemCount,
-    };
+      const totalItemCount = await this._prisma.contract.count({ where });
+
+      const records = await this._prisma.contract.findMany({
+        where,
+        skip: offset,
+        take: limit,
+        orderBy: { createdAt: "desc" },
+        include: this._includeOption,
+      });
+
+      return {
+        contracts: records.map(
+          (r) =>
+            ContractMapper.toPersistEntity(
+              r as unknown as ContractRecord,
+            ) as PersistContractEntity,
+        ),
+        totalItemCount,
+      };
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
         if (err.code === "P2025") {

@@ -11,7 +11,7 @@ export class ContractRouter extends BaseRouter {
     this.setRoutes();
   }
 
-  private setRoutes() {	
+  private setRoutes() {
     this.router.get(
       "/",
       this._authMiddleware.isUserAuthenticate,
@@ -29,7 +29,7 @@ export class ContractRouter extends BaseRouter {
       this._authMiddleware.isUserAuthenticate,
       this.catch(this._contractController.getContractCustomers),
     );
-    
+
     this.router.get(
       "/users",
       this._authMiddleware.isUserAuthenticate,

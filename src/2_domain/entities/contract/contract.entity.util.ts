@@ -76,6 +76,12 @@ export interface ContractRecord extends PersistContractEn {
   car?: { id: number; model: string };
 }
 
-export type ContractCreateData = Omit<ContractEn, "id" | "meetings" | "contractDocuments" | "version">;
-export type ContractUpdateData = Omit<ContractEn, "id" | "meetings" | "contractDocuments" | "version">;
+export type ContractCreateData = Omit<
+  ContractEn,
+  "id" | "meetings" | "contractDocuments" | "version"
+>;
+export type ContractUpdateData = Omit<
+  ContractEn,
+  "id" | "meetings" | "contractDocuments" | "version"
+>;
 export type MeetingCreateData = Omit<MeetingEn, "id">;
