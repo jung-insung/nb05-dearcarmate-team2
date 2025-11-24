@@ -11,7 +11,6 @@ export class ContractMapper {
 
     const meetingsData = entity.meetings.map((m) => ({
       date: m.date,
-      version: 1,
       alarms: m.alarms,
     }));
 
@@ -26,13 +25,15 @@ export class ContractMapper {
 
     const meetingsData = entity.meetings.map((m) => ({
       date: m.date,
-      version: 1,
-      alarms: m.alarms,
+      alarms: m.alarms as any,
     }));
 
     return {
       contract: contractData,
-      meetings: meetingsData,
+      meeting: {
+        deleteMany: {},
+        create: meetingsData,
+      },
     };
   }
 

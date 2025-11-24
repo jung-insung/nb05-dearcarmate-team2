@@ -11,10 +11,77 @@ import {
   ContractResponseDto,
   ContractListResponseDto,
 } from "../../1_inbound/responses/contract/contract.response";
+import { ContractEntity } from "../entities/contract/contract.entity";
+import { PersistContractEn } from "../entities/contract/contract.entity.util";
+import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
+import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
+import { BusinessException } from "../../4_shared/exceptions/business.exceptions/business.exception";
+import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
+import {
+  UpdateContractReq,
+  UpdateContractStatusReq,
+} from "../../1_inbound/requests/contract-schema.request";
 
 export class ContractService extends BaseService implements IContractService {
   constructor(unitOfWork: IUnitOfWork) {
     super(unitOfWork);
+  }
+
+  private async _executeContractUpdate(
+    contractId: number,
+    dto: any,
+    conflictExceptionType: BusinessExceptionType,
+  ) {
+    return await this._unitOfWork.do(
+      async (txRepos) => {
+        const entity = await txRepos.contract.findById(contractId);
+
+        if (!entity) {
+          throw new BusinessException({
+            type: BusinessExceptionType.CONTRACT_NOT_EXIST,
+          });
+        }
+
+        entity.update(dto);
+
+        try {
+          const updated = await txRepos.contract.update(contractId, entity);
+          return ContractMapper.toResponse(updated);
+        } catch (err) {
+          if (
+            err instanceof TechnicalException &&
+            err.type === TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED
+          ) {
+            throw new BusinessException({ type: conflictExceptionType });
+          }
+          throw err;
+        }
+      },
+      true,
+      false,
+    );
+  }
+
+  async updateContractStatus(params: {
+    contractId: number;
+    dto: UpdateContractStatusReq;
+  }) {
+    return this._executeContractUpdate(
+      params.contractId,
+      params.dto,
+      BusinessExceptionType.CONTRACT_STATUS_CHANGED,
+    );
+  }
+
+  async updateContractDetail(params: {
+    contractId: number;
+    dto: UpdateContractReq;
+  }) {
+    return this._executeContractUpdate(
+      params.contractId,
+      params.dto,
+      BusinessExceptionType.CONTRACT_DATA_CHANGED,
+    );
   }
 
   async getContracts(

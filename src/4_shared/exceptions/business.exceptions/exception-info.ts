@@ -62,6 +62,9 @@ export enum BusinessExceptionType {
   CUSTOMER_CSV_INVALID_PHONENUMBER,
   VALIDATION_ERROR,
   CONTRACTFORDOC_NOT_EXIST,
+  CONTRACT_NOT_EXIST,
+  CONTRACT_STATUS_CHANGED,
+  CONTRACT_DATA_CHANGED,
 }
 
 export const BusinessExceptionTable: Record<
@@ -139,7 +142,7 @@ export const BusinessExceptionTable: Record<
   },
   [BusinessExceptionType.REFRESHTOKEN_MISMATCH]: {
     statusCode: 401,
-    message: "리플래쉬 토큰이 일치하지 않습니다.",
+    message: "리프래쉬 토큰이 일치하지 않습니다.",
   },
   [BusinessExceptionType.INVALID_AUTH]: {
     statusCode: 401,
@@ -253,6 +256,14 @@ export const BusinessExceptionTable: Record<
     statusCode: 400,
     message: "Phonenumber 데이터 형식이 올바르지 않습니다.",
   },
+  [BusinessExceptionType.CONTRACT_STATUS_CHANGED]: {
+    statusCode: 400,
+    message: "계약 현황을 다시 확인해주세요",
+  },
+  [BusinessExceptionType.CONTRACT_DATA_CHANGED]: {
+    statusCode: 400,
+    message: "변경된 계약 내용을 확인 후 다시 시도해주세요",
+  },
   [BusinessExceptionType.VALIDATION_ERROR]: {
     statusCode: 404,
   },
@@ -281,6 +292,10 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.CONTRACTFORDOC_NOT_EXIST]: {
     statusCode: 404,
     message: "완료된 계약에서 문서를 추가한 계약이 없습니다.",
+  },
+  [BusinessExceptionType.CONTRACT_NOT_EXIST]: {
+    statusCode: 404,
+    message: "계약이 존재하지 않습니다.",
   },
 
   // 중복, 충돌
