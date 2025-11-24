@@ -7,7 +7,4 @@ export class ContractDocRepo extends BaseRepo implements IContractDocRepo{
     super(prisma);
   }
 
-  async getContractDocs(pagination: ContractDocPagination) {
-    const docs = await this._prisma.contractDocument.
-  }
 }

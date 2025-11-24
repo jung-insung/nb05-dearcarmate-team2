@@ -18,6 +18,8 @@ export class RepoFactory {
       company: this._repoGenerators.company(prismaClient),
       car: this._repoGenerators.car(prismaClient),
       customer: this._repoGenerators.customer(prismaClient),
+      contract: this._repoGenerators.contract(prismaClient),
+      contractDoc: this._repoGenerators.contractDoc(prismaClient),
     };
   }
 }

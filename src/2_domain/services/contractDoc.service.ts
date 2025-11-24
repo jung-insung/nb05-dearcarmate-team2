@@ -1,12 +1,12 @@
 import { ContractDocListReqDto } from "../../1_inbound/requests/contract-doc-schema.request";
+import { ContractDocViewReturn } from "../../3_outbound/repos/contract.repo";
 import { BusinessException } from "../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
-import { PersistContractDocEntity } from "../entities/cotract-doc/contract-doc.entity";
 import { IUnitOfWork } from "../port/unit-of-work.interface";
 import { BaseService } from "./base.service";
 
 export interface IContractDocService {
-  getContractDocs(dto: ContractDocListReqDto): PersistContractDocEntity
+  getContractForDocView(dto: ContractDocListReqDto): Promise<ContractDocViewReturn>;
 }
 
 export type ContractDocPagination = {
@@ -20,7 +20,7 @@ export class ContractDocService extends BaseService implements IContractDocServi
     super(unitOfWork);
   }
 
-  async getContractDocs(dto: ContractDocListReqDto): PersistContractDocEntity {
+  async getContractForDocView(dto: ContractDocListReqDto): Promise<ContractDocViewReturn> {
     return this._unitOfWork.do(async (repos) => {
       const foundUser = await repos.user.findUserById(dto.userId);
 
@@ -30,9 +30,15 @@ export class ContractDocService extends BaseService implements IContractDocServi
         });
       }
 
-      const foundContracts = await repos.contract.getContracts(dto.query)
-      return
+      const foundContractDocs = await repos.contract.getContractsForDocView(dto.query)
+      
+      if(foundContractDocs.data.length < 1) {
+        throw new BusinessException({
+          type: BusinessExceptionType.CONTRACTFORDOC_NOT_EXIST
+        });
+      }
 
+      return foundContractDocs;
     })
   }
 }

@@ -11,6 +11,25 @@ import { PersistContractEntity } from "../../2_domain/entities/contract/contract
 import { ContractMapper } from "../mappers/contract.mapper";
 import { ContractStatus } from "../../2_domain/entities/contract/contract.enum";
 import { ContractRecord } from "../../2_domain/entities/contract/contract.entity.util";
+import { ContractDocMapper } from "../mappers/contract-doc.mapper";
+import { ContractDocViewEntity } from "../../2_domain/entities/cotract-doc/contract-doc-view.entity";
+
+export type ContractDBForDocView = Prisma.ContractGetPayload<{
+  include: {
+    user: true;
+    car: true;
+    customer: true;
+    documents: true;
+  }
+}>;
+export type ContractDocViewReturn = {
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItemCount: number;
+  };
+  data: ContractDocViewEntity[];
+};
 
 export class ContractRepo extends BaseRepo implements IContractRepo {
   private _includeOption: Prisma.ContractInclude = {
@@ -20,6 +39,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     meeting: true,
     contractDocuments: true,
   };
+
   private _includeOptionForDoc: Prisma.ContractInclude;
 
   constructor(prisma: BasePrismaClient) {
@@ -102,10 +122,13 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     }
   }
 
-
-  // | ContractPagination 추가할 것
-  async getContracts(pagination: ContractDocPagination) {
-    let whereCondition: Prisma.ContractWhereInput = {};
+  async getContractsForDocView(pagination: ContractDocPagination): Promise<ContractDocViewReturn> {
+    let whereCondition: Prisma.ContractWhereInput = {
+      status: 'CONTRACT_SUCCESSFUL',
+      documents: {
+        some: {},
+      } 
+    };
 
     switch (pagination.searchBy) {
       case "userName":
@@ -129,7 +152,17 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       take: pagination.pageSize,
       orderBy: { createdAt: "desc" }
     });
+    const totalItemCount = contracts.length;
+	  const totalPages = Math.ceil(totalItemCount/pagination.pageSize);
 
+    return {
+      pagination : {
+        currentPage : pagination.page,
+        totalItemCount,
+        totalPages,
+      },
+      data: contracts.map(contract => ContractDocMapper.toContractDocViewEntity(contract))
+    };
   }
 }
 

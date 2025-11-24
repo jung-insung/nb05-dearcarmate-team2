@@ -12,6 +12,7 @@ import { CarRouter } from "./1_inbound/routers/car.router";
 
 import { NotFoundMiddleware } from "./1_inbound/middlewares/not-found.middleware";
 import { AuthRouter } from "./1_inbound/routers/auth.router";
+import { ContractDocRouter } from "./1_inbound/routers/contract-doc.router";
 
 export class Server {
   private _app;
@@ -22,6 +23,7 @@ export class Server {
     private _companyRouter: CompanyRouter,
     private _customerRouter: CustomerRouter,
     private _carRouter: CarRouter,
+    private _contractDoc: ContractDocRouter,
     private _configUtil: IConfigUtil,
     private _corsMiddleware: CorsMiddleware,
     private _loggerMiddleware: LoggerMiddleware,
@@ -51,6 +53,8 @@ export class Server {
     this._app.use(this._companyRouter.basePath, this._companyRouter.router);
     this._app.use(this._carRouter.basePath, this._carRouter.router);
     this._app.use(this._customerRouter.basePath, this._customerRouter.router);
+    this._app.use(this._contractDoc.basePath, this._contractDoc.router);
+
 
     this._app.use(this._notFoundMiddleware.handler());
     this._app.use(this._globalErrorMiddleware.handler);

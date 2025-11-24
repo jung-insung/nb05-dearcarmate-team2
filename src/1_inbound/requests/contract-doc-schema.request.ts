@@ -13,7 +13,7 @@ export const contractDocListReqSchema = z.object({
 
     pageSize: z.coerce.number().default(8),
 
-    searchBy: z.enum(["ContractName", "userName", "carNumber"]).optional().default("ContractName"),
+    searchBy: z.enum(["contractName", "userName", "carNumber"]).default("contractName"),
 
     keyword: z.string().optional(),
   })
