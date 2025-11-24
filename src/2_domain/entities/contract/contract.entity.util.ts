@@ -82,6 +82,6 @@ export type ContractCreateData = Omit<
 >;
 export type ContractUpdateData = Omit<
   ContractEn,
-  "id" | "meetings" | "contractDocuments" | "version"
+  "id" | "meetings" | "contractDocuments"
 >;
 export type MeetingCreateData = Omit<MeetingEn, "id">;

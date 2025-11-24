@@ -2,7 +2,12 @@ import { Request, Response } from "express";
 import { BaseController } from "./base.controller";
 import { IContractService } from "../port/services/contract.service.interface";
 import { IContractController } from "../port/controllers/contract.controller.interface";
-import { getContractListReqSchema } from "../requests/contract-schema.request";
+import {
+  getContractListReqSchema,
+  updateContractReqSchema,
+  UpdateContractReqSchema,
+  updateContractStatusReqSchema,
+} from "../requests/contract-schema.request";
 
 export class ContractController
   extends BaseController
@@ -11,6 +16,32 @@ export class ContractController
   constructor(private readonly _contractService: IContractService) {
     super();
   }
+
+  updateContractDetail = async (req: Request, res: Response) => {
+    const contractId = Number(req.params.id);
+    const body = req.body;
+
+    const dto = this.validateOrThrow(updateContractReqSchema, { body });
+    const result = await this._contractService.updateContractDetail({
+      contractId,
+      dto,
+    });
+
+    return res.status(200).json(result);
+  };
+
+  updateContractStatus = async (req: Request, res: Response) => {
+    const contractId = Number(req.params.id);
+    const body = req.body;
+
+    const dto = this.validateOrThrow(updateContractStatusReqSchema, { body });
+    const result = await this._contractService.updateContractStatus({
+      contractId,
+      dto,
+    });
+
+    return res.status(200).json(result);
+  };
 
   getContracts = async (req: Request, res: Response) => {
     const { query, userId } = this.validateOrThrow(getContractListReqSchema, {

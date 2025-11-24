@@ -7,7 +7,10 @@ import {
   ContractListRepoDto,
   IContractRepo,
 } from "../../2_domain/port/repos/contract.repo.interface";
-import { PersistContractEntity } from "../../2_domain/entities/contract/contract.entity";
+import {
+  ContractEntity,
+  PersistContractEntity,
+} from "../../2_domain/entities/contract/contract.entity";
 import { ContractMapper } from "../mappers/contract.mapper";
 import { ContractStatus } from "../../2_domain/entities/contract/contract.enum";
 import { ContractRecord } from "../../2_domain/entities/contract/contract.entity.util";
@@ -20,8 +23,9 @@ export type ContractDBForDocView = Prisma.ContractGetPayload<{
     car: true;
     customer: true;
     documents: true;
-  }
+  };
 }>;
+
 export type ContractDocViewReturn = {
   pagination: {
     currentPage: number;
@@ -48,8 +52,8 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       user: true,
       car: true,
       customer: true,
-      documents: true
-    }
+      documents: true,
+    };
   }
 
   private _toPrismaStatus(status: ContractStatus): PrismaContractStatus {
@@ -66,6 +70,42 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
         return PrismaContractStatus.CONTRACT_FAILED;
       default:
         return PrismaContractStatus.CAR_INSPECTION;
+    }
+  }
+
+  async findById(id: number) {
+    const record = await this._prisma.contract.findUnique({
+      where: { id },
+    });
+
+    return ContractMapper.toPersistEntity(record as unknown as ContractRecord);
+  }
+
+  async update(id: number, entity: ContractEntity) {
+    try {
+      const { contract, meeting } = ContractMapper.toUpdateData(entity);
+      const record = await this._prisma.contract.update({
+        where: { id, version: contract.version },
+        data: {
+          ...contract,
+          version: { increment: 1 },
+          meeting: meeting,
+        } as any,
+        include: this._includeOption,
+      });
+      return ContractMapper.toPersistEntity(
+        record as unknown as ContractRecord,
+      );
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === "P2025") {
+          throw new TechnicalException({
+            type: TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED,
+            error: err,
+          });
+        }
+      }
+      throw err;
     }
   }
 
@@ -122,12 +162,14 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     }
   }
 
-  async getContractsForDocView(pagination: ContractDocPagination): Promise<ContractDocViewReturn> {
+  async getContractsForDocView(
+    pagination: ContractDocPagination,
+  ): Promise<ContractDocViewReturn> {
     let whereCondition: Prisma.ContractWhereInput = {
-      status: 'CONTRACT_SUCCESSFUL',
+      status: "CONTRACT_SUCCESSFUL",
       documents: {
         some: {},
-      } 
+      },
     };
 
     switch (pagination.searchBy) {
@@ -140,8 +182,8 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       case "contractName":
         whereCondition.OR = [
           { car: { model: { contains: pagination.keyword } } },
-          { customer: { name: { contains: pagination.keyword } } }
-        ]
+          { customer: { name: { contains: pagination.keyword } } },
+        ];
         break;
     }
 
@@ -150,19 +192,20 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       include: this._includeOptionForDoc,
       skip: (pagination.page - 1) * pagination.pageSize,
       take: pagination.pageSize,
-      orderBy: { createdAt: "desc" }
+      orderBy: { createdAt: "desc" },
     });
     const totalItemCount = contracts.length;
-	  const totalPages = Math.ceil(totalItemCount/pagination.pageSize);
+    const totalPages = Math.ceil(totalItemCount / pagination.pageSize);
 
     return {
-      pagination : {
-        currentPage : pagination.page,
+      pagination: {
+        currentPage: pagination.page,
         totalItemCount,
         totalPages,
       },
-      data: contracts.map(contract => ContractDocMapper.toContractDocViewEntity(contract))
+      data: contracts.map((contract) =>
+        ContractDocMapper.toContractDocViewEntity(contract),
+      ),
     };
   }
 }
-
