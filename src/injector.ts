@@ -37,6 +37,11 @@ import { AuthController } from "./1_inbound/controllers/auth.controller";
 import { TokenUtil } from "./4_shared/utils/token.util";
 import { AuthMiddleware } from "./1_inbound/middlewares/auth.middleware";
 import { ContractDocRepo } from "./3_outbound/repos/contract-doc.repo";
+import { ContractRepo } from "./3_outbound/repos/contract.repo";
+import { MulterMiddleware } from "./1_inbound/middlewares/multer.middleware";
+import { ContractDocRouter } from "./1_inbound/routers/contract-doc.router";
+import { ContractDocService } from "./2_domain/services/contractDoc.service";
+import { ContractDocController } from "./1_inbound/controllers/contract-doc.controller";
 
 export class Injector {
   private _server: Server;
@@ -61,13 +66,16 @@ export class Injector {
     const jsonMiddleware = new JsonMiddleware(configUtil);
     const loggerMiddleware = new LoggerMiddleware(configUtil);
     const notFoundMiddleware = new NotFoundMiddleware();
+    const authMiddleware = new AuthMiddleware(tokenUtil);
+    const multerMiddleware = new MulterMiddleware();
 
     const repoFactory = new RepoFactory({
       user: (prisma) => new UserRepo(prisma),
       company: (prisma) => new CompanyRepo(prisma),
       car: (prisma) => new CarRepo(prisma),
       customer: (prisma) => new CustomerRepo(prisma),
-      contract: (prisma) => new ContractDocRepo(prisma),
+      contract: (prisma) => new ContractRepo(prisma),
+      contractDoc: (prisma) => new ContractDocRepo(prisma)
     });
 
     const unitOfWork = new UnitOfWork(prisma, repoFactory, configUtil);
@@ -81,14 +89,14 @@ export class Injector {
     const companyService = new CompanyService(unitOfWork);
     const carService = new CarService(unitOfWork);
     const customerService = new CustomerService(unitOfWork);
+    const contractDocService = new ContractDocService(unitOfWork);
 
     const authController = new AuthController(authService);
     const userController = new UserController(userService);
     const companyController = new CompanyController(companyService);
     const carController = new CarController(carService);
     const customerController = new CustomerController(customerService);
-
-    const authMiddleware = new AuthMiddleware(tokenUtil);
+    const contractDocController = new ContractDocController(contractDocService);
 
     const authRouter = new AuthRouter(authController);
     const userRouter = new UserRouter(userController, authMiddleware);
@@ -98,6 +106,7 @@ export class Injector {
       customerController,
       authMiddleware,
     );
+    const contractDocRouter = new ContractDocRouter(contractDocController, authMiddleware, multerMiddleware)
 
     return new Server(
       authRouter,
@@ -105,6 +114,7 @@ export class Injector {
       companyRouter,
       customerRouter,
       carRouter,
+      contractDocRouter,
       configUtil,
       corsMiddleware,
       loggerMiddleware,

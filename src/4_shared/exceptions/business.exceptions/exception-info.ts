@@ -61,6 +61,7 @@ export enum BusinessExceptionType {
   CUSTOMER_CSV_INVALID_EMAIL,
   CUSTOMER_CSV_INVALID_PHONENUMBER,
   VALIDATION_ERROR,
+  CONTRACTFORDOC_NOT_EXIST,
 }
 
 export const BusinessExceptionTable: Record<
@@ -276,6 +277,10 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.CAR_NOT_EXIST]: {
     statusCode: 404,
     message: "존재하지 않는 차량입니다.",
+  },
+  [BusinessExceptionType.CONTRACTFORDOC_NOT_EXIST]: {
+    statusCode: 404,
+    message: "완료된 계약에서 문서를 추가한 계약이 없습니다.",
   },
 
   // 중복, 충돌

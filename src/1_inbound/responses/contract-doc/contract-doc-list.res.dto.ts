@@ -1,22 +1,39 @@
-import { PersistContractDocEntity } from "../../../2_domain/entities/cotract-doc/contract-doc.entity";
+import { ContractDocViewEntity } from "../../../2_domain/entities/cotract-doc/contract-doc-view.entity";
+import { ContractDocViewReturn } from "../../../3_outbound/repos/contract.repo";
+
+export type ContractDocViewDto = {
+  id: number;
+  contractName: string;
+  resolutionDate: Date | null;
+  documentCount: number;
+  userName: string;
+  carNumber: string;
+  documents: { id: number; fileName: string }[];
+};
 
 export class contractDocListResDto {
-  public currentPage: string;
-  public totalPages: string;
+  public currentPage: number;
+  public totalPages: number;
   public totalItemCount: number;
-  public data: PersistContractDocEntity[];
+  public data: ContractDocViewDto[];
 
   constructor(
-    pagination: {
-      currentPage: string;
-      totalPages: string;
-      totalItemCount: number;
-    },
-    contractDocList: PersistContractDocEntity[]
+    contractDocs :  ContractDocViewReturn
   ) {
-    this.currentPage = pagination.currentPage;
-    this.totalPages = pagination.totalPages;
-    this.totalItemCount = pagination.totalItemCount
-    this.data = contractDocList;
+    this.currentPage = contractDocs.pagination.currentPage;
+    this.totalPages = contractDocs.pagination.totalPages;
+    this.totalItemCount = contractDocs.pagination.totalItemCount
+    this.data = contractDocs.data.map(contractDoc => ({
+      id: contractDoc.id,
+      contractName: contractDoc.contractName,
+			resolutionDate: contractDoc.resolutionDate,
+			documentCount : contractDoc.documentCount,
+			userName: contractDoc.userName,
+			carNumber: contractDoc.carNumber,
+      documents: contractDoc.documents.map(document => ({
+        id: document.id,
+        fileName: document.fileName
+      }))
+    }));
   }
 }
