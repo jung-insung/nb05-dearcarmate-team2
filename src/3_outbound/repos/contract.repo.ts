@@ -81,6 +81,31 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     return ContractMapper.toPersistEntity(record as unknown as ContractRecord);
   }
 
+  async updateStatus(id: number, status: ContractStatus, version: number) {
+    try {
+      const record = await this._prisma.contract.update({
+        where: { id, version },
+        data: {
+          status: this._toPrismaStatus(status),
+          version: { increment: 1 },
+        },
+        include: this._includeOption,
+      });
+      return ContractMapper.toPersistEntity(
+        record as unknown as ContractRecord,
+      );
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === "P2025") {
+          throw new TechnicalException({
+            type: TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED,
+            error: err,
+          });
+        }
+      }
+      throw err;
+    }
+  }
   async update(id: number, entity: ContractEntity) {
     try {
       const { contract, meeting } = ContractMapper.toUpdateData(entity);

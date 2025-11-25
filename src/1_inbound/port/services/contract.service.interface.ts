@@ -1,5 +1,11 @@
-import { CreateContractReq } from "../../requests/contract-schema.request";
-import { ContractListResponseDto } from "../../responses/contract/contract.response";
+import {
+  UpdateContractReq,
+  UpdateContractStatusReq,
+} from "../../requests/contract-schema.request";
+import {
+  ContractListResponseDto,
+  ContractResponseDto,
+} from "../../responses/contract/contract.response";
 
 export interface ContractListQueryDto {
   page: number;
@@ -14,6 +20,14 @@ export interface DropdownItemDto {
 }
 
 export interface IContractService {
+  updateContractStatus(params: {
+    contractId: number;
+    dto: UpdateContractStatusReq;
+  }): Promise<ContractResponseDto>;
+  updateContractDetail(params: {
+    contractId: number;
+    dto: UpdateContractReq;
+  }): Promise<ContractResponseDto>;
   getContracts(
     userId: number,
     query: ContractListQueryDto,
