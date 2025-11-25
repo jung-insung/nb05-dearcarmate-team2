@@ -114,6 +114,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
   ): Promise<{ contracts: PersistContractEntity[]; totalItemCount: number }> {
     try {
       const { offset, limit, keyword, searchBy, companyId, status } = query;
+	  const queryMode: Prisma.QueryMode = "insensitive";
 
       const where: Prisma.ContractWhereInput = { companyId };
 
@@ -122,10 +123,19 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       }
 
       if (keyword) {
-        if (searchBy === "customerName") {
-          where.customer = { name: { contains: keyword } };
-        } else if (searchBy === "userName") {
-          where.user = { name: { contains: keyword } };
+        switch (searchBy) {
+          case "customerName":
+            where.customer = { name: { contains: keyword, mode: queryMode } };
+            break;
+          case "userName":
+            where.user = { name: { contains: keyword, mode: queryMode } };
+            break;
+          default:
+            where.OR = [
+              { customer: { name: { contains: keyword, mode: queryMode } } },
+              { user: { name: { contains: keyword, mode: queryMode } } },
+            ];
+            break;
         }
       }
 
