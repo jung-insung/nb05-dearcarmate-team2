@@ -1,6 +1,7 @@
 import {
   UpdateContractReq,
   UpdateContractStatusReq,
+  CreateContractReq,
 } from "../../requests/contract-schema.request";
 import {
   ContractListResponseDto,
@@ -20,6 +21,11 @@ export interface DropdownItemDto {
 }
 
 export interface IContractService {
+  createContract(params: {
+    userId: number;
+    dto: CreateContractReq;
+  }): Promise<any>;
+
   updateContractStatus(params: {
     contractId: number;
     dto: UpdateContractStatusReq;
@@ -28,6 +34,7 @@ export interface IContractService {
     contractId: number;
     dto: UpdateContractReq;
   }): Promise<ContractResponseDto>;
+
   getContractLists(
     userId: number,
     query: ContractListQueryDto,
@@ -35,9 +42,4 @@ export interface IContractService {
   getContractCars(userId: number): Promise<DropdownItemDto[]>;
   getContractCustomers(userId: number): Promise<DropdownItemDto[]>;
   getContractUsers(userId: number): Promise<DropdownItemDto[]>;
-
-  createContract(params: {
-    userId: number;
-    dto: CreateContractReq;
-  }): Promise<any>;
 }
