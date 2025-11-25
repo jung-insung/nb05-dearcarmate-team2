@@ -33,9 +33,8 @@ export class ContractController
     const body = req.body;
 
     const bodyKeys = Object.keys(body);
-    const isStatusOnlyUpdate = 
-      bodyKeys.length === 1 && 
-      bodyKeys[0] === 'status';
+    const isStatusOnlyUpdate =
+      bodyKeys.length === 1 && bodyKeys[0] === "status";
 
     if (isStatusOnlyUpdate) {
       const dto = this.validateOrThrow(updateContractStatusReqSchema, { body });

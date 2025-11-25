@@ -204,7 +204,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       status: "CONTRACT_SUCCESSFUL",
       documents: {
         some: {},
-      }
+      },
     };
 
     switch (pagination.searchBy) {
@@ -265,15 +265,15 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
   async getDraftContracts(): Promise<ContractDocViewEntity[]> {
     const contracts = await this._prisma.contract.findMany({
       where: {
-        status: 'CONTRACT_SUCCESSFUL',
+        status: "CONTRACT_SUCCESSFUL",
         documents: {
           some: {},
-        }
+        },
       },
-      include: this._includeOptionForDoc
+      include: this._includeOptionForDoc,
     });
-    return contracts.map(contract =>
-      ContractDocMapper.toContractDocViewEntity(contract)
+    return contracts.map((contract) =>
+      ContractDocMapper.toContractDocViewEntity(contract),
     );
   }
 }

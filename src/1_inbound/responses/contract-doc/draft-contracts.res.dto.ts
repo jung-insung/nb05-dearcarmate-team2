@@ -2,9 +2,9 @@ import { ContractDocViewEntity } from "../../../2_domain/entities/cotract-doc/co
 
 export class DraftcontractsResDto {
   constructor(draftContracts: ContractDocViewEntity[]) {
-    draftContracts.map(contract => ({
+    draftContracts.map((contract) => ({
       id: contract.id,
-      data: contract.contractName
-    }))
+      data: contract.contractName,
+    }));
   }
 }

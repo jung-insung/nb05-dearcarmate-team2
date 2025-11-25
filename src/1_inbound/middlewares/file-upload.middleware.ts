@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import multer from "multer";
-import path from "path"
+import path from "path";
 
 export class FileUploadMiddleware {
   public upload;
@@ -18,8 +18,8 @@ export class FileUploadMiddleware {
       filename: function (req, file, cb) {
         const uniqueName = Date.now() + "-" + file.originalname;
         cb(null, uniqueName);
-      }
-    })
+      },
+    });
 
     this.upload = multer({ storage });
   }
@@ -30,12 +30,13 @@ export class FileUploadMiddleware {
     next: NextFunction,
   ) => {
     try {
-      req.body.fileName = req.file ? req.file.originalname : null
+      req.body.fileName = req.file ? req.file.originalname : null;
       req.body.filePath = req.file ? req.file.path : null;
       next();
     } catch (err) {
       next(err);
     }
+<<<<<<< Updated upstream:src/1_inbound/middlewares/file-upload.middleware.ts
   }
 
   imageUploadHandler = (
@@ -51,4 +52,7 @@ export class FileUploadMiddleware {
       next(err);
     }
   }
+=======
+  };
+>>>>>>> Stashed changes:src/1_inbound/middlewares/multer.middleware.ts
 }

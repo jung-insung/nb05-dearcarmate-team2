@@ -17,13 +17,13 @@ export class ContractDocRouter extends BaseRouter {
     this.router.get(
       "/",
       this._authMiddleware.isUserAuthenticate,
-      this.catch(this._contractDocController.getContractDocs)
+      this.catch(this._contractDocController.getContractDocs),
     );
-    
+
     this.router.get(
       "/draft",
       this._authMiddleware.isUserAuthenticate,
-      this.catch(this._contractDocController.getContractsForDraft)
+      this.catch(this._contractDocController.getContractsForDraft),
     );
 
     this.router.post(
@@ -37,7 +37,7 @@ export class ContractDocRouter extends BaseRouter {
     this.router.get(
       "/:contractDocId/download",
       this._authMiddleware.isUserAuthenticate,
-      this.catch(this._contractDocController.downloadContractDoc)
+      this.catch(this._contractDocController.downloadContractDoc),
     );
   }
 }

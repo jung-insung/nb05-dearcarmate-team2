@@ -38,10 +38,11 @@ export const contractDocUploadReqSchema = z.object({
       .string({ message: "파일명은 문자열이어야 합니다." })
       .nonempty({ message: "파일명은 필수 입력 항목입니다." })
       .trim(),
-    filePath: z.string({ message: "파일 경로는 문자열이어야 합니다." })
+    filePath: z
+      .string({ message: "파일 경로는 문자열이어야 합니다." })
       .nonempty({ message: "파일 경로는 필수 입력 항목입니다." })
       .trim(),
-  })
+  }),
 });
 
 export const contractDocDownLoadReqSchema = z.object({
