@@ -2,13 +2,18 @@ import { NextFunction, Request, Response } from "express";
 import multer from "multer";
 import path from "path"
 
-export class MulterMiddleware {
+export class FileUploadMiddleware {
   public upload;
 
   constructor() {
     const storage = multer.diskStorage({
       destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '../../../public/files'));
+        if (file.fieldname === "contractDoc") {
+          cb(null, path.join(__dirname, '../../../public/contractDocs'));
+
+        } else if (file.fieldname === "image") {
+          cb(null, path.join(__dirname, '../../../public/images'));
+        }
       },
       filename: function (req, file, cb) {
         const uniqueName = Date.now() + "-" + file.originalname;
@@ -27,6 +32,20 @@ export class MulterMiddleware {
     try {
       req.body.fileName = req.file ? req.file.originalname : null
       req.body.filePath = req.file ? req.file.path : null;
+      next();
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  imageUploadHandler = (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      req.body.fileName = req.file ? req.file.originalname : null
+      req.body.url = req.file ? `http://localhost:4000/${req.file.path.replace(/\\/g, "/")}` : null;
       next();
     } catch (err) {
       next(err);

@@ -1,13 +1,13 @@
 import { ContractDocController } from "../controllers/contract-doc.controller";
 import { AuthMiddleware } from "../middlewares/auth.middleware";
-import { MulterMiddleware } from "../middlewares/multer.middleware";
+import { FileUploadMiddleware } from "../middlewares/file-upload.middleware";
 import { BaseRouter } from "./base.router";
 
 export class ContractDocRouter extends BaseRouter {
   constructor(
     private _contractDocController: ContractDocController,
     private _authMiddleware: AuthMiddleware,
-    private _MulterMiddleware: MulterMiddleware,
+    private _fileUploadMiddleware: FileUploadMiddleware,
   ) {
     super("/contractDocuments");
     this.registerContractDocRouter();
@@ -29,8 +29,8 @@ export class ContractDocRouter extends BaseRouter {
     this.router.post(
       "/upload",
       this._authMiddleware.isUserAuthenticate,
-      this._MulterMiddleware.upload.single('contractDoc'),
-      this._MulterMiddleware.contractDocUploadHandler,
+      this._fileUploadMiddleware.upload.single('contractDoc'),
+      this._fileUploadMiddleware.contractDocUploadHandler,
       this.catch(this._contractDocController.uploadContractDoc)
     );
 
