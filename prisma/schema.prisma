@@ -172,7 +172,6 @@ model Meeting {
   id         Int      @id @default(autoincrement())
   contractId Int
   date       DateTime
-  version    Int      @default(1)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -190,8 +189,8 @@ enum ContractStatus {
 }
 
 enum AlarmTime {
-  DAY_BEFORE_9AM @map("dayBefore9am")
-  ON_DAY_9AM     @map("onDay9am")
+  DAY_BEFORE_9AM 
+  ON_DAY_9AM    
 }
 
 model ContractDocument {
