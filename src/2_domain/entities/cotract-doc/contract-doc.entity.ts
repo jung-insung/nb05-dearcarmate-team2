@@ -7,14 +7,7 @@ export interface PersistContractDocEntity extends ContractDocEntity {
   updatedat: Date;
 }
 
-<<<<<<< HEAD
-export type NewContractDocEntity = Omit<
-  ContractDocEntity,
-  "id" | "createdAt" | "updatedAt"
->;
-=======
 export type NewContractDocEntity = Omit<ContractDocEntity, "id" | "createdAt" | "updatedAt" | "contractId">;
->>>>>>> 8725acb ([feat] 계약서 api 나머지 구현)
 
 export class ContractDocEntity {
   private readonly _id?: number;
@@ -58,9 +51,6 @@ export class ContractDocEntity {
   get updatedAt() {
     return this._updatedAt;
   }
-<<<<<<< HEAD
-}
-=======
 
   static createContractDoc(params:{
     fileName: string;
@@ -74,4 +64,3 @@ export class ContractDocEntity {
     }) as NewContractDocEntity
   }
 }
->>>>>>> 8725acb ([feat] 계약서 api 나머지 구현)

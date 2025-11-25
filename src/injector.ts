@@ -26,7 +26,6 @@ import { CompanyService } from "./2_domain/services/company.service";
 import { CarService } from "./2_domain/services/car.service";
 import { CustomerService } from "./2_domain/services/customer.service";
 import { ContractService } from "./2_domain/services/contract.service";
-import { ContractDocService } from "./2_domain/services/contractDoc.service";
 
 import { UserController } from "./1_inbound/controllers/user.controller";
 import { CompanyController } from "./1_inbound/controllers/company.controller";
@@ -45,6 +44,7 @@ import { AuthController } from "./1_inbound/controllers/auth.controller";
 import { TokenUtil } from "./4_shared/utils/token.util";
 import { AuthMiddleware } from "./1_inbound/middlewares/auth.middleware";
 import { MulterMiddleware } from "./1_inbound/middlewares/multer.middleware";
+import { ContractDocService } from "./2_domain/services/contract-doc.service";
 
 export class Injector {
   private _server: Server;
