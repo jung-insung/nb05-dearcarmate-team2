@@ -27,14 +27,13 @@ export class ContractService extends BaseService implements IContractService {
     super(unitOfWork);
   }
 
-  private async _executeContractUpdate(
-    contractId: number,
-    dto: any,
-    conflictExceptionType: BusinessExceptionType,
-  ) {
+  async updateContractStatus(params: {
+    contractId: number;
+    dto: UpdateContractStatusReq;
+  }) {
     return await this._unitOfWork.do(
       async (txRepos) => {
-        const entity = await txRepos.contract.findById(contractId);
+        const entity = await txRepos.contract.findById(params.contractId);
 
         if (!entity) {
           throw new BusinessException({
@@ -42,17 +41,21 @@ export class ContractService extends BaseService implements IContractService {
           });
         }
 
-        entity.update(dto);
-
         try {
-          const updated = await txRepos.contract.update(contractId, entity);
-          return ContractMapper.toResponse(updated);
+          const updated = await txRepos.contract.updateStatus(
+            params.contractId,
+            params.dto.body.status as ContractStatus,
+            entity.version,
+          );
+          return new ContractResponseDto(ContractMapper.toResponse(updated));
         } catch (err) {
           if (
             err instanceof TechnicalException &&
             err.type === TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED
           ) {
-            throw new BusinessException({ type: conflictExceptionType });
+            throw new BusinessException({
+              type: BusinessExceptionType.CONTRACT_STATUS_CHANGED,
+            });
           }
           throw err;
         }
@@ -62,25 +65,42 @@ export class ContractService extends BaseService implements IContractService {
     );
   }
 
-  async updateContractStatus(params: {
-    contractId: number;
-    dto: UpdateContractStatusReq;
-  }) {
-    return this._executeContractUpdate(
-      params.contractId,
-      params.dto,
-      BusinessExceptionType.CONTRACT_STATUS_CHANGED,
-    );
-  }
-
   async updateContractDetail(params: {
     contractId: number;
     dto: UpdateContractReq;
   }) {
-    return this._executeContractUpdate(
-      params.contractId,
-      params.dto,
-      BusinessExceptionType.CONTRACT_DATA_CHANGED,
+    return await this._unitOfWork.do(
+      async (txRepos) => {
+        const entity = await txRepos.contract.findById(params.contractId);
+
+        if (!entity) {
+          throw new BusinessException({
+            type: BusinessExceptionType.CONTRACT_NOT_EXIST,
+          });
+        }
+
+        entity.update(params.dto.body);
+
+        try {
+          const updated = await txRepos.contract.update(
+            params.contractId,
+            entity,
+          );
+          return new ContractResponseDto(ContractMapper.toResponse(updated));
+        } catch (err) {
+          if (
+            err instanceof TechnicalException &&
+            err.type === TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED
+          ) {
+            throw new BusinessException({
+              type: BusinessExceptionType.CONTRACT_DATA_CHANGED,
+            });
+          }
+          throw err;
+        }
+      },
+      true,
+      false,
     );
   }
 
