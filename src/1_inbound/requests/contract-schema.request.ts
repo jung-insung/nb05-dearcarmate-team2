@@ -78,6 +78,26 @@ export const updateContractStatusReqSchema = z.object({
 
 export const updateContractReqSchema = z.object({
   body: z.object({
+    status: z
+      .string()
+      .transform((val) => {
+        const upper = val.toUpperCase();
+        if (CONTRACT_STATUS_KEYS.includes(upper as any)) {
+          return upper;
+        }
+        const lower = val.toLowerCase().replace(/[_-]/g, "");
+        const statusMapping: Record<string, string> = {
+            carinspection: "CAR_INSPECTION",
+            pricenegotiation: "PRICE_NEGOTIATION",
+            contractdraft: "CONTRACT_DRAFT",
+            contractsuccessful: "CONTRACT_SUCCESSFUL",
+            contractfailed: "CONTRACT_FAILED",
+        };
+        return statusMapping[lower] || val;
+      })
+      .pipe(z.enum(CONTRACT_STATUS_KEYS))
+      .optional(),
+
     resolutionDate: z.string().regex(ISO_DATETIME_REGEX).nullable().optional(),
 
     contractPrice: z.number().int().min(0).optional(),

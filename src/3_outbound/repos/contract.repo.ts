@@ -109,10 +109,14 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
   async update(id: number, entity: ContractEntity) {
     try {
       const { contract, meeting } = ContractMapper.toUpdateData(entity);
+
+      const prismaStatus = this._toPrismaStatus(contract.status);
+
       const record = await this._prisma.contract.update({
         where: { id, version: contract.version },
         data: {
           ...contract,
+          status: prismaStatus,
           version: { increment: 1 },
           meeting: meeting,
         } as any,
