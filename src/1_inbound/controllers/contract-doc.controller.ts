@@ -67,7 +67,7 @@ export class ContractDocController extends BaseController {
 
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename="${encodeURIComponent(downloadcontractDocs.fileName)}"`
+      `attachment; filename="${downloadcontractDocs.fileName}"; filename*=UTF-8''${encodeURIComponent(downloadcontractDocs.fileName)}`
     )
     return res.sendFile(path.resolve(downloadcontractDocs.filePath));
   };

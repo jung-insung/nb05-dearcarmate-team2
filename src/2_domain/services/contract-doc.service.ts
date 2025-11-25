@@ -95,7 +95,7 @@ export class ContractDocService extends BaseService implements IContractDocServi
         });
       }
 
-      const foundContractDoc = await repos.contractDoc.findContractDocById(dto.params.contractDocumentId);
+      const foundContractDoc = await repos.contractDoc.findContractDocById(dto.params.contractDocId);
 
       if(!foundContractDoc) {
         throw new BusinessException({
