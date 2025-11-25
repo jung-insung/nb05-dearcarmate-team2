@@ -5,4 +5,6 @@ export interface IContractController {
   getContractCars: ControllerHandler;
   getContractCustomers: ControllerHandler;
   getContractUsers: ControllerHandler;
+  updateContractDetail: ControllerHandler;
+  updateContractStatus: ControllerHandler;
 }
