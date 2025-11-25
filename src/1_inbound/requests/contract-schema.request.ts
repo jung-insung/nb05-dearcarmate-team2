@@ -12,7 +12,7 @@ export const getContractListReqSchema = z.object({
 
   query: z.object({
     page: z.coerce.number().min(1).default(1),
-    pageSize: z.coerce.number().min(1).default(20),
+    pageSize: z.coerce.number().min(1).default(1000),
     searchBy: z.enum(["customerName", "userName"]).optional(),
     keyword: z.string().optional(),
   }),

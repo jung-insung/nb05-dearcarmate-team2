@@ -1,7 +1,7 @@
 import { ControllerHandler } from "../../controllers/base.controller";
 
 export interface IContractController {
-  getContracts: ControllerHandler;
+  getContractLists: ControllerHandler;
   getContractCars: ControllerHandler;
   getContractCustomers: ControllerHandler;
   getContractUsers: ControllerHandler;

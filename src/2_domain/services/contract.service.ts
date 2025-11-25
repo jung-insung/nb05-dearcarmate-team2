@@ -104,7 +104,7 @@ export class ContractService extends BaseService implements IContractService {
     );
   }
 
-  async getContracts(
+  async getContractLists(
     userId: number,
     query: ContractListQueryDto,
   ): Promise<ContractListResponseDto> {
@@ -163,7 +163,11 @@ export class ContractService extends BaseService implements IContractService {
   }
 
   async getContractUsers(userId: number): Promise<DropdownItemDto[]> {
-    const me = await this._unitOfWork.repos.user.findUserById(userId);
-    return me ? [{ id: me.id, data: `${me.name}(${me.email})` }] : [];
+    const companyId = await this._getCompanyId(userId);
+    const users = await this._unitOfWork.repos.user.findAllByCompanyId(companyId);
+    return users.map((user) => ({
+      id: user.id!,
+      data: `${user.name}(${user.email})`,
+    }));
   }
 }

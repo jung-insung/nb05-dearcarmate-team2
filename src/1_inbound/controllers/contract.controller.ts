@@ -12,7 +12,7 @@ export class ContractController
   extends BaseController
   implements IContractController
 {
-  constructor(private readonly _contractService: IContractService) {
+  constructor(private _contractService: IContractService) {
     super();
   }
 
@@ -42,13 +42,13 @@ export class ContractController
     return res.status(200).json(result);
   };
 
-  getContracts = async (req: Request, res: Response) => {
+  getContractLists = async (req: Request, res: Response) => {
     const { query, userId } = this.validateOrThrow(getContractListReqSchema, {
       query: req.query,
       userId: req.userId,
     });
 
-    const result = await this._contractService.getContracts(userId, query);
+    const result = await this._contractService.getContractLists(userId, query);
 
     return res.json(result);
   };
@@ -60,9 +60,7 @@ export class ContractController
   };
 
   getContractCustomers = async (req: Request, res: Response) => {
-    const result = await this._contractService.getContractCustomers(
-      req.userId!,
-    );
+   const result = await this._contractService.getContractCustomers(req.userId!);
 
     return res.json(result);
   };

@@ -38,6 +38,18 @@ export class UserRepo extends BaseRepo implements IUserRepo {
     };
   }
 
+  // 유저가 속한 회사의 직원들 불러오기용
+  async findAllByCompanyId(
+    companyId: number
+  ): Promise<PersistUserEntityWithCompany[]> {
+    const users = await this._prisma.user.findMany({
+      where: { companyId },
+      include: this._includeOption,
+    });
+
+    return users.map((user) => UserMapper.toPersistEntity(user));
+  }
+
   async findUserByEmail(
     email: string,
     lockType?: LockType,

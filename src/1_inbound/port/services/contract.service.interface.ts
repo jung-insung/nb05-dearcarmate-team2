@@ -28,7 +28,7 @@ export interface IContractService {
     contractId: number;
     dto: UpdateContractReq;
   }): Promise<ContractResponseDto>;
-  getContracts(
+  getContractLists(
     userId: number,
     query: ContractListQueryDto,
   ): Promise<ContractListResponseDto>;
