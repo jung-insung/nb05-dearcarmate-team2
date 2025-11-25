@@ -7,6 +7,6 @@ export enum ContractStatus {
 }
 
 export enum AlarmTime {
-  DAY_BEFORE_9AM = "dayBefore9am",
-  ON_DAY_9AM = "onDay9am",
+  DAY_BEFORE_9AM = "DAY_BEFORE_9AM",
+  ON_DAY_9AM = "ON_DAY_9AM",
 }

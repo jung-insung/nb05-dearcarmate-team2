@@ -39,6 +39,14 @@ export const CONTRACT_STATUS_KEYS = [
   "CONTRACT_FAILED",
 ] as const;
 
+const statusMapping: Record<string, (typeof CONTRACT_STATUS_KEYS)[number]> = {
+  carinspection: "CAR_INSPECTION",
+  pricenegotiation: "PRICE_NEGOTIATION",
+  contractdraft: "CONTRACT_DRAFT",
+  contractsuccessful: "CONTRACT_SUCCESSFUL",
+  contractfailed: "CONTRACT_FAILED",
+};
+
 export const ALARM_TIME_KEYS = ["DAY_BEFORE_9AM", "ON_DAY_9AM"] as const;
 
 export const MeetingItemSchema = z.object({
@@ -53,7 +61,18 @@ export const DocumentItemSchema = z.object({
 
 export const updateContractStatusReqSchema = z.object({
   body: z.object({
-    status: z.enum(CONTRACT_STATUS_KEYS),
+    status: z
+      .string()
+      .transform((val) => {
+        const upper = val.toUpperCase();
+        if (CONTRACT_STATUS_KEYS.includes(upper as any)) {
+          return upper;
+        }
+
+        const lower = val.toLowerCase().replace(/[_-]/g, "");
+        return statusMapping[lower] || val;
+      })
+      .pipe(z.enum(CONTRACT_STATUS_KEYS)),
   }),
 });
 
