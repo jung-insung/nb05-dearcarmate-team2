@@ -6,7 +6,7 @@ export type UpdateContractReq = z.infer<typeof updateContractReqSchema>;
 export type UpdateContractStatusReq = z.infer<
   typeof updateContractStatusReqSchema
 >;
-export type CreateContractReq = z.infer<typeof createContractReqSchema>;
+export type CreateContractReq = z.infer<typeof createContractReqSchema>["body"];
 
 export const getContractListReqSchema = z.object({
   userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
@@ -43,7 +43,6 @@ export const ALARM_TIME_KEYS = ["DAY_BEFORE_9AM", "ON_DAY_9AM"] as const;
 
 export const MeetingItemSchema = z.object({
   date: z.string().regex(ISO_DATE_REGEX),
-
   alarms: z.array(z.string().regex(ISO_DATETIME_REGEX)).max(2),
 });
 
@@ -69,16 +68,15 @@ export const updateContractReqSchema = z.object({
   }),
 });
 
+const CreateMeetingItemSchema = z.object({
+  date: z.string().regex(ISO_DATETIME_REGEX),
+  alarms: z.array(z.string().regex(ISO_DATETIME_REGEX)).max(2),
+});
+
 export const createContractReqSchema = z.object({
-  carId: z.number().int(),
-  customerId: z.number().int(),
-  meetings: z
-    .array(
-      z.object({
-        date: z.string().regex(ISO_DATETIME_REGEX),
-        alarms: z.array(z.string().regex(ISO_DATETIME_REGEX)).max(2),
-      }),
-    )
-    .max(3)
-    .optional(),
+  body: z.object({
+    carId: z.number(),
+    customerId: z.number(),
+    meetings: z.array(CreateMeetingItemSchema).optional(),
+  }),
 });

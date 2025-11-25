@@ -39,7 +39,7 @@ export class ContractRouter extends BaseRouter {
     this.router.post(
       "/",
       this._authMiddleware.isUserAuthenticate,
-      this.catch(this._contractController.createContract)
+      this.catch(this._contractController.createContract),
     );
 
     this.router.patch(
@@ -47,7 +47,7 @@ export class ContractRouter extends BaseRouter {
       this._authMiddleware.isUserAuthenticate,
       this.catch(this._contractController.updateContractDetail),
     );
-    
+
     this.router.patch(
       "/:id",
       this._authMiddleware.isUserAuthenticate,

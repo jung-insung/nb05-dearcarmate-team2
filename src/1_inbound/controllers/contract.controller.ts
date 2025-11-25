@@ -18,14 +18,14 @@ export class ContractController
   }
 
   createContract = async (req: Request, res: Response) => {
-    const dto = this.validateOrThrow(createContractReqSchema, req.body);
+    const { body } = this.validateOrThrow(createContractReqSchema, req);
 
     const result = await this._contractService.createContract({
       userId: req.userId!,
-      dto,
+      dto: body,
     });
 
-    return res.json(result);
+    return res.status(201).json(result);
   };
 
   updateContractDetail = async (req: Request, res: Response) => {
@@ -72,7 +72,9 @@ export class ContractController
   };
 
   getContractCustomers = async (req: Request, res: Response) => {
-   const result = await this._contractService.getContractCustomers(req.userId!);
+    const result = await this._contractService.getContractCustomers(
+      req.userId!,
+    );
 
     return res.json(result);
   };

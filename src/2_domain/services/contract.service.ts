@@ -166,7 +166,8 @@ export class ContractService extends BaseService implements IContractService {
 
   async getContractUsers(userId: number): Promise<DropdownItemDto[]> {
     const companyId = await this._getCompanyId(userId);
-    const users = await this._unitOfWork.repos.user.findAllByCompanyId(companyId);
+    const users =
+      await this._unitOfWork.repos.user.findAllByCompanyId(companyId);
     return users.map((user) => ({
       id: user.id!,
       data: `${user.name}(${user.email})`,
