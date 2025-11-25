@@ -36,7 +36,6 @@ export class FileUploadMiddleware {
     } catch (err) {
       next(err);
     }
-<<<<<<< Updated upstream:src/1_inbound/middlewares/file-upload.middleware.ts
   }
 
   imageUploadHandler = (
@@ -52,7 +51,4 @@ export class FileUploadMiddleware {
       next(err);
     }
   }
-=======
-  };
->>>>>>> Stashed changes:src/1_inbound/middlewares/multer.middleware.ts
 }
