@@ -6,4 +6,6 @@ export interface IContractController {
   getContractCustomers: ControllerHandler;
   getContractUsers: ControllerHandler;
   createContract: ControllerHandler;
+  updateContractDetail: ControllerHandler;
+  updateContractStatus: ControllerHandler;
 }
