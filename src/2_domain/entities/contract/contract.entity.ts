@@ -118,7 +118,7 @@ export class ContractEntity {
     if (params.contractPrice !== undefined) {
       this._contractPrice = params.contractPrice;
     }
-    if (params.meetings) {
+    if (params.meetings !== undefined) {
       this.replaceMeetings(params.meetings);
     }
   }
@@ -147,6 +147,15 @@ export class ContractEntity {
   }
 
   toUpdateData(): ContractUpdateData {
-    return this.toCreateData();
+    return {
+      userId: this._userId,
+      carId: this._carId,
+      customerId: this._customerId,
+      companyId: this._companyId,
+      status: this._status,
+      resolutionDate: this._resolutionDate,
+      contractPrice: this._contractPrice,
+      version: this._version,
+    };
   }
 }
