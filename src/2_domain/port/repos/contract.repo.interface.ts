@@ -1,10 +1,11 @@
 import { ContractDocViewReturn } from "../../../3_outbound/repos/contract.repo";
-import { ContractDocPagination } from "../../services/contractDoc.service";
+import { ContractDocPagination } from "../../services/contract-doc.service";
 import { ContractStatus } from "../../entities/contract/contract.enum";
 import {
   ContractEntity,
   PersistContractEntity,
 } from "../../entities/contract/contract.entity";
+import { ContractDocViewEntity } from "../../entities/cotract-doc/contract-doc-view.entity";
 
 export type LockType = "share" | "beta";
 
@@ -24,6 +25,7 @@ export interface IContractRepo {
     status: ContractStatus,
     version: number,
   ): Promise<ContractEntity>;
+  
   update(id: number, entity: ContractEntity): Promise<ContractEntity>;
   findAll(
     query: ContractListRepoDto,
@@ -34,4 +36,8 @@ export interface IContractRepo {
   ): Promise<ContractDocViewReturn>;
 
   create(entity: ContractEntity): Promise<ContractEntity>;
+  
+  getContractsForDocView(pagination: ContractDocPagination): Promise<ContractDocViewReturn>;
+
+  getDraftContracts(): Promise<ContractDocViewEntity[]>
 }

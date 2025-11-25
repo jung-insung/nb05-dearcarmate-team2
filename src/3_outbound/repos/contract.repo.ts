@@ -1,4 +1,4 @@
-import { ContractDocPagination } from "../../2_domain/services/contractDoc.service";
+import { ContractDocPagination } from "../../2_domain/services/contract-doc.service";
 import { Prisma, ContractStatus as PrismaContractStatus } from "@prisma/client";
 import { BasePrismaClient, BaseRepo } from "./base.repo";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
@@ -204,7 +204,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       status: "CONTRACT_SUCCESSFUL",
       documents: {
         some: {},
-      },
+      }
     };
 
     switch (pagination.searchBy) {
@@ -245,7 +245,6 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
   }
   async create(entity: ContractEntity): Promise<ContractEntity> {
     const { contract, meetings } = ContractMapper.toCreateData(entity);
-
     const record = await this._prisma.contract.create({
       data: {
         ...contract,
@@ -257,5 +256,20 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     });
 
     return ContractMapper.toPersistEntity(record as unknown as ContractRecord);
+  }
+
+  async getDraftContracts(): Promise<ContractDocViewEntity[]> {
+    const contracts = await this._prisma.contract.findMany({
+      where: {
+        status: 'CONTRACT_SUCCESSFUL',
+        documents: {
+          some: {},
+        }
+      },
+      include: this._includeOptionForDoc
+    });
+    return contracts.map(contract =>
+      ContractDocMapper.toContractDocViewEntity(contract)
+    );
   }
 }

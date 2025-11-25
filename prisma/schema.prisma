@@ -197,11 +197,12 @@ enum AlarmTime {
 model ContractDocument {
   id        Int      @id @default(autoincrement())
   fileName  String
+  filePath  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  contractId Int
-  contract   Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  contractId Int?
+  contract   Contract? @relation(fields: [contractId], references: [id], onDelete: Cascade)
 }
 
 model Dashboard {
