@@ -8,10 +8,10 @@ export class ContractRouter extends BaseRouter {
     private _authMiddleware: AuthMiddleware,
   ) {
     super("/contracts");
-    this.setRoutes();
+    this.registercontractRouter();
   }
 
-  private setRoutes() {
+  private registercontractRouter() {
     this.router.get(
       "/",
       this._authMiddleware.isUserAuthenticate,
