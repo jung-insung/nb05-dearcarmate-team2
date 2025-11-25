@@ -40,7 +40,7 @@ export class UserRepo extends BaseRepo implements IUserRepo {
 
   // 유저가 속한 회사의 직원들 불러오기용
   async findAllByCompanyId(
-    companyId: number
+    companyId: number,
   ): Promise<PersistUserEntityWithCompany[]> {
     const users = await this._prisma.user.findMany({
       where: { companyId },

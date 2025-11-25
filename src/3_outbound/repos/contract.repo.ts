@@ -139,7 +139,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
   ): Promise<{ contracts: PersistContractEntity[]; totalItemCount: number }> {
     try {
       const { offset, limit, keyword, searchBy, companyId, status } = query;
-	  const queryMode: Prisma.QueryMode = "insensitive";
+      const queryMode: Prisma.QueryMode = "insensitive";
 
       const where: Prisma.ContractWhereInput = { companyId };
 
@@ -243,19 +243,23 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       ),
     };
   }
-  async create(entity: ContractEntity): Promise<ContractEntity> {
+  async create(entity: ContractEntity) {
     const { contract, meetings } = ContractMapper.toCreateData(entity);
 
     const record = await this._prisma.contract.create({
       data: {
         ...contract,
+        status: this._toPrismaStatus(contract.status),
         meeting: {
-          create: meetings as any,
+          create: meetings.map((m) => ({
+            date: m.date,
+            alarms: m.alarms as any,
+          })),
         },
-      } as any,
+      },
       include: this._includeOption,
     });
 
-    return ContractMapper.toPersistEntity(record as unknown as ContractRecord);
+    return ContractMapper.toPersistEntity(record as any);
   }
 }

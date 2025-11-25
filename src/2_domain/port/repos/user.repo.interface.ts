@@ -12,7 +12,9 @@ export interface IUserRepo {
   /**
    * 유저가 속한 회사의 직원들 불러오기용
    */
-  findAllByCompanyId(companyId: number): Promise<PersistUserEntityWithCompany[]>;
+  findAllByCompanyId(
+    companyId: number,
+  ): Promise<PersistUserEntityWithCompany[]>;
 
   /**
    * @throws Error lockType이 유효하지 않은 값일 경우

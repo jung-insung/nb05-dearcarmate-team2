@@ -111,7 +111,10 @@ export class Injector {
       customerController,
       authMiddleware,
     );
-    const contractRouter = new ContractRouter(contractController, authMiddleware);
+    const contractRouter = new ContractRouter(
+      contractController,
+      authMiddleware,
+    );
     const contractDocRouter = new ContractDocRouter(
       contractDocController,
       authMiddleware,
