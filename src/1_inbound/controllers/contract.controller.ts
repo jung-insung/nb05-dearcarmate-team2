@@ -28,29 +28,29 @@ export class ContractController
     return res.status(201).json(result);
   };
 
-  updateContractDetail = async (req: Request, res: Response) => {
+  updateContract = async (req: Request, res: Response) => {
     const contractId = Number(req.params.id);
     const body = req.body;
+
+    const bodyKeys = Object.keys(body);
+    const isStatusOnlyUpdate = 
+      bodyKeys.length === 1 && 
+      bodyKeys[0] === 'status';
+
+    if (isStatusOnlyUpdate) {
+      const dto = this.validateOrThrow(updateContractStatusReqSchema, { body });
+      const result = await this._contractService.updateContractStatus({
+        contractId,
+        dto,
+      });
+      return res.status(200).json(result);
+    }
 
     const dto = this.validateOrThrow(updateContractReqSchema, { body });
     const result = await this._contractService.updateContractDetail({
       contractId,
       dto,
     });
-
-    return res.status(200).json(result);
-  };
-
-  updateContractStatus = async (req: Request, res: Response) => {
-    const contractId = Number(req.params.id);
-    const body = req.body;
-
-    const dto = this.validateOrThrow(updateContractStatusReqSchema, { body });
-    const result = await this._contractService.updateContractStatus({
-      contractId,
-      dto,
-    });
-
     return res.status(200).json(result);
   };
 
