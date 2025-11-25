@@ -84,7 +84,7 @@ export class ContractService extends BaseService implements IContractService {
     );
   }
 
-  async getContracts(
+  async getContractLists(
     userId: number,
     query: ContractListQueryDto,
   ): Promise<ContractListResponseDto> {

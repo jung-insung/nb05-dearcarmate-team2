@@ -13,7 +13,7 @@ export interface DropdownItemDto {
 }
 
 export interface IContractService {
-  getContracts(
+  getContractLists(
     userId: number,
     query: ContractListQueryDto,
   ): Promise<ContractListResponseDto>;

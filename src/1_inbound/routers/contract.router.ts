@@ -15,7 +15,7 @@ export class ContractRouter extends BaseRouter {
     this.router.get(
       "/",
       this._authMiddleware.isUserAuthenticate,
-      this.catch(this._contractController.getContracts),
+      this.catch(this._contractController.getContractLists),
     );
 
     this.router.get(
