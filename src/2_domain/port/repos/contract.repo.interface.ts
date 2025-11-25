@@ -19,6 +19,11 @@ export interface ContractListRepoDto {
 
 export interface IContractRepo {
   findById(id: number): Promise<ContractEntity>;
+  updateStatus(
+    id: number,
+    status: ContractStatus,
+    version: number,
+  ): Promise<ContractEntity>;
   update(id: number, entity: ContractEntity): Promise<ContractEntity>;
   findAll(
     query: ContractListRepoDto,
