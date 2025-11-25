@@ -4,6 +4,8 @@ import { IContractDocRepo as IContractDocRepo } from "../../2_domain/port/repos/
 import { BasePrismaClient, BaseRepo } from "./base.repo";
 import { ContractDocMapper } from "../mappers/contract-doc.mapper";
 
+export type PersistDBContractDoc = ContractDocument;
+
 export class ContractDocRepo extends BaseRepo implements IContractDocRepo {
   constructor(prisma: BasePrismaClient) {
     super(prisma);
