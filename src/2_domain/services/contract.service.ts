@@ -18,6 +18,8 @@ import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exce
 import { BusinessException } from "../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
 import {
+  CreateContractReq,
+  createContractReqSchema,
   UpdateContractReq,
   UpdateContractStatusReq,
 } from "../../1_inbound/requests/contract-schema.request";
@@ -169,5 +171,60 @@ export class ContractService extends BaseService implements IContractService {
       id: user.id!,
       data: `${user.name}(${user.email})`,
     }));
+  }
+
+  async createContract(params: { userId: number; dto: CreateContractReq }) {
+    const { userId, dto } = params;
+
+    return this._unitOfWork.do(
+      async (txRepos) => {
+        // 유저 확인
+        const user = await txRepos.user.findUserById(userId);
+        if (!user) {
+          throw new BusinessException({
+            type: BusinessExceptionType.USER_NOT_EXIST,
+          });
+        }
+        const companyId = user.companyId;
+
+        // 차량 확인
+        const car = await txRepos.car.findById({
+          companyId,
+          carId: dto.carId,
+        });
+        if (!car) {
+          throw new BusinessException({
+            type: BusinessExceptionType.CAR_NOT_EXIST,
+          });
+        }
+
+        // 고객 확인
+        const customer = await txRepos.customer.findById(dto.customerId);
+        if (!customer) {
+          throw new BusinessException({
+            type: BusinessExceptionType.CUSTOMER_NOT_EXIST,
+          });
+        }
+
+        const newContract = ContractEntity.createNew({
+          userId,
+          carId: dto.carId,
+          customerId: dto.customerId,
+          companyId,
+          contractPrice: 0,
+          meetings: dto.meetings,
+        });
+
+        const created = await txRepos.contract.create(newContract);
+
+        return ContractMapper.toResponse(created, {
+          user: { id: user.id, name: user.name },
+          customer: { id: customer.id, name: customer.name },
+          car: { id: car.id!, model: car.model },
+        });
+      },
+      true,
+      true,
+    );
   }
 }

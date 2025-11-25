@@ -243,4 +243,19 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       ),
     };
   }
+  async create(entity: ContractEntity): Promise<ContractEntity> {
+    const { contract, meetings } = ContractMapper.toCreateData(entity);
+
+    const record = await this._prisma.contract.create({
+      data: {
+        ...contract,
+        meeting: {
+          create: meetings as any,
+        },
+      } as any,
+      include: this._includeOption,
+    });
+
+    return ContractMapper.toPersistEntity(record as unknown as ContractRecord);
+  }
 }

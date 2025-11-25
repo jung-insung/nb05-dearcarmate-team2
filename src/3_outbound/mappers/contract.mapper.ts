@@ -11,7 +11,7 @@ export class ContractMapper {
 
     const meetingsData = entity.meetings.map((m) => ({
       date: m.date,
-      alarms: m.alarms,
+      alarms: m.alarms as any,
     }));
 
     return {

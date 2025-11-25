@@ -32,4 +32,6 @@ export interface IContractRepo {
   getContractsForDocView(
     pagination: ContractDocPagination,
   ): Promise<ContractDocViewReturn>;
+
+  create(entity: ContractEntity): Promise<ContractEntity>;
 }
