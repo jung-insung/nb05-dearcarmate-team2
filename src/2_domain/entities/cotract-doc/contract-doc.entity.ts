@@ -7,7 +7,10 @@ export interface PersistContractDocEntity extends ContractDocEntity {
   updatedat: Date;
 }
 
-export type NewContractDocEntity = Omit<ContractDocEntity, "id" | "createdAt" | "updatedAt" | "contractId">;
+export type NewContractDocEntity = Omit<
+  ContractDocEntity,
+  "id" | "createdAt" | "updatedAt" | "contractId"
+>;
 
 export class ContractDocEntity {
   private readonly _id?: number;
@@ -52,15 +55,15 @@ export class ContractDocEntity {
     return this._updatedAt;
   }
 
-  static createContractDoc(params:{
+  static createContractDoc(params: {
     fileName: string;
     filePath: string;
   }): NewContractDocEntity {
-    const {filePath, fileName} = params;
+    const { filePath, fileName } = params;
 
     return new ContractDocEntity({
       fileName,
       filePath,
-    }) as NewContractDocEntity
+    }) as NewContractDocEntity;
   }
 }

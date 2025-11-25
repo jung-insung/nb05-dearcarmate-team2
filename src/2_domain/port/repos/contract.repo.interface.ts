@@ -25,7 +25,7 @@ export interface IContractRepo {
     status: ContractStatus,
     version: number,
   ): Promise<ContractEntity>;
-  
+
   update(id: number, entity: ContractEntity): Promise<ContractEntity>;
   findAll(
     query: ContractListRepoDto,
@@ -36,8 +36,10 @@ export interface IContractRepo {
   ): Promise<ContractDocViewReturn>;
 
   create(entity: ContractEntity): Promise<ContractEntity>;
-  
-  getContractsForDocView(pagination: ContractDocPagination): Promise<ContractDocViewReturn>;
 
-  getDraftContracts(): Promise<ContractDocViewEntity[]>
+  getContractsForDocView(
+    pagination: ContractDocPagination,
+  ): Promise<ContractDocViewReturn>;
+
+  getDraftContracts(): Promise<ContractDocViewEntity[]>;
 }
