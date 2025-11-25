@@ -47,6 +47,6 @@ export const contractDocUploadReqSchema = z.object({
 export const contractDocDownLoadReqSchema = z.object({
   userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
   params: z.object({
-    contractDocumentId: z.number({ message: "계약서 ID는 숫자이어야 합니다." }),
+    contractDocId: z.coerce.number({ message: "계약서 ID는 숫자이어야 합니다." }),
   })
 });
