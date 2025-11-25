@@ -17,6 +17,17 @@ export class ContractController
     super();
   }
 
+  createContract = async (req: Request, res: Response) => {
+    const dto = this.validateOrThrow(createContractReqSchema, req.body);
+
+    const result = await this._contractService.createContract({
+      userId: req.userId!,
+      dto,
+    });
+
+    return res.json(result);
+  };
+
   updateContractDetail = async (req: Request, res: Response) => {
     const contractId = Number(req.params.id);
     const body = req.body;
@@ -68,17 +79,6 @@ export class ContractController
 
   getContractUsers = async (req: Request, res: Response) => {
     const result = await this._contractService.getContractUsers(req.userId!);
-
-    return res.json(result);
-  };
-
-  createContract = async (req: Request, res: Response) => {
-    const dto = this.validateOrThrow(createContractReqSchema, req.body);
-
-    const result = await this._contractService.createContract({
-      userId: req.userId!,
-      dto,
-    });
 
     return res.json(result);
   };
