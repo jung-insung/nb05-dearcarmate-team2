@@ -23,6 +23,7 @@ export enum BusinessExceptionType {
   PASSWORD_MISMATCH,
   COMPANY_NOT_EXIST,
   USER_NOT_EXIST,
+  DOCUMENT_NOT_EXIST,
   TOKEN_EXPIRED,
   TOKEN_MISMATCH,
   INVALID_AUTH,
@@ -297,7 +298,11 @@ export const BusinessExceptionTable: Record<
     statusCode: 404,
     message: "계약이 존재하지 않습니다.",
   },
-
+  [BusinessExceptionType.DOCUMENT_NOT_EXIST]: {
+    statusCode: 404,
+    message: "계약서가 존재하지 않습니다.",
+  },
+  
   // 중복, 충돌
   [BusinessExceptionType.EMAIL_DUPLICATE]: {
     statusCode: 409,

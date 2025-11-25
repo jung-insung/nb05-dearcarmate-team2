@@ -17,27 +17,27 @@ export class ContractDocRouter extends BaseRouter {
     this.router.get(
       "/",
       this._authMiddleware.isUserAuthenticate,
-      this.catch(this._contractDocController.getContractDocAfterUpload),
+      this.catch(this._contractDocController.getContractDocs)
+    );
+    
+    this.router.get(
+      "/draft",
+      this._authMiddleware.isUserAuthenticate,
+      this.catch(this._contractDocController.getContractsForDraft)
     );
 
-    // this.router.get(
-    //   "/darft",
-    //   this._authMiddleware.isUserAuthenticate,
-    //   this.catch(this._contractDocController.getContractDocAfterAdd)
-    // );
+    this.router.post(
+      "/upload",
+      this._authMiddleware.isUserAuthenticate,
+      this._MulterMiddleware.upload.single('contractDoc'),
+      this._MulterMiddleware.contractDocUploadHandler,
+      this.catch(this._contractDocController.uploadContractDoc)
+    );
 
-    // this.router.post(
-    //   "/upload",
-    //   this._authMiddleware.isUserAuthenticate,
-    //   this._MulterMiddleware.upload.single('contractDoc'),
-    //   this._MulterMiddleware.contractDocUploadHandler,
-    //   this.catch(this._contractDocController.uploadContractDoc)
-    // );
-
-    // this.router.get(
-    //   "/:contractDocId/download",
-    //   this._authMiddleware.isUserAuthenticate,
-    //   this.catch(this._contractDocController.downloadContractDoc)
-    // );
+    this.router.get(
+      "/:contractDocId/download",
+      this._authMiddleware.isUserAuthenticate,
+      this.catch(this._contractDocController.downloadContractDoc)
+    );
   }
 }

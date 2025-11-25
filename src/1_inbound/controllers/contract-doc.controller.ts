@@ -1,15 +1,18 @@
 import { Request, Response } from "express";
 import { BaseController } from "./base.controller";
-import { IContractDocService } from "../../2_domain/services/contractDoc.service";
-import { contractDocListReqSchema } from "../requests/contract-doc-schema.request";
+import { IContractDocService } from "../../2_domain/services/contract-doc.service";
+import { contractDocDownLoadReqSchema, contractDocDraftListReqSchema, contractDocListReqSchema, contractDocUploadReqSchema } from "../requests/contract-doc-schema.request";
 import { contractDocListResDto } from "../responses/contract-doc/contract-doc-list.res.dto";
+import { DraftcontractsResDto } from "../responses/contract-doc/draft-contracts.res.dto";
+import { UploadContractDocResDto } from "../responses/contract-doc/upload-contract-doc.res.dto";
+import path from "path"
 
 export class ContractDocController extends BaseController {
   constructor(private _ContractDocService: IContractDocService) {
     super();
   }
 
-  getContractDocAfterUpload = async (
+  getContractDocs = async (
     req: Request,
     res: Response,
   ): Promise<Response<any>> => {
@@ -18,44 +21,54 @@ export class ContractDocController extends BaseController {
       query: req.query,
     });
 
-    const contractDocList =
-      await this._ContractDocService.getContractForDocView(reqDto);
+    const contractDocList = await this._ContractDocService.getContractForDocView(reqDto);
 
     const resDto = new contractDocListResDto(contractDocList);
     return res.json(resDto);
   };
 
-  // getContractDocAfterAdd = async (
-  //   req: Request,
-  //   res: Response,
-  // ): Promise<Response<any>> => {
-  //   const contractDocList = this._ContractDocService.contractDocList(reqDto);
+  getContractsForDraft = async (
+    req: Request,
+    res: Response,
+  ): Promise<Response<any>> => {
+    const reqDto = this.validateOrThrow(contractDocDraftListReqSchema, {
+      userId: req.userId
+    })
+    const draftContracts = await this._ContractDocService.getDraftContracts(reqDto);
 
-  //   const resDto = new contractDocListResDto(contractDocList);
-  //   return res.json(resDto);
-  // };
+    const resDto = new DraftcontractsResDto(draftContracts);
+    return res.json(resDto);
+  };
 
-  // uploadContractDoc = async (
-  //   req: Request,
-  //   res: Response,
-  // ): Promise<Response<any>> => {
-  //   const reqDto = this.validateOrThrow(contractDocUploadListReqSchema, {
-  //     userId: req.userId,
-  //     body: req.body
-  //   })
-  //   const contractDocList = this._ContractDocService.contractDocList(reqDto);
+  uploadContractDoc = async (
+    req: Request,
+    res: Response,
+  ): Promise<Response<any>> => {
+    const reqDto = this.validateOrThrow(contractDocUploadReqSchema, {
+      userId: req.userId,
+      body: req.body
+    })
+    const uploadContractDoc = await this._ContractDocService.uploadContractDoc(reqDto);
 
-  //   const resDto = new contractDocListResDto(contractDocList);
-  //   return res.json(resDto);
-  // };
+    const resDto = new UploadContractDocResDto(uploadContractDoc);
+    return res.json(resDto);
+  };
 
-  // downloadContractDoc = async (
-  //   req: Request,
-  //   res: Response,
-  // ): Promise<Response<any>> => {
-  //   const contractDocList = this._ContractDocService.contractDocList(reqDto);
+  downloadContractDoc = async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    const reqDto = this.validateOrThrow(contractDocDownLoadReqSchema, {
+      userId: req.userId,
+      params: req.params
+    })
 
-  //   const resDto = new contractDocListResDto(contractDocList);
-  //   return res.json(resDto);
-  // };
+    const downloadcontractDocs = await this._ContractDocService.downloadcontractDocs(reqDto);
+
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${encodeURIComponent(downloadcontractDocs.fileName)}"`
+    )
+    return res.sendFile(path.resolve(downloadcontractDocs.filePath));
+  };
 }
