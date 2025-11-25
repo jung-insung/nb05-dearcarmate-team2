@@ -3,9 +3,9 @@ import { BaseController } from "./base.controller";
 import { IContractService } from "../port/services/contract.service.interface";
 import { IContractController } from "../port/controllers/contract.controller.interface";
 import {
+  createContractReqSchema,
   getContractListReqSchema,
   updateContractReqSchema,
-  UpdateContractReqSchema,
   updateContractStatusReqSchema,
 } from "../requests/contract-schema.request";
 
@@ -70,6 +70,17 @@ export class ContractController
 
   getContractUsers = async (req: Request, res: Response) => {
     const result = await this._contractService.getContractUsers(req.userId!);
+
+    return res.json(result);
+  };
+
+  createContract = async (req: Request, res: Response) => {
+    const dto = this.validateOrThrow(createContractReqSchema, req.body);
+
+    const result = await this._contractService.createContract({
+      userId: req.userId!,
+      dto,
+    });
 
     return res.json(result);
   };

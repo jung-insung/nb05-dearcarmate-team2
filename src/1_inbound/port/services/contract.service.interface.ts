@@ -1,3 +1,4 @@
+import { CreateContractReq } from "../../requests/contract-schema.request";
 import { ContractListResponseDto } from "../../responses/contract/contract.response";
 
 export interface ContractListQueryDto {
@@ -20,4 +21,9 @@ export interface IContractService {
   getContractCars(userId: number): Promise<DropdownItemDto[]>;
   getContractCustomers(userId: number): Promise<DropdownItemDto[]>;
   getContractUsers(userId: number): Promise<DropdownItemDto[]>;
+
+  createContract(params: {
+    userId: number;
+    dto: CreateContractReq;
+  }): Promise<any>;
 }
