@@ -204,4 +204,16 @@ export class UserService extends BaseService implements IUserService {
       await repos.user.delete(foundUser.id);
     });
   }
+
+  async checkUserExists(userId: number): Promise<boolean> {
+    const foundUser = await this._unitOfWork.repos.user.findUserById(userId);
+
+    if (!foundUser) {
+      throw new BusinessException({
+        type: BusinessExceptionType.USER_NOT_EXIST
+      })
+    }
+    
+    return true;
+  }
 }

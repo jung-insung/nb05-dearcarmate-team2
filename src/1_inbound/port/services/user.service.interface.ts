@@ -47,4 +47,6 @@ export interface IUserService {
    * 5. 해결 방안 - P2025로 해결
    */
   deleteUser(dto: DeleteUserReqDto): Promise<void>;
+
+  checkUserExists(userId: number): Promise<boolean>;
 }

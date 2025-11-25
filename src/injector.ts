@@ -43,8 +43,10 @@ import { AuthService } from "./2_domain/services/auth.service";
 import { AuthController } from "./1_inbound/controllers/auth.controller";
 import { TokenUtil } from "./4_shared/utils/token.util";
 import { AuthMiddleware } from "./1_inbound/middlewares/auth.middleware";
-import { MulterMiddleware } from "./1_inbound/middlewares/multer.middleware";
+import { FileUploadMiddleware } from "./1_inbound/middlewares/file-upload.middleware";
 import { ContractDocService } from "./2_domain/services/contract-doc.service";
+import { ImageController } from "./1_inbound/controllers/image.controller";
+import { ImageRouter } from "./1_inbound/routers/image.router";
 
 export class Injector {
   private _server: Server;
@@ -70,7 +72,7 @@ export class Injector {
     const loggerMiddleware = new LoggerMiddleware(configUtil);
     const notFoundMiddleware = new NotFoundMiddleware();
     const authMiddleware = new AuthMiddleware(tokenUtil);
-    const multerMiddleware = new MulterMiddleware();
+    const fileUploadMiddleware = new FileUploadMiddleware();
 
     const repoFactory = new RepoFactory({
       user: (prisma) => new UserRepo(prisma),
@@ -94,7 +96,7 @@ export class Injector {
     const customerService = new CustomerService(unitOfWork);
     const contractService = new ContractService(unitOfWork);
     const contractDocService = new ContractDocService(unitOfWork);
-
+    
     const authController = new AuthController(authService);
     const userController = new UserController(userService);
     const companyController = new CompanyController(companyService);
@@ -102,6 +104,7 @@ export class Injector {
     const customerController = new CustomerController(customerService);
     const contractController = new ContractController(contractService);
     const contractDocController = new ContractDocController(contractDocService);
+    const imageController = new ImageController(userService);
 
     const authRouter = new AuthRouter(authController);
     const userRouter = new UserRouter(userController, authMiddleware);
@@ -118,8 +121,13 @@ export class Injector {
     const contractDocRouter = new ContractDocRouter(
       contractDocController,
       authMiddleware,
-      multerMiddleware,
+      fileUploadMiddleware,
     );
+    const imageRouter = new ImageRouter(
+      imageController,
+      authMiddleware,
+      fileUploadMiddleware
+    )
 
     return new Server(
       authRouter,
@@ -129,6 +137,7 @@ export class Injector {
       carRouter,
       contractRouter,
       contractDocRouter,
+      imageRouter,
       configUtil,
       corsMiddleware,
       loggerMiddleware,
