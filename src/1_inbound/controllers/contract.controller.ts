@@ -5,7 +5,6 @@ import { IContractController } from "../port/controllers/contract.controller.int
 import {
   getContractListReqSchema,
   updateContractReqSchema,
-  UpdateContractReqSchema,
   updateContractStatusReqSchema,
 } from "../requests/contract-schema.request";
 
