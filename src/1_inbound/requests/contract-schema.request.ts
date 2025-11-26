@@ -7,6 +7,7 @@ export type UpdateContractStatusReq = z.infer<
   typeof updateContractStatusReqSchema
 >;
 export type CreateContractReq = z.infer<typeof createContractReqSchema>["body"];
+export type DeleteContractReqDto = z.infer<typeof deleteContractReqSchema>;
 
 export const getContractListReqSchema = z.object({
   userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
@@ -117,5 +118,13 @@ export const createContractReqSchema = z.object({
     carId: z.number(),
     customerId: z.number(),
     meetings: z.array(CreateMeetingItemSchema).optional(),
+  }),
+});
+
+export const deleteContractReqSchema = z.object({
+  userId: z.number({ message: "유저 ID는 숫자이어야 합니다." }),
+
+  params: z.object({
+    contractId: z.coerce.number({ message: "계약 ID는 숫자여야 합니다." }),
   }),
 });

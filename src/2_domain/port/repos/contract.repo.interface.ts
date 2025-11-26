@@ -20,6 +20,7 @@ export interface ContractListRepoDto {
 
 export interface IContractRepo {
   findById(id: number): Promise<ContractEntity>;
+  
   updateStatus(
     id: number,
     status: ContractStatus,
@@ -27,6 +28,7 @@ export interface IContractRepo {
   ): Promise<ContractEntity>;
 
   update(id: number, entity: ContractEntity): Promise<ContractEntity>;
+  
   findAll(
     query: ContractListRepoDto,
   ): Promise<{ contracts: PersistContractEntity[]; totalItemCount: number }>;
@@ -42,4 +44,6 @@ export interface IContractRepo {
   ): Promise<ContractDocViewReturn>;
 
   getDraftContracts(): Promise<ContractDocViewEntity[]>;
+
+  delete(id: number): Promise<void>;
 }

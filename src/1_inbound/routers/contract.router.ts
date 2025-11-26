@@ -47,5 +47,11 @@ export class ContractRouter extends BaseRouter {
       this._authMiddleware.isUserAuthenticate,
       this.catch(this._contractController.updateContract),
     );
+
+    this.router.delete(
+      "/:contractId",
+      this._authMiddleware.isUserAuthenticate,
+      this.catch(this._contractController.deleteContract),
+    );
   }
 }

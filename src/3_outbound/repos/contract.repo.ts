@@ -106,6 +106,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       throw err;
     }
   }
+
   async update(id: number, entity: ContractEntity) {
     try {
       const { contract, meeting } = ContractMapper.toUpdateData(entity);
@@ -247,6 +248,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       ),
     };
   }
+
   async create(entity: ContractEntity) {
     const { contract, meetings } = ContractMapper.toCreateData(entity);
     const record = await this._prisma.contract.create({
@@ -279,5 +281,20 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     return contracts.map((contract) =>
       ContractDocMapper.toContractDocViewEntity(contract),
     );
+  }
+
+  async delete(id: number): Promise<void> {
+    try {
+      await this._prisma.contract.delete({
+        where: { id },
+      });
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === "P2025") {
+          return;
+        }
+      }
+      throw err;
+    }
   }
 }
