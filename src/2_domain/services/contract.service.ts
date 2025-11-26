@@ -309,7 +309,7 @@ export class ContractService extends BaseService implements IContractService {
         await txRepos.car.update(updatedCar);
         await txRepos.customer.increaseContractCount(customer.id);
 
-        return ContractMapper.toResponse(created, {
+        return ContractMapper.toCreateResponse(created, {
           user: { id: user.id, name: user.name },
           customer: { id: customer.id, name: customer.name },
           car: { id: car.id!, model: car.model },
