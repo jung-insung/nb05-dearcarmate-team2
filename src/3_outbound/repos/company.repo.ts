@@ -269,13 +269,9 @@ export class CompanyRepo extends BaseRepo implements ICompanyRepo {
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
         if (err.code === "P2025") {
-          throw new TechnicalException({
-            type: TechnicalExceptionType.NOT_FOUND,
-            error: err,
-          });
+          return;
         }
       }
-
       throw err;
     }
   }
