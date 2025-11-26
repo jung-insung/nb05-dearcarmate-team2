@@ -296,7 +296,7 @@ export class ContractService extends BaseService implements IContractService {
           carId: dto.carId,
           customerId: dto.customerId,
           companyId,
-          contractPrice: 0,
+          contractPrice: car.price,
           meetings: dto.meetings,
         });
 
