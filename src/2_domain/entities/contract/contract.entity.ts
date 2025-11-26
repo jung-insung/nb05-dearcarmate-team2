@@ -80,10 +80,11 @@ export class ContractEntity {
   }
 
   static createNew(params: NewContractEn): ContractEntity {
-    const { meetings, ...otherParams } = params;
+    const { meetings, resolutionDate, ...otherParams } = params;
     const contract = new ContractEntity({
       ...otherParams,
       status: ContractStatus.CAR_INSPECTION,
+      resolutionDate: resolutionDate ?? null,
     });
 
     if (meetings && meetings.length > 0) {
