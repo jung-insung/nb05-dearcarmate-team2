@@ -135,11 +135,6 @@ export class ContractMapper {
         ),
       })),
 
-      contractDocuments: entity.contractDocuments.map((d) => ({
-        id: d.id,
-        fileName: d.fileName,
-      })),
-
       user: relations?.user ?? { id: entity.userId },
       customer: relations?.customer ?? { id: entity.customerId },
       car: relations?.car ?? { id: entity.carId },
