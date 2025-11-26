@@ -13,14 +13,14 @@ export class ContractResponseDto {
 
   constructor(data: any) {
     this.id = data.id;
-    this.status = data.status;
-    this.resolutionDate = data.resolutionDate;
-    this.contractPrice = data.contractPrice;
-    this.meetings = data.meetings;
-    this.contractDocuments = data.contractDocuments;
-    this.user = data.user;
-    this.customer = data.customer;
     this.car = data.car;
+    this.customer = data.customer;
+    this.user = data.user;
+    this.meetings = data.meetings;
+    this.contractPrice = data.contractPrice;
+    this.resolutionDate = data.resolutionDate;
+    this.status = data.status;
+    this.contractDocuments = data.contractDocuments;
   }
 }
 
