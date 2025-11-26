@@ -90,21 +90,90 @@ export class ContractMapper {
     };
   }
 
-  private static calculateAlarmTime(meetingDate: Date, type: AlarmTime): Date {
-    const target = new Date(meetingDate);
-    target.setHours(9, 0, 0, 0);
-    if (type === AlarmTime.DAY_BEFORE_9AM) {
-      target.setDate(target.getDate() - 1);
-    }
-
-    return target;
-  }
-
   private static formatDate(date: Date): string {
     return date.toISOString().slice(0, 10); // YYYY-MM-DD
   }
 
   private static formatDateTime(date: Date): string {
-    return date.toISOString().slice(0, 19); // YYYY-MM-DDTHH:mm:ss
+    return (
+      [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, "0"),
+        String(date.getDate()).padStart(2, "0"),
+      ].join("-") +
+      "T" +
+      [
+        String(date.getHours()).padStart(2, "0"),
+        String(date.getMinutes()).padStart(2, "0"),
+        String(date.getSeconds()).padStart(2, "0"),
+      ].join(":")
+    );
+  }
+
+  static toCreateResponse(
+    entity: ContractEntity,
+    relations?: {
+      user?: { id: number; name: string };
+      customer?: { id: number; name: string };
+      car?: { id: number; model: string };
+    },
+  ) {
+    const resolutionDate = entity.resolutionDate
+      ? this.formatDateTime(entity.resolutionDate)
+      : this.formatDateTime(this.getDefaultResolutionDate(entity));
+
+    return {
+      id: entity.id,
+      status: entity.status,
+      resolutionDate,
+      contractPrice: entity.contractPrice,
+
+      meetings: entity.meetings.map((m) => ({
+        date: this.formatDateTime(m.date),
+        alarms: m.alarms.map((alarmEnum) =>
+          this.formatDateTime(this.calculateAlarmTime(m.date, alarmEnum)),
+        ),
+      })),
+
+      contractDocuments: entity.contractDocuments.map((d) => ({
+        id: d.id,
+        fileName: d.fileName,
+      })),
+
+      user: relations?.user ?? { id: entity.userId },
+      customer: relations?.customer ?? { id: entity.customerId },
+      car: relations?.car ?? { id: entity.carId },
+    };
+  }
+
+  private static getDefaultResolutionDate(entity: ContractEntity): Date {
+    const meeting = entity.meetings[0];
+    return new Date(
+      meeting.date.getFullYear(),
+      meeting.date.getMonth(),
+      meeting.date.getDate(),
+      9,
+      0,
+      0,
+      0,
+    );
+  }
+
+  private static calculateAlarmTime(meetingDate: Date, type: AlarmTime): Date {
+    const base = new Date(
+      meetingDate.getFullYear(),
+      meetingDate.getMonth(),
+      meetingDate.getDate(),
+      9,
+      0,
+      0,
+      0,
+    );
+
+    if (type === AlarmTime.DAY_BEFORE_9AM) {
+      base.setDate(base.getDate() - 1);
+    }
+
+    return base;
   }
 }
