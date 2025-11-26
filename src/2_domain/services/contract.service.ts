@@ -46,7 +46,7 @@ export class ContractService extends BaseService implements IContractService {
           companyId: entity.companyId,
           carId: entity.carId,
         });
-        
+
         if (!car) {
           throw new BusinessException({
             type: BusinessExceptionType.CAR_NOT_EXIST,
@@ -54,10 +54,11 @@ export class ContractService extends BaseService implements IContractService {
         }
 
         const statusKey = params.dto.body.status;
-        const newContractStatus = ContractStatus[statusKey as keyof typeof ContractStatus];
+        const newContractStatus =
+          ContractStatus[statusKey as keyof typeof ContractStatus];
         let updatedCar;
 
-        switch(newContractStatus) {
+        switch (newContractStatus) {
           case ContractStatus.CONTRACT_SUCCESSFUL:
             updatedCar = CarEntity.update(car, {
               status: "CONTRACT_COMPLETED",
@@ -116,7 +117,7 @@ export class ContractService extends BaseService implements IContractService {
         }
 
         const { status: statusKey, ...restBody } = params.dto.body;
-        
+
         const statusEnum = statusKey
           ? ContractStatus[statusKey as keyof typeof ContractStatus]
           : undefined;
@@ -140,7 +141,7 @@ export class ContractService extends BaseService implements IContractService {
 
           let updatedCar;
 
-          switch(statusEnum) {
+          switch (statusEnum) {
             case ContractStatus.CONTRACT_SUCCESSFUL:
               updatedCar = CarEntity.update(car, {
                 status: "CONTRACT_COMPLETED",
@@ -306,7 +307,7 @@ export class ContractService extends BaseService implements IContractService {
         });
 
         await txRepos.car.update(updatedCar);
-        await txRepos.customer.increaseContractCount(customer.id)
+        await txRepos.customer.increaseContractCount(customer.id);
 
         return ContractMapper.toResponse(created, {
           user: { id: user.id, name: user.name },
@@ -319,7 +320,10 @@ export class ContractService extends BaseService implements IContractService {
     );
   }
 
-  async deleteContract(params: { userId: number; contractId: number }): Promise<void> {
+  async deleteContract(params: {
+    userId: number;
+    contractId: number;
+  }): Promise<void> {
     const { userId, contractId } = params;
 
     await this._unitOfWork.do(

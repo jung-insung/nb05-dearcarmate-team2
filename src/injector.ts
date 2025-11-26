@@ -96,7 +96,7 @@ export class Injector {
     const customerService = new CustomerService(unitOfWork);
     const contractService = new ContractService(unitOfWork);
     const contractDocService = new ContractDocService(unitOfWork);
-    
+
     const authController = new AuthController(authService);
     const userController = new UserController(userService);
     const companyController = new CompanyController(companyService);
@@ -126,8 +126,8 @@ export class Injector {
     const imageRouter = new ImageRouter(
       imageController,
       authMiddleware,
-      fileUploadMiddleware
-    )
+      fileUploadMiddleware,
+    );
 
     return new Server(
       authRouter,

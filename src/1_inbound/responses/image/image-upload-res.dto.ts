@@ -1,7 +1,7 @@
-export class ImageUploadResDto{
+export class ImageUploadResDto {
   public ImageUrl: string;
 
-  constructor(url: string){
-    this.ImageUrl = url
+  constructor(url: string) {
+    this.ImageUrl = url;
   }
 }

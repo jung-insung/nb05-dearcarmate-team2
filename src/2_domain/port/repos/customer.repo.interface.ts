@@ -34,5 +34,5 @@ export interface ICustomerRepo {
   delete(id: number): Promise<void>;
 
   increaseContractCount(id: number): Promise<void>;
-  decreaseContractCount(customerId: number): Promise<void>
+  decreaseContractCount(customerId: number): Promise<void>;
 }

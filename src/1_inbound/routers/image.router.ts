@@ -9,17 +9,17 @@ export class ImageRouter extends BaseRouter {
     private _authMiddleware: AuthMiddleware,
     private _fileUploadMiddleware: FileUploadMiddleware,
   ) {
-    super('/images');
+    super("/images");
     this.registerImageRouter();
   }
 
   registerImageRouter() {
     this.router.post(
-      '/upload',
+      "/upload",
       this._authMiddleware.isUserAuthenticate,
-      this._fileUploadMiddleware.upload.single('image'),
+      this._fileUploadMiddleware.upload.single("image"),
       this._fileUploadMiddleware.imageUploadHandler,
-      this.catch(this._imageController.imageUploadController)
-    )
+      this.catch(this._imageController.imageUploadController),
+    );
   }
 }
