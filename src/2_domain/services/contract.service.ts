@@ -317,4 +317,42 @@ export class ContractService extends BaseService implements IContractService {
       true,
     );
   }
+
+  async deleteContract(params: { userId: number; contractId: number }): Promise<void> {
+    const { userId, contractId } = params;
+
+    await this._unitOfWork.do(
+      async (repos) => {
+        const contract = await repos.contract.findById(contractId);
+        if (!contract) {
+          throw new BusinessException({
+            type: BusinessExceptionType.CONTRACT_NOT_EXIST,
+          });
+        }
+
+        const userCompanyId = await this._getCompanyId(userId);
+        if (contract.companyId !== userCompanyId) {
+          throw new BusinessException({
+            type: BusinessExceptionType.NOT_FOUND,
+          });
+        }
+
+        const car = await repos.car.findById({
+          companyId: contract.companyId,
+          carId: contract.carId,
+        });
+
+        if (car) {
+          const updatedCar = CarEntity.update(car, {
+            status: "POSSESSION",
+          });
+          await repos.car.update(updatedCar);
+        }
+
+        await repos.contract.delete(contractId);
+      },
+      true,
+      true,
+    );
+  }
 }

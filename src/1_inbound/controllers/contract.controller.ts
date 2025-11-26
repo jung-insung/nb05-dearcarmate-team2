@@ -7,6 +7,7 @@ import {
   getContractListReqSchema,
   updateContractReqSchema,
   updateContractStatusReqSchema,
+  deleteContractReqSchema
 } from "../requests/contract-schema.request";
 
 export class ContractController
@@ -82,5 +83,19 @@ export class ContractController
     const result = await this._contractService.getContractUsers(req.userId!);
 
     return res.json(result);
+  };
+
+  deleteContract = async (req: Request, res: Response) => {
+    const { params, userId } = this.validateOrThrow(deleteContractReqSchema, {
+      params: req.params,
+      userId: req.userId,
+    });
+
+    await this._contractService.deleteContract({
+      userId: userId!,
+      contractId: params.contractId,
+    });
+
+    return res.status(200).json({ message: "계약 삭제 성공" });
   };
 }

@@ -30,6 +30,7 @@ export interface IContractService {
     contractId: number;
     dto: UpdateContractStatusReq;
   }): Promise<ContractResponseDto>;
+
   updateContractDetail(params: {
     contractId: number;
     dto: UpdateContractReq;
@@ -42,4 +43,6 @@ export interface IContractService {
   getContractCars(userId: number): Promise<DropdownItemDto[]>;
   getContractCustomers(userId: number): Promise<DropdownItemDto[]>;
   getContractUsers(userId: number): Promise<DropdownItemDto[]>;
+
+  deleteContract(params: { userId: number; contractId: number }): Promise<void>;
 }
