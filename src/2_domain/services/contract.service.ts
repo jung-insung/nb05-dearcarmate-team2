@@ -266,7 +266,6 @@ export class ContractService extends BaseService implements IContractService {
           });
         }
         const companyId = user.companyId;
-
         // 차량 확인
         const car = await txRepos.car.findById({
           companyId,

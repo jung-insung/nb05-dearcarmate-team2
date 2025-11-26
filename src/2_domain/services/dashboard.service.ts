@@ -26,7 +26,9 @@ export class DashboardService extends BaseService implements IDashboardService {
       const monthlySales = await txRepos.contract.getMonthlySalesAggregates("current");
       const lastMonthSales = await txRepos.contract.getMonthlySalesAggregates("last");
 
-      const growthRate = ((monthlySales - lastMonthSales) / lastMonthSales) * 100;
+      const growthRate = lastMonthSales === 0
+        ? (monthlySales === 0 ? 0 : 100)
+        : ((monthlySales - lastMonthSales) / lastMonthSales) * 100;
 
       const { completedContractsCount, carTypeAggregates } = await txRepos.contract.getSuccessfulContractAggregates();
 
@@ -38,11 +40,11 @@ export class DashboardService extends BaseService implements IDashboardService {
       carTypeAggregates.forEach((cartype) => {
         contractsByCarType.push({
           carType: cartype.type,
-          count: cartype.count,
+          count: Number(cartype.count),
         });
         salesByCarType.push({
           carType: cartype.type,
-          count: cartype.totalSales ?? 0,
+          count: Number(cartype.totalSales) ?? 0,
         });
       });
 
@@ -57,6 +59,6 @@ export class DashboardService extends BaseService implements IDashboardService {
       })
 
       return dashboard;
-    }, false, true)
+    })
   }
 }

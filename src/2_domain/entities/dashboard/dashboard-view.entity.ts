@@ -1,14 +1,14 @@
 export class DashBoardViewEntity {
-  private readonly monthlySales: number;
-  private readonly lastMonthSales: number;
-  private readonly growthRate: number;
-  private readonly proceedingContractsCount: number;
-  private readonly completedContractsCount: number;
-  private readonly contractsByCarType: {
+  private readonly _monthlySales: number;
+  private readonly _lastMonthSales: number;
+  private readonly _growthRate: number;
+  private readonly _proceedingContractsCount: number;
+  private readonly _completedContractsCount: number;
+  private readonly _contractsByCarType: {
     carType: string;
     count: number;
   }[];
-  private readonly salesByCarType: {
+  private readonly _salesByCarType: {
     carType: string;
     count: number;
   }[];
@@ -28,34 +28,34 @@ export class DashBoardViewEntity {
       count: number;
     }[];
   }) {
-    this.monthlySales = params.monthlySales;
-    this.lastMonthSales = params.lastMonthSales;
-    this.growthRate = params.growthRate;
-    this.proceedingContractsCount = params.proceedingContractsCount;
-    this.completedContractsCount = params.completedContractsCount;
-    this.contractsByCarType = params.contractsByCarType;
-    this.salesByCarType = params.salesByCarType;
+    this._monthlySales = params.monthlySales;
+    this._lastMonthSales = params.lastMonthSales;
+    this._growthRate = params.growthRate;
+    this._proceedingContractsCount = params.proceedingContractsCount;
+    this._completedContractsCount = params.completedContractsCount;
+    this._contractsByCarType = params.contractsByCarType;
+    this._salesByCarType = params.salesByCarType;
   }
 
-  get MonthlySales() {
-    return this.monthlySales;
+  get monthlySales() {
+    return this._monthlySales;
   }
-  get LastMonthSales() {
-    return this.lastMonthSales;
+  get lastMonthSales() {
+    return this._lastMonthSales;
   }
-  get GrowthRate() {
-    return this.growthRate;
+  get growthRate() {
+    return this._growthRate;
   }
-  get ProceedingContractsCount() {
-    return this.proceedingContractsCount;
+  get proceedingContractsCount() {
+    return this._proceedingContractsCount;
   }
-  get CompletedContractsCount() {
-    return this.completedContractsCount;
+  get completedContractsCount() {
+    return this._completedContractsCount;
   }
-  get ContractsByCarType() {
-    return this.contractsByCarType;
+  get contractsByCarType() {
+    return this._contractsByCarType;
   }
-  get SalesByCarType() {
-    return this.salesByCarType;
+  get salesByCarType() {
+    return this._salesByCarType;
   }
 }
