@@ -123,7 +123,9 @@ export class ContractDocService
         });
       }
 
-      const foundContractDoc = await repos.contractDoc.findContractDocById(dto.params.contractDocId);
+      const foundContractDoc = await repos.contractDoc.findContractDocById(
+        dto.params.contractDocId,
+      );
 
       if (!foundContractDoc) {
         throw new BusinessException({

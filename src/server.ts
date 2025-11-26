@@ -60,7 +60,7 @@ export class Server {
     this._app.use(this._contract.basePath, this._contract.router);
     this._app.use(this._contractDoc.basePath, this._contractDoc.router);
     this._app.use(this._image.basePath, this._image.router);
-    
+
     this._app.use(this._notFoundMiddleware.handler());
     this._app.use(this._globalErrorMiddleware.handler);
     this.listen();

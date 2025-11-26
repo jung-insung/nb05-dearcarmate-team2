@@ -65,10 +65,10 @@ export class ContractMapper {
     return {
       id: entity.id,
       status: entity.status,
-      
+
       resolutionDate: entity.resolutionDate
-      ? this.formatDateTime(entity.resolutionDate)
-      : null,
+        ? this.formatDateTime(entity.resolutionDate)
+        : null,
 
       contractPrice: entity.contractPrice,
       meetings: entity.meetings.map((m) => ({

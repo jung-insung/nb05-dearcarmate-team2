@@ -210,10 +210,10 @@ export class UserService extends BaseService implements IUserService {
 
     if (!foundUser) {
       throw new BusinessException({
-        type: BusinessExceptionType.USER_NOT_EXIST
-      })
+        type: BusinessExceptionType.USER_NOT_EXIST,
+      });
     }
-    
+
     return true;
   }
 }

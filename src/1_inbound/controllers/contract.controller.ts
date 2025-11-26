@@ -7,7 +7,7 @@ import {
   getContractListReqSchema,
   updateContractReqSchema,
   updateContractStatusReqSchema,
-  deleteContractReqSchema
+  deleteContractReqSchema,
 } from "../requests/contract-schema.request";
 
 export class ContractController

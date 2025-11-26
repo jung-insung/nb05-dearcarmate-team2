@@ -88,11 +88,11 @@ export const updateContractReqSchema = z.object({
         }
         const lower = val.toLowerCase().replace(/[_-]/g, "");
         const statusMapping: Record<string, string> = {
-            carinspection: "CAR_INSPECTION",
-            pricenegotiation: "PRICE_NEGOTIATION",
-            contractdraft: "CONTRACT_DRAFT",
-            contractsuccessful: "CONTRACT_SUCCESSFUL",
-            contractfailed: "CONTRACT_FAILED",
+          carinspection: "CAR_INSPECTION",
+          pricenegotiation: "PRICE_NEGOTIATION",
+          contractdraft: "CONTRACT_DRAFT",
+          contractsuccessful: "CONTRACT_SUCCESSFUL",
+          contractfailed: "CONTRACT_FAILED",
         };
         return statusMapping[lower] || val;
       })
