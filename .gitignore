@@ -66,3 +66,6 @@ pnpm-debug.log*
 
 ### prisma ###
 prisma/migrations
+
+# 로컬 저장소
+.public

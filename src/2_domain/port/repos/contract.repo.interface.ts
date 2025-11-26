@@ -1,4 +1,4 @@
-import { ContractDocViewReturn } from "../../../3_outbound/repos/contract.repo";
+import { ContractDocViewReturn, SuccessfulContractAggregates } from "../../../3_outbound/repos/contract.repo";
 import { ContractDocPagination } from "../../services/contract-doc.service";
 import { ContractStatus } from "../../entities/contract/contract.enum";
 import {
@@ -46,4 +46,10 @@ export interface IContractRepo {
   getDraftContracts(): Promise<ContractDocViewEntity[]>;
 
   delete(id: number): Promise<void>;
+
+  getMonthlySalesAggregates(month: string): Promise<number>;
+
+  getSuccessfulContractAggregates(): Promise<SuccessfulContractAggregates>;
+
+  getProceedingContractAggregate() : Promise<number>;
 }
