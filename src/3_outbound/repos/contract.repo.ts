@@ -37,8 +37,8 @@ export type ContractDocViewReturn = {
 
 export type CaryTypeAggregate = {
   type: string;
-  count: number;
-  totalSales: number | null;
+  count: bigint;
+  totalSales: bigint | null;
 };
 
 export type SuccessfulContractAggregates = {
@@ -319,7 +319,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0); // 이번 달 마지막 날
     } else {
       startOfMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-      endOfMonth = new Date(now.getFullYear(), now.getMonth(), 0); 
+      endOfMonth = new Date(now.getFullYear(), now.getMonth(), 0);
     }
 
     const result = await this._prisma.contract.aggregate({
@@ -343,31 +343,33 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       }
     });
 
+
     const carTypeResult = await this._prisma.$queryRaw<{
       type: string;
-      count: number;
-      totalSales: number | null;
+      count: bigint;
+      totalSales: bigint | null;
     }[]
     >`
       SELECT
         c2.type AS type,
         COUNT(*) AS count,
-        SUM(c.contractPrice) AS totalSales
+        SUM(c."contractPrice") AS "totalSales"
       FROM "Contract" AS c
-      JOIN "Car" AS c2 ON c.carId = c2.id
-      WHERE c.status = 'CONTRACT_SUCCESSFUL'
-      GROUP BY c2.type
+      JOIN "Car" AS c2 ON c."carId" = c2.id
+      WHERE c.status = 'contractSuccessful'
+      GROUP BY c2.type;
     `;
+
     return {
       completedContractsCount: successContracts,
       carTypeAggregates: carTypeResult
     }
   }
 
-  async getProceedingContractAggregate() : Promise<number> {
+  async getProceedingContractAggregate(): Promise<number> {
     const proceedingContracts = await this._prisma.contract.count({
       where: {
-        status: {in: ['CAR_INSPECTION', 'CONTRACT_DRAFT', 'PRICE_NEGOTIATION']}
+        status: { in: ['CAR_INSPECTION', 'CONTRACT_DRAFT', 'PRICE_NEGOTIATION'] }
       }
     });
 

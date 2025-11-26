@@ -19,9 +19,8 @@ export class DashboardController extends BaseController{
     )
 
     const dashboardData = await this._dashboardService.getData(reqDto);
-
     const resDto = new DashboardDataResDto(dashboardData);
-
+    
     return res.json(resDto);
   }
 }
