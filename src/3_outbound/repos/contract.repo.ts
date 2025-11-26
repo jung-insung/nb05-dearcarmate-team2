@@ -35,6 +35,17 @@ export type ContractDocViewReturn = {
   data: ContractDocViewEntity[];
 };
 
+export type CaryTypeAggregate = {
+  type: string;
+  count: number;
+  totalSales: number | null;
+};
+
+export type SuccessfulContractAggregates = {
+  completedContractsCount: number;
+  carTypeAggregates: CaryTypeAggregate[];
+}
+
 export class ContractRepo extends BaseRepo implements IContractRepo {
   private _includeOption: Prisma.ContractInclude = {
     user: { select: { id: true, name: true, email: true } },
@@ -296,5 +307,70 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       }
       throw err;
     }
+  }
+
+  async getMonthlySalesAggregates(month: string): Promise<number> {
+    const now = new Date();
+    let startOfMonth: Date;
+    let endOfMonth: Date;
+
+    if (month === "current") {
+      startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1); // 이번 달 1일
+      endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0); // 이번 달 마지막 날
+    } else {
+      startOfMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      endOfMonth = new Date(now.getFullYear(), now.getMonth(), 0); 
+    }
+
+    const result = await this._prisma.contract.aggregate({
+      _sum: { contractPrice: true },
+      where: {
+        status: "CONTRACT_SUCCESSFUL",
+        resolutionDate: {
+          gte: startOfMonth,
+          lte: endOfMonth
+        }
+      }
+    })
+
+    return result._sum.contractPrice ?? 0;
+  }
+
+  async getSuccessfulContractAggregates(): Promise<SuccessfulContractAggregates> {
+    const successContracts = await this._prisma.contract.count({
+      where: {
+        status: 'CONTRACT_SUCCESSFUL'
+      }
+    });
+
+    const carTypeResult = await this._prisma.$queryRaw<{
+      type: string;
+      count: number;
+      totalSales: number | null;
+    }[]
+    >`
+      SELECT
+        c2.type AS type,
+        COUNT(*) AS count,
+        SUM(c.contractPrice) AS totalSales
+      FROM "Contract" AS c
+      JOIN "Car" AS c2 ON c.carId = c2.id
+      WHERE c.status = 'CONTRACT_SUCCESSFUL'
+      GROUP BY c2.type
+    `;
+    return {
+      completedContractsCount: successContracts,
+      carTypeAggregates: carTypeResult
+    }
+  }
+
+  async getProceedingContractAggregate() : Promise<number> {
+    const proceedingContracts = await this._prisma.contract.count({
+      where: {
+        status: {in: ['CAR_INSPECTION', 'CONTRACT_DRAFT', 'PRICE_NEGOTIATION']}
+      }
+    });
+
+    return proceedingContracts;
   }
 }

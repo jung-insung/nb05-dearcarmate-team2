@@ -9,11 +9,17 @@ export class ImageController extends BaseController {
     super();
   }
 
-  imageUploadController = async (req: Request, res: Response) => {
-    const reqDto = this.validateOrThrow(imageUploadReqSchema, {
-      userId: req.userId,
-      body: req.body,
-    });
+  imageUploadController = async (
+    req: Request,
+    res: Response,
+  ): Promise<Response<any>> => {
+    const reqDto = this.validateOrThrow(
+      imageUploadReqSchema,
+      {
+        userId: req.userId,
+        body: req.body
+      }
+    )
 
     await this._userService.checkUserExists(reqDto.userId);
 

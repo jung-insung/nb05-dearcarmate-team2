@@ -15,6 +15,7 @@ import { NotFoundMiddleware } from "./1_inbound/middlewares/not-found.middleware
 import { AuthRouter } from "./1_inbound/routers/auth.router";
 import { ContractDocRouter } from "./1_inbound/routers/contract-doc.router";
 import { ImageRouter } from "./1_inbound/routers/image.router";
+import { DashBoardRouter } from "./1_inbound/routers/dashboard.router";
 
 export class Server {
   private _app;
@@ -28,6 +29,7 @@ export class Server {
     private _contract: ContractRouter,
     private _contractDoc: ContractDocRouter,
     private _image: ImageRouter,
+    private _dashboard: DashBoardRouter,
     private _configUtil: IConfigUtil,
     private _corsMiddleware: CorsMiddleware,
     private _loggerMiddleware: LoggerMiddleware,
@@ -60,7 +62,8 @@ export class Server {
     this._app.use(this._contract.basePath, this._contract.router);
     this._app.use(this._contractDoc.basePath, this._contractDoc.router);
     this._app.use(this._image.basePath, this._image.router);
-
+    this._app.use(this._dashboard.basePath, this._dashboard.router);
+    
     this._app.use(this._notFoundMiddleware.handler());
     this._app.use(this._globalErrorMiddleware.handler);
     this.listen();

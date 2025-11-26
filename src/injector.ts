@@ -47,6 +47,9 @@ import { FileUploadMiddleware } from "./1_inbound/middlewares/file-upload.middle
 import { ContractDocService } from "./2_domain/services/contract-doc.service";
 import { ImageController } from "./1_inbound/controllers/image.controller";
 import { ImageRouter } from "./1_inbound/routers/image.router";
+import { DashboardService } from "./2_domain/services/dashboard.service";
+import { DashboardController } from "./1_inbound/controllers/dashboard.controller";
+import { DashBoardRouter } from "./1_inbound/routers/dashboard.router";
 
 export class Injector {
   private _server: Server;
@@ -96,7 +99,8 @@ export class Injector {
     const customerService = new CustomerService(unitOfWork);
     const contractService = new ContractService(unitOfWork);
     const contractDocService = new ContractDocService(unitOfWork);
-
+    const dashboardService = new DashboardService(unitOfWork);
+    
     const authController = new AuthController(authService);
     const userController = new UserController(userService);
     const companyController = new CompanyController(companyService);
@@ -105,6 +109,7 @@ export class Injector {
     const contractController = new ContractController(contractService);
     const contractDocController = new ContractDocController(contractDocService);
     const imageController = new ImageController(userService);
+    const dashboardController = new DashboardController(dashboardService);
 
     const authRouter = new AuthRouter(authController);
     const userRouter = new UserRouter(userController, authMiddleware);
@@ -128,6 +133,10 @@ export class Injector {
       authMiddleware,
       fileUploadMiddleware,
     );
+    const dashboardRouter = new DashBoardRouter(
+      dashboardController,
+      authMiddleware
+    );
 
     return new Server(
       authRouter,
@@ -138,6 +147,7 @@ export class Injector {
       contractRouter,
       contractDocRouter,
       imageRouter,
+      dashboardRouter,
       configUtil,
       corsMiddleware,
       loggerMiddleware,

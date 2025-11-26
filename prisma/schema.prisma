@@ -205,36 +205,8 @@ model ContractDocument {
   contract   Contract? @relation(fields: [contractId], references: [id], onDelete: Cascade)
 }
 
-model Dashboard {
-  id                       Int      @id @default(autoincrement())
-  monthlySales             Int
-  lastMonthSales           Int
-  growthRate               Float
-  proceedingContractsCount Int
-  completedContractsCount  Int
-  createdAt                DateTime @default(now())
-  updatedAt                DateTime @updatedAt
-
-  contractsByCarType ContractByCarType[]
-  salesByCarType     SalesByCarType[]
-}
-
 enum Cartype {
   SEDAN    @map("세단")
   SUV      @map("SUV")
   KEUN_CHA @map("경차")
-}
-
-model ContractByCarType {
-  carType     Cartype
-  count       Int
-  dashboardId Int       @id
-  dashboard   Dashboard @relation(fields: [dashboardId], references: [id])
-}
-
-model SalesByCarType {
-  carType     Cartype
-  count       Int
-  dashboardId Int       @id
-  dashboard   Dashboard @relation(fields: [dashboardId], references: [id])
 }

@@ -10,11 +10,7 @@ import { BusinessException } from "../../4_shared/exceptions/business.exceptions
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
-import { PersistCompanyEntity } from "../entities/company/company.entity";
 import {
-  NewAdminEntity,
-  NewUserEntity,
-  PersistUserEntity,
   UserEntity,
 } from "../entities/user/user.entity";
 import { IBcryptHashManager } from "../port/managers/bcrypt-hash.manager.interface";
