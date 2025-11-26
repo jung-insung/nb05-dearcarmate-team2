@@ -59,6 +59,7 @@ export type NewContractEn = Omit<
   | "contractDocuments"
 > & {
   meetings?: NewMeetingParams[];
+  resolutionDate?: Date | null;
 };
 
 export interface PersistContractEn extends ContractEn {

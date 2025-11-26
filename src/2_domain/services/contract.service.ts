@@ -291,12 +291,21 @@ export class ContractService extends BaseService implements IContractService {
           });
         }
 
+        const firstMeetingDate = new Date(dto.meetings![0].date);
+
+        const resolutionDate = new Date(
+        firstMeetingDate.getFullYear(),
+        firstMeetingDate.getMonth(),
+        firstMeetingDate.getDate(),
+        9, 0, 0, 0
+        );
         const newContract = ContractEntity.createNew({
           userId,
           carId: dto.carId,
           customerId: dto.customerId,
           companyId,
           contractPrice: car.price,
+          resolutionDate,
           meetings: dto.meetings,
         });
 
