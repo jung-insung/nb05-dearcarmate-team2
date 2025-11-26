@@ -108,4 +108,25 @@ export class CustomerRepo extends BaseRepo implements ICustomerRepo {
       }
     }
   }
+
+  async increaseContractCount(id: number) {
+    await this._prisma.customer.update({
+      where: { id },
+      data: {
+        contractCount: { increment: 1 }
+      }
+    })
+  }
+
+  async decreaseContractCount(customerId: number): Promise<void> {
+    await this._prisma.customer.updateMany({
+      where: {
+        id: customerId,
+        contractCount: { gt: 0 },
+      },
+      data: {
+        contractCount: { decrement: 1 },
+      },
+    });
+  }
 }

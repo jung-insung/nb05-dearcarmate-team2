@@ -306,6 +306,7 @@ export class ContractService extends BaseService implements IContractService {
         });
 
         await txRepos.car.update(updatedCar);
+        await txRepos.customer.increaseContractCount(customer.id)
 
         return ContractMapper.toResponse(created, {
           user: { id: user.id, name: user.name },
@@ -350,6 +351,7 @@ export class ContractService extends BaseService implements IContractService {
         }
 
         await repos.contract.delete(contractId);
+        await repos.customer.decreaseContractCount(contract.customerId);
       },
       true,
       true,
