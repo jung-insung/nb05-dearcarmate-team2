@@ -32,4 +32,7 @@ export interface ICustomerRepo {
    * @throws {TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED}
    */
   delete(id: number): Promise<void>;
+
+  increaseContractCount(id: number): Promise<void>;
+  decreaseContractCount(customerId: number): Promise<void>
 }
