@@ -66,6 +66,7 @@ export enum BusinessExceptionType {
   CONTRACT_NOT_EXIST,
   CONTRACT_STATUS_CHANGED,
   CONTRACT_DATA_CHANGED,
+  ALREADY_EXIST_EAMIL,
 }
 
 export const BusinessExceptionTable: Record<
@@ -323,6 +324,10 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.CUSTOMER_DATA_ARLEADY_DELETE]: {
     statusCode: 409,
     message: "요청하신 고객 정보가 삭제되었습니다.",
+  },
+  [BusinessExceptionType.ALREADY_EXIST_EAMIL]: {
+    statusCode: 409,
+    message: "이미 존재하는 이메일입니다.",
   },
 
   // 기타

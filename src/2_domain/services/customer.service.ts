@@ -25,13 +25,24 @@ export class CustomerService extends BaseService implements ICustomerService {
     dto: RegistCustomerReq;
     userId: number;
   }): Promise<CustomerResponseDto> {
-    const { dto, userId } = params;
+    try {
+      const { dto, userId } = params;
 
-    const companyId = await this._getCompanyId(userId);
+      const companyId = await this._getCompanyId(userId);
 
-    const entity = CustomerMapper.toNewEntity({ dto, companyId });
-    const newCusotmer = await this._unitOfWork.repos.customer.create(entity);
-    return CustomerMapper.toResponseData(newCusotmer);
+      const entity = CustomerMapper.toNewEntity({ dto, companyId });
+      const newCusotmer = await this._unitOfWork.repos.customer.create(entity);
+      return CustomerMapper.toResponseData(newCusotmer);
+    } catch (err) {
+      if (err instanceof TechnicalException) {
+        if (err.type === TechnicalExceptionType.UNIQUE_VIOLATION_EMAIL) {
+          throw new BusinessException({
+            type: BusinessExceptionType.ALREADY_EXIST_EAMIL,
+          });
+        }
+      }
+      throw err;
+    }
   }
 
   async getCustomers(params: {
