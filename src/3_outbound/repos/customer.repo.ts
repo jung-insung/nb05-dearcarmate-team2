@@ -60,6 +60,14 @@ export class CustomerRepo extends BaseRepo implements ICustomerRepo {
       const newRecord = await this._prisma.customer.create({ data });
       return CustomerMapper.fromPersistence(newRecord);
     } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === "P2002") {
+          throw new TechnicalException({
+            type: TechnicalExceptionType.UNIQUE_VIOLATION_EMAIL,
+            error: err,
+          });
+        }
+      }
       throw err;
     }
   }
