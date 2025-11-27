@@ -16,7 +16,6 @@ export class CorsMiddleware {
       `${protocol}://${clientDomain}`,
       `${protocol}://www.${clientDomain}`,
     ];
-    console.log(whitelist)
     this._option = {
       origin: function (origin, callback) {
         if (!origin || whitelist.indexOf(origin) !== -1) {

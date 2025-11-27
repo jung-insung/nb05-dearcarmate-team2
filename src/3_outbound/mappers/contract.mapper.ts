@@ -84,9 +84,9 @@ export class ContractMapper {
         fileName: d.fileName,
       })),
 
-      user: relations?.user ?? { id: entity.userId },
-      customer: relations?.customer ?? { id: entity.customerId },
-      car: relations?.car ?? { id: entity.carId },
+      user: relations?.user ?? { id: entity.user?.id, name: entity.user?.name },
+      customer: relations?.customer ?? { id: entity.customer?.id, name: entity.customer?.name },
+      car: relations?.car ?? { id: entity.car?.id, model: entity.car?.model },
     };
   }
 
