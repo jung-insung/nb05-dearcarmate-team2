@@ -71,7 +71,7 @@ export class CustomerService extends BaseService implements ICustomerService {
       currentPage: page,
       totalPages: Math.ceil(totalItemCount / pageSize),
       totalItemCount,
-      resData,
+      data: resData,
     };
   }
 
