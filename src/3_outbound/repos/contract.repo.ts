@@ -93,43 +93,43 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
   }
 
   async update(id: number, entity: ContractEntity) {
-  try {
-    const { contract, meeting } = ContractMapper.toUpdateData(entity);
+    try {
+      const { contract, meeting } = ContractMapper.toUpdateData(entity);
 
-    const record = await this._prisma.contract.update({
-      where: {
-        id,
-        version: contract.version, 
-      },
-      data: {
-        ...contract,
-       
-        status:
-          contract.status != null
-            ? this._toPrismaStatus(contract.status as ContractStatus)
-            : undefined, 
+      const record = await this._prisma.contract.update({
+        where: {
+          id,
+          version: contract.version,
+        },
+        data: {
+          ...contract,
 
-        version: { increment: 1 },
-        meeting, 
-      } as any,
-      include: this._includeOption,
-    });
+          status:
+            contract.status != null
+              ? this._toPrismaStatus(contract.status as ContractStatus)
+              : undefined,
 
-    return ContractMapper.toPersistEntity(
-      record as unknown as ContractRecord,
-    );
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      if (err.code === "P2025") {
-        throw new TechnicalException({
-          type: TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED,
-          error: err,
-        });
+          version: { increment: 1 },
+          meeting,
+        } as any,
+        include: this._includeOption,
+      });
+
+      return ContractMapper.toPersistEntity(
+        record as unknown as ContractRecord,
+      );
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === "P2025") {
+          throw new TechnicalException({
+            type: TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED,
+            error: err,
+          });
+        }
       }
+      throw err;
     }
-    throw err;
   }
-}
 
   async findAll(
     query: ContractListRepoDto,

@@ -57,9 +57,9 @@ export class Server {
     // 정적 파일 서빙 추가
     this._app.use(
       "/uploads",
-      express.static(path.join(__dirname, "../public"))
+      express.static(path.join(__dirname, "../public")),
     );
-    
+
     // routers
     this._app.use(this._authRouter.basePath, this._authRouter.router);
     this._app.use(this._userRouter.basePath, this._userRouter.router);
