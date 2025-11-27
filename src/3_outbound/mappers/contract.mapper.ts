@@ -1,5 +1,8 @@
 import { ContractEntity } from "../../2_domain/entities/contract/contract.entity";
-import { AlarmTime } from "../../2_domain/entities/contract/contract.enum";
+import {
+  AlarmTime,
+  ContractStatus,
+} from "../../2_domain/entities/contract/contract.enum";
 import {
   ContractRecord,
   MeetingEn,
@@ -49,6 +52,7 @@ export class ContractMapper {
 
     return ContractEntity.createPersist({
       ...record,
+      status: this.toDomainStatus(String(record.status)),
       meetings,
       contractDocuments: record.contractDocuments ?? [],
     });
@@ -85,7 +89,10 @@ export class ContractMapper {
       })),
 
       user: relations?.user ?? { id: entity.user?.id, name: entity.user?.name },
-      customer: relations?.customer ?? { id: entity.customer?.id, name: entity.customer?.name },
+      customer: relations?.customer ?? {
+        id: entity.customer?.id,
+        name: entity.customer?.name,
+      },
       car: relations?.car ?? { id: entity.car?.id, model: entity.car?.model },
     };
   }
@@ -170,5 +177,32 @@ export class ContractMapper {
     }
 
     return base;
+  }
+
+  private static toDomainStatus(raw: string): ContractStatus {
+    switch (raw) {
+      case "CAR_INSPECTION":
+      case "carInspection":
+        return ContractStatus.CAR_INSPECTION;
+
+      case "PRICE_NEGOTIATION":
+      case "priceNegotiation":
+        return ContractStatus.PRICE_NEGOTIATION;
+
+      case "CONTRACT_DRAFT":
+      case "contractDraft":
+        return ContractStatus.CONTRACT_DRAFT;
+
+      case "CONTRACT_SUCCESSFUL":
+      case "contractSuccessful":
+        return ContractStatus.CONTRACT_SUCCESSFUL;
+
+      case "CONTRACT_FAILED":
+      case "contractFailed":
+        return ContractStatus.CONTRACT_FAILED;
+
+      default:
+        throw new Error(`Unknown contract status from DB: ${raw}`);
+    }
   }
 }
