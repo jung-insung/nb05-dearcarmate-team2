@@ -3,9 +3,6 @@ import z from "zod";
 export type GetContractListReqDto = z.infer<typeof getContractListReqSchema>;
 export type GetContractReqDto = z.infer<typeof getContractReqSchema>;
 export type UpdateContractReq = z.infer<typeof updateContractReqSchema>;
-// export type UpdateContractStatusReq = z.infer<
-//   typeof updateContractStatusReqSchema
-// >;
 export type CreateContractReq = z.infer<typeof createContractReqSchema>["body"];
 export type DeleteContractReqDto = z.infer<typeof deleteContractReqSchema>;
 
@@ -51,8 +48,8 @@ const statusMapping: Record<string, (typeof CONTRACT_STATUS_KEYS)[number]> = {
 export const ALARM_TIME_KEYS = ["DAY_BEFORE_9AM", "ON_DAY_9AM"] as const;
 
 export const MeetingItemSchema = z.object({
-  date: z.string().regex(ISO_DATE_REGEX),
-  alarms: z.array(z.string().regex(ISO_DATETIME_REGEX)).max(2),
+  date: z.string().regex(ISO_DATETIME_REGEX),
+  alarms: z.array(z.string().regex(ISO_DATETIME_REGEX)).max(3),
 });
 
 export const DocumentItemSchema = z.object({
@@ -74,7 +71,12 @@ export const updateContractReqSchema = z.object({
         return statusMapping[lower] || val;
       })
       .pipe(z.enum(CONTRACT_STATUS_KEYS))
-      .nullable(),
+      .nullable()
+      .optional(),
+
+    userId: z.number().int().positive().optional(),
+    customerId: z.number().int().positive().optional(),
+    carId: z.number().int().positive().optional(),
 
     resolutionDate: z.string().regex(ISO_DATETIME_REGEX).nullable().optional(),
 

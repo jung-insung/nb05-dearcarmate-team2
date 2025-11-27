@@ -30,13 +30,17 @@ export class ContractMapper {
       date: m.date,
       alarms: m.alarms as any,
     }));
+    const meeting =
+      meetingsData.length > 0
+        ? {
+            deleteMany: {},
+            create: meetingsData,
+          }
+        : undefined;
 
     return {
       contract: contractData,
-      meeting: {
-        deleteMany: {},
-        create: meetingsData,
-      },
+      meeting,
     };
   }
 

@@ -96,22 +96,25 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     try {
       const { contract, meeting } = ContractMapper.toUpdateData(entity);
 
+      const data: any = {
+        ...contract,
+        status:
+          contract.status != null
+            ? this._toPrismaStatus(contract.status as ContractStatus)
+            : undefined,
+        version: { increment: 1 },
+      };
+
+      if (meeting) {
+        data.meeting = meeting;
+      }
+
       const record = await this._prisma.contract.update({
         where: {
           id,
           version: contract.version,
         },
-        data: {
-          ...contract,
-
-          status:
-            contract.status != null
-              ? this._toPrismaStatus(contract.status as ContractStatus)
-              : undefined,
-
-          version: { increment: 1 },
-          meeting,
-        } as any,
+        data,
         include: this._includeOption,
       });
 
