@@ -82,7 +82,7 @@ export class ContractService extends BaseService implements IContractService {
             newContractStatus,
             entity.version,
           );
-          
+          console.log(updated);
           await txRepos.car.update(updatedCar);
           return new ContractResponseDto(ContractMapper.toResponse(updated));
         } catch (err) {
@@ -115,50 +115,7 @@ export class ContractService extends BaseService implements IContractService {
           });
         }
 
-        const { status: statusKey, ...restBody } = params.dto.body;
-
-        const statusEnum = statusKey
-          ? ContractStatus[statusKey as keyof typeof ContractStatus]
-          : undefined;
-
-        entity.update({
-          ...restBody,
-          status: statusEnum,
-        });
-
-        if (statusEnum) {
-          const car = await txRepos.car.findById({
-            companyId: entity.companyId,
-            carId: entity.carId,
-          });
-
-          if (!car) {
-            throw new BusinessException({
-              type: BusinessExceptionType.CAR_NOT_EXIST,
-            });
-          }
-
-          let updatedCar;
-
-          switch (statusEnum) {
-            case ContractStatus.CONTRACT_SUCCESSFUL:
-              updatedCar = CarEntity.update(car, {
-                status: "CONTRACT_COMPLETED",
-              });
-              break;
-            case ContractStatus.CONTRACT_FAILED:
-              updatedCar = CarEntity.update(car, {
-                status: "POSSESSION",
-              });
-              break;
-            default:
-              updatedCar = CarEntity.update(car, {
-                status: "CONTRACT_PROCEEDING",
-              });
-              break;
-          }
-          await txRepos.car.update(updatedCar);
-        }
+        entity.update(params.dto.body);
 
         try {
           const updated = await txRepos.contract.update(
@@ -280,7 +237,7 @@ export class ContractService extends BaseService implements IContractService {
             type: BusinessExceptionType.BAD_REQUEST,
           });
         }
-        
+
         // 고객 확인
         const customer = await txRepos.customer.findById(dto.customerId);
         if (!customer) {
