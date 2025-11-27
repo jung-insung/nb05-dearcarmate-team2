@@ -21,11 +21,11 @@ export class DashboardDataResDto {
     this.growthRate = entity.growthRate;
     this.proceedingContractsCount = entity.proceedingContractsCount;
     this.completedContractsCount = entity.completedContractsCount;
-    this.contractsByCarType = entity.contractsByCarType.map(item => ({
+    this.contractsByCarType = entity.contractsByCarType.map((item) => ({
       carType: item.carType,
       count: item.count,
     }));
-    this.salesByCarType = entity.salesByCarType.map(item => ({
+    this.salesByCarType = entity.salesByCarType.map((item) => ({
       carType: item.carType,
       count: item.count,
     }));

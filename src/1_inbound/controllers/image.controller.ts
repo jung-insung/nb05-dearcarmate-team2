@@ -13,13 +13,10 @@ export class ImageController extends BaseController {
     req: Request,
     res: Response,
   ): Promise<Response<any>> => {
-    const reqDto = this.validateOrThrow(
-      imageUploadReqSchema,
-      {
-        userId: req.userId,
-        body: req.body
-      }
-    )
+    const reqDto = this.validateOrThrow(imageUploadReqSchema, {
+      userId: req.userId,
+      body: req.body,
+    });
 
     await this._userService.checkUserExists(reqDto.userId);
 

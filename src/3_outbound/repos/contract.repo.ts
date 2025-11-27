@@ -44,7 +44,7 @@ export type CaryTypeAggregate = {
 export type SuccessfulContractAggregates = {
   completedContractsCount: number;
   carTypeAggregates: CaryTypeAggregate[];
-}
+};
 
 export class ContractRepo extends BaseRepo implements IContractRepo {
   private _includeOption: Prisma.ContractInclude = {
@@ -328,10 +328,10 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
         status: "CONTRACT_SUCCESSFUL",
         resolutionDate: {
           gte: startOfMonth,
-          lte: endOfMonth
-        }
-      }
-    })
+          lte: endOfMonth,
+        },
+      },
+    });
 
     return result._sum.contractPrice ?? 0;
   }
@@ -339,16 +339,16 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
   async getSuccessfulContractAggregates(): Promise<SuccessfulContractAggregates> {
     const successContracts = await this._prisma.contract.count({
       where: {
-        status: 'CONTRACT_SUCCESSFUL'
-      }
+        status: "CONTRACT_SUCCESSFUL",
+      },
     });
 
-
-    const carTypeResult = await this._prisma.$queryRaw<{
-      type: string;
-      count: bigint;
-      totalSales: bigint | null;
-    }[]
+    const carTypeResult = await this._prisma.$queryRaw<
+      {
+        type: string;
+        count: bigint;
+        totalSales: bigint | null;
+      }[]
     >`
       SELECT
         c2.type AS type,
@@ -362,15 +362,17 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
 
     return {
       completedContractsCount: successContracts,
-      carTypeAggregates: carTypeResult
-    }
+      carTypeAggregates: carTypeResult,
+    };
   }
 
   async getProceedingContractAggregate(): Promise<number> {
     const proceedingContracts = await this._prisma.contract.count({
       where: {
-        status: { in: ['CAR_INSPECTION', 'CONTRACT_DRAFT', 'PRICE_NEGOTIATION'] }
-      }
+        status: {
+          in: ["CAR_INSPECTION", "CONTRACT_DRAFT", "PRICE_NEGOTIATION"],
+        },
+      },
     });
 
     return proceedingContracts;

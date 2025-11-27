@@ -100,7 +100,7 @@ export class Injector {
     const contractService = new ContractService(unitOfWork);
     const contractDocService = new ContractDocService(unitOfWork);
     const dashboardService = new DashboardService(unitOfWork);
-    
+
     const authController = new AuthController(authService);
     const userController = new UserController(userService);
     const companyController = new CompanyController(companyService);
@@ -135,7 +135,7 @@ export class Injector {
     );
     const dashboardRouter = new DashBoardRouter(
       dashboardController,
-      authMiddleware
+      authMiddleware,
     );
 
     return new Server(
