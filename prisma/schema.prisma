@@ -43,8 +43,8 @@ model Company {
 }
 
 enum Gender {
-  MALE
-  FEMALE
+  MALE  @map("남")
+  FEMALE @map("여")
 }
 
 enum AgeGroup {
