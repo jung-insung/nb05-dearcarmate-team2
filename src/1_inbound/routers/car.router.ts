@@ -1,9 +1,9 @@
 import { BaseRouter } from "./base.router";
 import { CarController } from "../controllers/car.controller";
-import multer from "multer";
 import { AuthMiddleware } from "../middlewares/auth.middleware";
+import { FileUploadMiddleware } from "../middlewares/file-upload.middleware";
 
-const upload = multer();
+const uploader = new FileUploadMiddleware();
 
 export class CarRouter extends BaseRouter {
   constructor(
@@ -16,7 +16,7 @@ export class CarRouter extends BaseRouter {
 
   private setRoutes() {
     this.router.post(
-      "",
+      "/",
       this._authMiddleware.isUserAuthenticate,
       this.catch(this._carController.registerCar),
     );
@@ -28,12 +28,14 @@ export class CarRouter extends BaseRouter {
     // 업로드
     this.router.post(
       "/upload",
-      upload.single("file"),
+      uploader.upload.single("file"),
       this._authMiddleware.isUserAuthenticate,
+      uploader.csvUploadHandler,
       this.catch(this._carController.uploadCars),
     );
+
     this.router.get(
-      "",
+      "/",
       this._authMiddleware.isUserAuthenticate,
       this.catch(this._carController.getCars),
     );

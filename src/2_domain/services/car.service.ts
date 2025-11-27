@@ -11,6 +11,7 @@ import { ICarService } from "../../1_inbound/port/services/car.service.interface
 import { BusinessException } from "../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
 import { BaseService } from "./base.service";
+import fs from "fs";
 
 export class CarService extends BaseService implements ICarService {
   constructor(unitOfWork: IUnitOfWork) {
@@ -133,14 +134,16 @@ export class CarService extends BaseService implements ICarService {
   async uploadCars(params: { userId: number; req: any }): Promise<void> {
     const { userId, req } = params;
     const companyId = await this._getCompanyId(userId);
+
     const file = req.file;
     if (!file) {
       throw new BusinessException({
         type: BusinessExceptionType.CAR_UPLOAD_FILE_NOT_UPLOADED,
       });
     }
-    // multer 메모리 스토리지를 사용하므로 buffer 사용
-    const content = file.buffer?.toString("utf-8");
+
+    // 디스크에서 직접 읽어옴 (대용량 안정적)
+    const content = fs.readFileSync(req.file.path, "utf-8");
 
     if (!content) {
       throw new BusinessException({
@@ -165,5 +168,7 @@ export class CarService extends BaseService implements ICarService {
         await txRepos.car.create(entity);
       }
     }, false);
+
+    fs.unlinkSync(file.path);
   }
 }

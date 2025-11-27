@@ -69,3 +69,6 @@ prisma/migrations
 
 # 로컬 저장소
 .public
+/public/csv/*
+
+
