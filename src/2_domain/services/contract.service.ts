@@ -212,6 +212,13 @@ export class ContractService extends BaseService implements IContractService {
   async createContract(params: { userId: number; dto: CreateContractReq }) {
     const { userId, dto } = params;
 
+    if (!dto.meetings || dto.meetings.length === 0) {
+      throw new BusinessException({
+        type: BusinessExceptionType.BAD_REQUEST,
+        message: "일정을 선택해주세요",
+      });
+    }
+
     return this._unitOfWork.do(
       async (txRepos) => {
         // 유저 확인

@@ -31,6 +31,12 @@ export class MeetingEntity {
     // this.validateMeetingTime(meetingDate);
 
     const dateStr = params.date.toString();
+    if (!params.alarms || params.alarms.length === 0) {
+      throw new BusinessException({
+        type: BusinessExceptionType.BAD_REQUEST,
+        message: "알람을 최소 1개 이상 선택해야 합니다.",
+      });
+    }
 
     const meetingDate = /^\d{4}-\d{2}-\d{2}$/.test(dateStr)
       ? new Date(`${dateStr}T12:00:00`)
