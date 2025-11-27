@@ -76,7 +76,7 @@ export class ContractMapper {
 
       contractPrice: entity.contractPrice,
       meetings: entity.meetings.map((m) => ({
-        date: this.formatDate(m.date),
+        date: this.formatDateTime(m.date),
 
         alarms: m.alarms.map((alarmEnum) =>
           this.formatDateTime(this.calculateAlarmTime(m.date, alarmEnum)),
@@ -97,9 +97,9 @@ export class ContractMapper {
     };
   }
 
-  private static formatDate(date: Date): string {
-    return date.toISOString().slice(0, 10); // YYYY-MM-DD
-  }
+  // private static formatDate(date: Date): string {
+  //   return date.toISOString().slice(0, 10); // YYYY-MM-DD
+  // }
 
   private static formatDateTime(date: Date): string {
     return (
