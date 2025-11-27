@@ -60,7 +60,6 @@ export const DocumentItemSchema = z.object({
   fileName: z.string().min(1),
 });
 
-
 export const updateContractReqSchema = z.object({
   body: z.object({
     status: z
@@ -76,10 +75,10 @@ export const updateContractReqSchema = z.object({
       })
       .pipe(z.enum(CONTRACT_STATUS_KEYS))
       .nullable(),
-      
+
     resolutionDate: z.string().regex(ISO_DATETIME_REGEX).nullable().optional(),
 
-    contractPrice: z.number().int().min(0).optional(),
+    contractPrice: z.number().int().positive().optional(),
 
     meetings: z.array(MeetingItemSchema).optional(),
     contractDocuments: z.array(DocumentItemSchema).optional(),
