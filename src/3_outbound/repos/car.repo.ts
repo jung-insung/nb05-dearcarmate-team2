@@ -30,7 +30,7 @@ export class CarRepo extends BaseRepo implements ICarRepo {
         companyId: params.companyId,
       },
     });
-    console.log(record!.status)
+    console.log(record!.status);
     return record ? CarEntity.fromPersistence(record) : null;
   }
 

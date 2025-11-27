@@ -7,7 +7,7 @@ export const registerCarSchema = z.object({
   manufacturer: z.enum(["기아", "현대", "쉐보레"]),
   model: z.string().trim().nonempty(),
 
-  manufacturingYear: z.number().int().gte(1980),
+  manufacturingYear: z.number().int().gte(1975),
   mileage: z.number().int().nonnegative(),
   price: z.number().int().nonnegative(),
 
