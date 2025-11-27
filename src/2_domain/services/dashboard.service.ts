@@ -11,11 +11,13 @@ export interface IDashboardService {
 
 export class DashboardService extends BaseService implements IDashboardService {
   constructor(unitOfwork: IUnitOfWork) {
-    super(unitOfwork)
+    super(unitOfwork);
   }
 
   async getData(dto: getDashboardDataReqDto): Promise<DashBoardViewEntity> {
-    const foundUser = await this._unitOfWork.repos.user.findUserById(dto.userId);
+    const foundUser = await this._unitOfWork.repos.user.findUserById(
+      dto.userId,
+    );
     if (!foundUser) {
       throw new BusinessException({
         type: BusinessExceptionType.USER_NOT_EXIST,
@@ -23,16 +25,23 @@ export class DashboardService extends BaseService implements IDashboardService {
     }
 
     return this._unitOfWork.do(async (txRepos) => {
-      const monthlySales = await txRepos.contract.getMonthlySalesAggregates("current");
-      const lastMonthSales = await txRepos.contract.getMonthlySalesAggregates("last");
+      const monthlySales =
+        await txRepos.contract.getMonthlySalesAggregates("current");
+      const lastMonthSales =
+        await txRepos.contract.getMonthlySalesAggregates("last");
 
-      const growthRate = lastMonthSales === 0
-        ? (monthlySales === 0 ? 0 : 100)
-        : ((monthlySales - lastMonthSales) / lastMonthSales) * 100;
+      const growthRate =
+        lastMonthSales === 0
+          ? monthlySales === 0
+            ? 0
+            : 100
+          : ((monthlySales - lastMonthSales) / lastMonthSales) * 100;
 
-      const { completedContractsCount, carTypeAggregates } = await txRepos.contract.getSuccessfulContractAggregates();
+      const { completedContractsCount, carTypeAggregates } =
+        await txRepos.contract.getSuccessfulContractAggregates();
 
-      const proceedingContractsCount = await txRepos.contract.getProceedingContractAggregate();
+      const proceedingContractsCount =
+        await txRepos.contract.getProceedingContractAggregate();
 
       const contractsByCarType: { carType: string; count: number }[] = [];
       const salesByCarType: { carType: string; count: number }[] = [];
@@ -56,9 +65,9 @@ export class DashboardService extends BaseService implements IDashboardService {
         completedContractsCount,
         contractsByCarType,
         salesByCarType,
-      })
+      });
 
       return dashboard;
-    })
+    });
   }
 }

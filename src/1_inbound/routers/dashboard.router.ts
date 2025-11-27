@@ -5,7 +5,7 @@ import { BaseRouter } from "./base.router";
 export class DashBoardRouter extends BaseRouter {
   constructor(
     private _dashboardController: DashboardController,
-    private _authMiddleware: AuthMiddleware
+    private _authMiddleware: AuthMiddleware,
   ) {
     super("/dashboard");
     this.registerDashBoardRouter();
@@ -15,7 +15,7 @@ export class DashBoardRouter extends BaseRouter {
     this.router.get(
       "/",
       this._authMiddleware.isUserAuthenticate,
-      this.catch(this._dashboardController.getDashboardData)
-    )
+      this.catch(this._dashboardController.getDashboardData),
+    );
   }
 }

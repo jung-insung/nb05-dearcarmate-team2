@@ -1,4 +1,7 @@
-import { ContractDocViewReturn, SuccessfulContractAggregates } from "../../../3_outbound/repos/contract.repo";
+import {
+  ContractDocViewReturn,
+  SuccessfulContractAggregates,
+} from "../../../3_outbound/repos/contract.repo";
 import { ContractDocPagination } from "../../services/contract-doc.service";
 import { ContractStatus } from "../../entities/contract/contract.enum";
 import {
@@ -51,5 +54,5 @@ export interface IContractRepo {
 
   getSuccessfulContractAggregates(): Promise<SuccessfulContractAggregates>;
 
-  getProceedingContractAggregate() : Promise<number>;
+  getProceedingContractAggregate(): Promise<number>;
 }

@@ -10,9 +10,7 @@ import { BusinessException } from "../../4_shared/exceptions/business.exceptions
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
 import { TechnicalExceptionType } from "../../4_shared/exceptions/technical.exceptions/exception-info";
 import { TechnicalException } from "../../4_shared/exceptions/technical.exceptions/technical.exception";
-import {
-  UserEntity,
-} from "../entities/user/user.entity";
+import { UserEntity } from "../entities/user/user.entity";
 import { IBcryptHashManager } from "../port/managers/bcrypt-hash.manager.interface";
 import { IUnitOfWork } from "../port/unit-of-work.interface";
 import { BaseService } from "./base.service";

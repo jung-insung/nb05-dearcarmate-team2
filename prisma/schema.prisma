@@ -96,10 +96,10 @@ model Customer {
   company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
   contract  Contract[]
 
+  @@unique([email, companyId])
   @@index([name])
   @@index([email])
   @@index([name, email])
-  @@unique([email, companyId])
 }
 
 enum CarManufacturer {
@@ -153,11 +153,11 @@ model Contract {
   companyId  Int
 
   status         ContractStatus @default(CAR_INSPECTION)
-  resolutionDate DateTime?
+  resolutionDate DateTime?      @db.Timestamptz(6)
   contractPrice  Int
   version        Int            @default(1)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  createdAt      DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime       @updatedAt @db.Timestamptz(6)
 
   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   car      Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
@@ -172,9 +172,9 @@ model Contract {
 model Meeting {
   id         Int      @id @default(autoincrement())
   contractId Int
-  date       DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  date       DateTime @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @updatedAt @db.Timestamptz(6)
 
   alarms AlarmTime[]
 
@@ -190,8 +190,8 @@ enum ContractStatus {
 }
 
 enum AlarmTime {
-  DAY_BEFORE_9AM 
-  ON_DAY_9AM    
+  DAY_BEFORE_9AM
+  ON_DAY_9AM
 }
 
 model ContractDocument {
