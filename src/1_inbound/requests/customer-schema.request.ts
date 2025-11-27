@@ -30,6 +30,7 @@ export const registCustomerSchema = z.object({
     ageGroup: z
       .string()
       .trim()
+      .nullish()
       .optional()
       .transform((v) =>
         v ? (normalizeAgeGroup(v) as CustomerAgeGroup) : undefined,
@@ -38,6 +39,7 @@ export const registCustomerSchema = z.object({
     region: z
       .string()
       .trim()
+      .nullish()
       .optional()
       .transform((v) =>
         v ? (normalizeRegion(v) as CustomerRegion) : undefined,
@@ -55,7 +57,7 @@ export const registCustomerSchema = z.object({
         { message: "유효하지 않은 이메일 형식입니다." },
       ),
 
-    memo: z.any().optional(),
+    memo: z.any().optional().nullish(),
   }),
 });
 
@@ -79,6 +81,7 @@ export const updateCustomerSchema = z.object({
     ageGroup: z
       .string()
       .trim()
+      .nullish()
       .optional()
       .transform((v) =>
         v ? (normalizeAgeGroup(v) as CustomerAgeGroup) : undefined,
@@ -87,6 +90,7 @@ export const updateCustomerSchema = z.object({
     region: z
       .string()
       .trim()
+      .nullish()
       .optional()
       .transform((v) =>
         v ? (normalizeRegion(v) as CustomerRegion) : undefined,
@@ -104,7 +108,7 @@ export const updateCustomerSchema = z.object({
         { message: "유효하지 않은 이메일 형식입니다." },
       ),
 
-    memo: z.any().optional(),
+    memo: z.any().optional().nullish(),
   }),
 });
 
