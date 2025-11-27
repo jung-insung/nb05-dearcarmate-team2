@@ -29,7 +29,7 @@ export class ContractDocRouter extends BaseRouter {
     this.router.post(
       "/upload",
       this._authMiddleware.isUserAuthenticate,
-      this._fileUploadMiddleware.upload.single("contractDoc"),
+      this._fileUploadMiddleware.upload.single("file"),
       this._fileUploadMiddleware.contractDocUploadHandler,
       this.catch(this._contractDocController.uploadContractDoc),
     );
