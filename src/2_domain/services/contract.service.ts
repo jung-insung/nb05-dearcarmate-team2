@@ -21,6 +21,7 @@ import {
   CreateContractReq,
   UpdateContractReq,
 } from "../../1_inbound/requests/contract-schema.request";
+import { CustomerEntity } from "../entities/customer/customer.entity";
 
 export class ContractService extends BaseService implements IContractService {
   constructor(unitOfWork: IUnitOfWork) {
@@ -60,6 +61,14 @@ export class ContractService extends BaseService implements IContractService {
             });
           }
 
+          const customer = await txRepos.customer.findById(entity.customerId);
+
+          if (!customer) {
+            throw new BusinessException({
+              type: BusinessExceptionType.CUSTOMER_NOT_EXIST,
+            });
+          }
+
           let updatedCar;
 
           switch (statusEnum) {
@@ -67,11 +76,13 @@ export class ContractService extends BaseService implements IContractService {
               updatedCar = CarEntity.update(car, {
                 status: "CONTRACT_COMPLETED",
               });
+              await txRepos.customer.increaseContractCount(customer.id);
               break;
             case ContractStatus.CONTRACT_FAILED:
               updatedCar = CarEntity.update(car, {
                 status: "POSSESSION",
               });
+              await txRepos.customer.decreaseContractCount(customer.id);
               break;
             default:
               updatedCar = CarEntity.update(car, {
@@ -246,7 +257,6 @@ export class ContractService extends BaseService implements IContractService {
         });
 
         await txRepos.car.update(updatedCar);
-        await txRepos.customer.increaseContractCount(customer.id);
 
         return ContractMapper.toCreateResponse(created, {
           user: { id: user.id, name: user.name },
@@ -294,7 +304,6 @@ export class ContractService extends BaseService implements IContractService {
         }
 
         await repos.contract.delete(contractId);
-        await repos.customer.decreaseContractCount(contract.customerId);
       },
       true,
       true,
