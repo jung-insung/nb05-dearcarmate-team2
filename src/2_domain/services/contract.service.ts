@@ -276,12 +276,13 @@ export class ContractService extends BaseService implements IContractService {
             type: BusinessExceptionType.CAR_NOT_EXIST,
           });
         }
+        console.log(car.status)
         if ((car.status as string) !== "POSSESSION") {
           throw new BusinessException({
             type: BusinessExceptionType.BAD_REQUEST,
           });
         }
-
+        
         // 고객 확인
         const customer = await txRepos.customer.findById(dto.customerId);
         if (!customer) {

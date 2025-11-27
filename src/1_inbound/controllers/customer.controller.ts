@@ -20,7 +20,7 @@ export class CustomerController extends BaseController {
       dto,
       userId,
     });
-
+    
     res.status(201).json(newCusotmer);
   };
 
