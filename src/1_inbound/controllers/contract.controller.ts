@@ -6,7 +6,6 @@ import {
   createContractReqSchema,
   getContractListReqSchema,
   updateContractReqSchema,
-  updateContractStatusReqSchema,
   deleteContractReqSchema,
 } from "../requests/contract-schema.request";
 
@@ -33,21 +32,8 @@ export class ContractController
     const contractId = Number(req.params.id);
     const body = req.body;
 
-    const bodyKeys = Object.keys(body);
-    const isStatusOnlyUpdate =
-      bodyKeys.length === 1 && bodyKeys[0] === "status";
-
-    if (isStatusOnlyUpdate) {
-      const dto = this.validateOrThrow(updateContractStatusReqSchema, { body });
-      const result = await this._contractService.updateContractStatus({
-        contractId,
-        dto,
-      });
-      return res.status(200).json(result);
-    }
-
     const dto = this.validateOrThrow(updateContractReqSchema, { body });
-    const result = await this._contractService.updateContractDetail({
+    const result = await this._contractService.updateContract({
       contractId,
       dto,
     });

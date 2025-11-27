@@ -20,7 +20,6 @@ import { BusinessExceptionType } from "../../4_shared/exceptions/business.except
 import {
   CreateContractReq,
   UpdateContractReq,
-  UpdateContractStatusReq,
 } from "../../1_inbound/requests/contract-schema.request";
 
 export class ContractService extends BaseService implements IContractService {
@@ -28,81 +27,81 @@ export class ContractService extends BaseService implements IContractService {
     super(unitOfWork);
   }
 
-  async updateContractStatus(params: {
-    contractId: number;
-    dto: UpdateContractStatusReq;
-  }) {
-    return await this._unitOfWork.do(
-      async (txRepos) => {
-        const entity = await txRepos.contract.findById(params.contractId);
+  // async updateContract(params: {
+  //   contractId: number;
+  //   dto: UpdateContractStatusReq;
+  // }) {
+  //   return await this._unitOfWork.do(
+  //     async (txRepos) => {
+  //       const entity = await txRepos.contract.findById(params.contractId);
 
-        if (!entity) {
-          throw new BusinessException({
-            type: BusinessExceptionType.CONTRACT_NOT_EXIST,
-          });
-        }
+  //       if (!entity) {
+  //         throw new BusinessException({
+  //           type: BusinessExceptionType.CONTRACT_NOT_EXIST,
+  //         });
+  //       }
 
-        const car = await txRepos.car.findById({
-          companyId: entity.companyId,
-          carId: entity.carId,
-        });
+  //       const car = await txRepos.car.findById({
+  //         companyId: entity.companyId,
+  //         carId: entity.carId,
+  //       });
 
-        if (!car) {
-          throw new BusinessException({
-            type: BusinessExceptionType.CAR_NOT_EXIST,
-          });
-        }
+  //       if (!car) {
+  //         throw new BusinessException({
+  //           type: BusinessExceptionType.CAR_NOT_EXIST,
+  //         });
+  //       }
 
-        const statusKey = params.dto.body.status;
-        const newContractStatus =
-          ContractStatus[statusKey as keyof typeof ContractStatus];
-        let updatedCar;
+  //       const statusKey = params.dto.body.status;
+  //       const newContractStatus =
+  //         ContractStatus[statusKey as keyof typeof ContractStatus];
+  //       let updatedCar;
 
-        switch (newContractStatus) {
-          case ContractStatus.CONTRACT_SUCCESSFUL:
-            updatedCar = CarEntity.update(car, {
-              status: "CONTRACT_COMPLETED",
-            });
-            break;
-          case ContractStatus.CONTRACT_FAILED:
-            updatedCar = CarEntity.update(car, {
-              status: "POSSESSION",
-            });
-            break;
-          default:
-            updatedCar = CarEntity.update(car, {
-              status: "CONTRACT_PROCEEDING",
-            });
-            break;
-        }
+  //       switch (newContractStatus) {
+  //         case ContractStatus.CONTRACT_SUCCESSFUL:
+  //           updatedCar = CarEntity.update(car, {
+  //             status: "CONTRACT_COMPLETED",
+  //           });
+  //           break;
+  //         case ContractStatus.CONTRACT_FAILED:
+  //           updatedCar = CarEntity.update(car, {
+  //             status: "POSSESSION",
+  //           });
+  //           break;
+  //         default:
+  //           updatedCar = CarEntity.update(car, {
+  //             status: "CONTRACT_PROCEEDING",
+  //           });
+  //           break;
+  //       }
 
-        try {
-          const updated = await txRepos.contract.updateStatus(
-            params.contractId,
-            newContractStatus,
-            entity.version,
-          );
+  //       try {
+  //         const updated = await txRepos.contract.updateStatus(
+  //           params.contractId,
+  //           newContractStatus,
+  //           entity.version,
+  //         );
 
-          await txRepos.car.update(updatedCar);
-          return new ContractResponseDto(ContractMapper.toResponse(updated));
-        } catch (err) {
-          if (
-            err instanceof TechnicalException &&
-            err.type === TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED
-          ) {
-            throw new BusinessException({
-              type: BusinessExceptionType.CONTRACT_STATUS_CHANGED,
-            });
-          }
-          throw err;
-        }
-      },
-      true,
-      true,
-    );
-  }
+  //         await txRepos.car.update(updatedCar);
+  //         return new ContractResponseDto(ContractMapper.toResponse(updated));
+  //       } catch (err) {
+  //         if (
+  //           err instanceof TechnicalException &&
+  //           err.type === TechnicalExceptionType.OPTIMISTIC_LOCK_FAILED
+  //         ) {
+  //           throw new BusinessException({
+  //             type: BusinessExceptionType.CONTRACT_STATUS_CHANGED,
+  //           });
+  //         }
+  //         throw err;
+  //       }
+  //     },
+  //     true,
+  //     true,
+  //   );
+  // }
 
-  async updateContractDetail(params: {
+  async updateContract(params: {
     contractId: number;
     dto: UpdateContractReq;
   }) {
@@ -115,7 +114,50 @@ export class ContractService extends BaseService implements IContractService {
           });
         }
 
-        entity.update(params.dto.body);
+        const { status: statusKey, ...restBody } = params.dto.body;
+
+        const statusEnum = statusKey
+          ? ContractStatus[statusKey as keyof typeof ContractStatus]
+          : undefined;
+
+        entity.update({
+          ...restBody,
+          status: statusEnum,
+        });
+
+        if (statusEnum) {
+          const car = await txRepos.car.findById({
+            companyId: entity.companyId,
+            carId: entity.carId,
+          });
+
+          if (!car) {
+            throw new BusinessException({
+              type: BusinessExceptionType.CAR_NOT_EXIST,
+            });
+          }
+
+          let updatedCar;
+
+          switch (statusEnum) {
+            case ContractStatus.CONTRACT_SUCCESSFUL:
+              updatedCar = CarEntity.update(car, {
+                status: "CONTRACT_COMPLETED",
+              });
+              break;
+            case ContractStatus.CONTRACT_FAILED:
+              updatedCar = CarEntity.update(car, {
+                status: "POSSESSION",
+              });
+              break;
+            default:
+              updatedCar = CarEntity.update(car, {
+                status: "CONTRACT_PROCEEDING",
+              });
+              break;
+          }
+          await txRepos.car.update(updatedCar);
+        }
 
         try {
           const updated = await txRepos.contract.update(
