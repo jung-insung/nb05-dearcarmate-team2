@@ -82,7 +82,6 @@ export class ContractService extends BaseService implements IContractService {
             newContractStatus,
             entity.version,
           );
-          console.log(updated);
           await txRepos.car.update(updatedCar);
           return new ContractResponseDto(ContractMapper.toResponse(updated));
         } catch (err) {
