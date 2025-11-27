@@ -32,11 +32,13 @@ export class ContractEntity {
   private _customer?: { id: number; name: string };
   private _car?: { id: number; model: string };
 
-  constructor(attrs: ContractEn & {
-    user?: { id: number; name: string };
-    customer?: { id: number; name: string };
-    car?: { id: number; model: string };
-  }) {
+  constructor(
+    attrs: ContractEn & {
+      user?: { id: number; name: string };
+      customer?: { id: number; name: string };
+      car?: { id: number; model: string };
+    },
+  ) {
     this._id = attrs.id;
     this._userId = attrs.userId;
     this._carId = attrs.carId;
@@ -88,7 +90,7 @@ export class ContractEntity {
   get contractDocuments() {
     return this._contractDocuments;
   }
-  get user() { 
+  get user() {
     return this._user;
   }
   get customer() {

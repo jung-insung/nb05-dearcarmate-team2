@@ -50,7 +50,10 @@ export class CarRepo extends BaseRepo implements ICarRepo {
     }
 
     if (keyword && searchBy) {
-      where[searchBy] = { contains: keyword };
+      where[searchBy] = {
+        contains: keyword,
+        mode: "insensitive",
+      };
     }
 
     const [records, totalItemCount] = await Promise.all([
@@ -67,6 +70,15 @@ export class CarRepo extends BaseRepo implements ICarRepo {
       items: records.map((r) => CarEntity.fromPersistence(r)),
       totalItemCount,
     };
+  }
+  async findByCarNumber(
+    carNumber: string,
+    companyId: number,
+  ): Promise<CarEntity | null> {
+    const record = await this._prisma.car.findFirst({
+      where: { carNumber, companyId },
+    });
+    return record ? CarEntity.fromPersistence(record) : null;
   }
 
   async update(entity: CarEntity): Promise<CarEntity> {

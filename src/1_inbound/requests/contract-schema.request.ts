@@ -90,7 +90,7 @@ export const updateContractReqSchema = z.object({
 
 const CreateMeetingItemSchema = z.object({
   date: z.string().regex(ISO_DATETIME_REGEX),
-  alarms: z.array(z.string().regex(ISO_DATETIME_REGEX)).max(2),
+  alarms: z.array(z.string().regex(ISO_DATETIME_REGEX)).max(3),
 });
 
 export const createContractReqSchema = z.object({

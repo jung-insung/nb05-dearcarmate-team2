@@ -28,13 +28,16 @@ export class CarController extends BaseController {
     const page = Number(req.query.page ?? 1);
     const pageSize = Number(req.query.pageSize ?? 10);
 
+    const rawKeyword = req.query.keyword as string;
+    const cleanedKeyword = (rawKeyword ?? "").replace(/\s+/g, "");
+
     const result = await this._carService.getCars({
       userId: req.userId!,
       page,
       pageSize,
       status: req.query.status as string,
       searchBy: req.query.searchBy as any,
-      keyword: req.query.keyword as string,
+      keyword: cleanedKeyword,
     });
 
     return res.json(new CarListResDto(result));
