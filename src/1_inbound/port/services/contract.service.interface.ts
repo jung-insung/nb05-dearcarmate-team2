@@ -1,7 +1,6 @@
 import {
   CreateContractReq,
   UpdateContractReq,
-  UpdateContractStatusReq,
 } from "../../requests/contract-schema.request";
 import {
   ContractListResponseDto,
@@ -26,12 +25,7 @@ export interface IContractService {
     dto: CreateContractReq;
   }): Promise<any>;
 
-  updateContractStatus(params: {
-    contractId: number;
-    dto: UpdateContractStatusReq;
-  }): Promise<ContractResponseDto>;
-
-  updateContractDetail(params: {
+  updateContract(params: {
     contractId: number;
     dto: UpdateContractReq;
   }): Promise<ContractResponseDto>;

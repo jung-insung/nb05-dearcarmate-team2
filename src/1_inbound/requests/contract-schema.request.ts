@@ -3,9 +3,9 @@ import z from "zod";
 export type GetContractListReqDto = z.infer<typeof getContractListReqSchema>;
 export type GetContractReqDto = z.infer<typeof getContractReqSchema>;
 export type UpdateContractReq = z.infer<typeof updateContractReqSchema>;
-export type UpdateContractStatusReq = z.infer<
-  typeof updateContractStatusReqSchema
->;
+// export type UpdateContractStatusReq = z.infer<
+//   typeof updateContractStatusReqSchema
+// >;
 export type CreateContractReq = z.infer<typeof createContractReqSchema>["body"];
 export type DeleteContractReqDto = z.infer<typeof deleteContractReqSchema>;
 
@@ -60,7 +60,8 @@ export const DocumentItemSchema = z.object({
   fileName: z.string().min(1),
 });
 
-export const updateContractStatusReqSchema = z.object({
+
+export const updateContractReqSchema = z.object({
   body: z.object({
     status: z
       .string()
@@ -73,12 +74,9 @@ export const updateContractStatusReqSchema = z.object({
         const lower = val.toLowerCase().replace(/[_-]/g, "");
         return statusMapping[lower] || val;
       })
-      .pipe(z.enum(CONTRACT_STATUS_KEYS)),
-  }),
-});
-
-export const updateContractReqSchema = z.object({
-  body: z.object({
+      .pipe(z.enum(CONTRACT_STATUS_KEYS))
+      .nullable(),
+      
     resolutionDate: z.string().regex(ISO_DATETIME_REGEX).nullable().optional(),
 
     contractPrice: z.number().int().min(0).optional(),
