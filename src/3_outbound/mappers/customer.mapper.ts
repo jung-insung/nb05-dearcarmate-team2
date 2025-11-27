@@ -2,7 +2,12 @@ import {
   RegistCustomerReq,
   UpdateCustomerReq,
 } from "../../1_inbound/requests/customer-schema.request";
-import { CustomerResponseDto } from "../../1_inbound/responses/customer/customer.response";
+import {
+  AgeGroupLabel,
+  CustomerResponseDto,
+  GenderLabel,
+  RegionLabel,
+} from "../../1_inbound/responses/customer/customer.response";
 import {
   CustomerEntity,
   NewCustomerEntity,
@@ -14,6 +19,42 @@ import {
   CustomerGender,
   CustomerRegion,
 } from "../../2_domain/entities/customer/customer.enum";
+
+const GenderLabelMap: Record<CustomerGender, GenderLabel> = {
+  [CustomerGender.MALE]: "남",
+  [CustomerGender.FEMALE]: "여",
+};
+
+const AgeGroupLabelMap: Record<CustomerAgeGroup, AgeGroupLabel> = {
+  [CustomerAgeGroup.TEN]: "10대",
+  [CustomerAgeGroup.TWENTY]: "20대",
+  [CustomerAgeGroup.THIRTY]: "30대",
+  [CustomerAgeGroup.FOURTY]: "40대",
+  [CustomerAgeGroup.FIFTY]: "50대",
+  [CustomerAgeGroup.SIXTY]: "60대",
+  [CustomerAgeGroup.SEVENTY]: "70대",
+  [CustomerAgeGroup.EIGHTY]: "80대",
+};
+
+const RegionLabelMap: Record<CustomerRegion, RegionLabel> = {
+  [CustomerRegion.SEOUL]: "서울",
+  [CustomerRegion.GYEONGGI]: "경기",
+  [CustomerRegion.INCHEON]: "인천",
+  [CustomerRegion.GANGWON]: "강원",
+  [CustomerRegion.CHUNGBUK]: "충북",
+  [CustomerRegion.CHUNGNAM]: "충남",
+  [CustomerRegion.SEJONG]: "세종",
+  [CustomerRegion.DAEJEON]: "대전",
+  [CustomerRegion.JEONBUK]: "전북",
+  [CustomerRegion.JEONNAM]: "전남",
+  [CustomerRegion.GWANGJU]: "광주",
+  [CustomerRegion.GYEONGBUK]: "경북",
+  [CustomerRegion.GYEONGNAM]: "경남",
+  [CustomerRegion.DAEGU]: "대구",
+  [CustomerRegion.ULSAN]: "울산",
+  [CustomerRegion.BUSAN]: "부산",
+  [CustomerRegion.JEJU]: "제주",
+};
 
 export interface CustomerReocrd {
   id: number;
@@ -143,18 +184,18 @@ export class CustomerMapper {
   //Entity -> DTO
   static toResponseData(entity: PersistCustomerEntity): CustomerResponseDto {
     return {
-      id: entity.id,
+      id: entity.id!,
       name: entity.name,
-      gender: entity.gender,
+      gender: GenderLabelMap[entity.gender], // "남" / "여"
       phoneNumber: entity.phoneNumber,
-      ageGroup: entity.ageGroup,
-      region: entity.region,
+      ageGroup: entity.ageGroup ? AgeGroupLabelMap[entity.ageGroup] : undefined,
+      region: entity.region ? RegionLabelMap[entity.region] : undefined,
       email: entity.email,
       memo: entity.memo,
       contractCount: entity.contractCount,
       version: entity.version,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
+      createdAt: entity.createdAt!,
+      updatedAt: entity.updatedAt!,
     };
   }
 }
