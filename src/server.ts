@@ -16,6 +16,7 @@ import { AuthRouter } from "./1_inbound/routers/auth.router";
 import { ContractDocRouter } from "./1_inbound/routers/contract-doc.router";
 import { ImageRouter } from "./1_inbound/routers/image.router";
 import { DashBoardRouter } from "./1_inbound/routers/dashboard.router";
+import path from "path";
 
 export class Server {
   private _app;
@@ -53,6 +54,12 @@ export class Server {
     this._app.use(this._loggerMiddleware.handler());
     this._app.use(this._jsonMiddleware.handler());
 
+    // 정적 파일 서빙 추가
+    this._app.use(
+      "/uploads",
+      express.static(path.join(__dirname, "../public"))
+    );
+    
     // routers
     this._app.use(this._authRouter.basePath, this._authRouter.router);
     this._app.use(this._userRouter.basePath, this._userRouter.router);

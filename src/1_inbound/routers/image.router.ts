@@ -17,7 +17,7 @@ export class ImageRouter extends BaseRouter {
     this.router.post(
       "/upload",
       this._authMiddleware.isUserAuthenticate,
-      this._fileUploadMiddleware.upload.single("image"),
+      this._fileUploadMiddleware.upload.single("file"),
       this._fileUploadMiddleware.imageUploadHandler,
       this.catch(this._imageController.imageUploadController),
     );

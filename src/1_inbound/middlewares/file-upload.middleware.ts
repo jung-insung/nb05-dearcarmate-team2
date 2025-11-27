@@ -8,11 +8,7 @@ export class FileUploadMiddleware {
   constructor() {
     const storage = multer.diskStorage({
       destination: function (req, file, cb) {
-        if (file.fieldname === "contractDoc") {
-          cb(null, path.join(__dirname, "../../../public/contractDocs"));
-        } else if (file.fieldname === "image") {
-          cb(null, path.join(__dirname, "../../../public/images"));
-        }
+        cb(null, path.join(__dirname, "../../../public"));
       },
       filename: function (req, file, cb) {
         const uniqueName = Date.now() + "-" + file.originalname;
@@ -39,10 +35,9 @@ export class FileUploadMiddleware {
 
   imageUploadHandler = (req: Request, res: Response, next: NextFunction) => {
     try {
-      req.body.fileName = req.file ? req.file.originalname : null;
-      req.body.url = req.file
-        ? `http://localhost:4000/${req.file.path.replace(/\\/g, "/")}`
-        : null;
+      const fileName = req.file!.filename;
+      req.body.fileName = req.file!.originalname;
+      req.body.url = `http://localhost:4000/uploads/${fileName}`;
       next();
     } catch (err) {
       next(err);
