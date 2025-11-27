@@ -82,9 +82,8 @@ export class ContractService extends BaseService implements IContractService {
             newContractStatus,
             entity.version,
           );
-
+          
           await txRepos.car.update(updatedCar);
-
           return new ContractResponseDto(ContractMapper.toResponse(updated));
         } catch (err) {
           if (
@@ -276,7 +275,6 @@ export class ContractService extends BaseService implements IContractService {
             type: BusinessExceptionType.CAR_NOT_EXIST,
           });
         }
-        console.log(car.status)
         if ((car.status as string) !== "POSSESSION") {
           throw new BusinessException({
             type: BusinessExceptionType.BAD_REQUEST,

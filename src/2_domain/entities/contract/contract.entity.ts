@@ -28,8 +28,15 @@ export class ContractEntity {
   private _version: number;
   private _meetings: MeetingEntity[];
   private _contractDocuments: ContractDocumentEn[];
+  private _user?: { id: number; name: string };
+  private _customer?: { id: number; name: string };
+  private _car?: { id: number; model: string };
 
-  constructor(attrs: ContractEn) {
+  constructor(attrs: ContractEn & {
+    user?: { id: number; name: string };
+    customer?: { id: number; name: string };
+    car?: { id: number; model: string };
+  }) {
     this._id = attrs.id;
     this._userId = attrs.userId;
     this._carId = attrs.carId;
@@ -43,6 +50,9 @@ export class ContractEntity {
     this._version = attrs.version ?? 1;
     this._meetings = attrs.meetings?.map((m) => new MeetingEntity(m)) ?? [];
     this._contractDocuments = attrs.contractDocuments ?? [];
+    this._user = attrs.user;
+    this._customer = attrs.customer;
+    this._car = attrs.car;
   }
 
   get id() {
@@ -77,6 +87,15 @@ export class ContractEntity {
   }
   get contractDocuments() {
     return this._contractDocuments;
+  }
+  get user() { 
+    return this._user;
+  }
+  get customer() {
+    return this._customer;
+  }
+  get car() {
+    return this._car;
   }
 
   static createNew(params: NewContractEn): ContractEntity {
