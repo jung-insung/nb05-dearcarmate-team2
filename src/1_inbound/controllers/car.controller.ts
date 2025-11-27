@@ -20,6 +20,7 @@ export class CarController extends BaseController {
       body,
       userId: req.userId!,
     });
+
     return res.status(201).json(new CarResDto(entity));
   };
 
