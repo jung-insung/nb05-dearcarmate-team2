@@ -10,7 +10,7 @@ export class CorsMiddleware {
       this._configUtil.getParsed().NODE_ENV === "dev" ? "http" : "https";
     const clientDomain =
       this._configUtil.getParsed().NODE_ENV === "dev"
-        ? `localhost:${this._configUtil.getParsed().PORT}`
+        ? `localhost:${this._configUtil.getParsed().FE_PORT}`
         : this._configUtil.getParsed().CLIENT_DOMAIN;
     const whitelist = [
       `${protocol}://${clientDomain}`,

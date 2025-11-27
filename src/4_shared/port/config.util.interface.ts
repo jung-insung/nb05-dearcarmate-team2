@@ -17,6 +17,7 @@ export const configSchema = z.object({
   TOKEN_SECRET: z.string().min(8, "토큰 시크릿은 최소 8자 이상입니다."),
   ACCESS_TOKEN_EXPIRES_IN: z.enum(["15m", "1h", "7h"]).default("1h"),
   REFRESH_TOKEN_EXPIRES_IN: z.enum(["1d", "7d"]).default("1d"),
+  FE_PORT: z.coerce.number(),
 });
 
 export interface IConfigUtil {
