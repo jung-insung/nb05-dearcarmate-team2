@@ -82,7 +82,7 @@ export class ContractService extends BaseService implements IContractService {
             newContractStatus,
             entity.version,
           );
-          
+
           await txRepos.car.update(updatedCar);
           return new ContractResponseDto(ContractMapper.toResponse(updated));
         } catch (err) {
@@ -280,7 +280,7 @@ export class ContractService extends BaseService implements IContractService {
             type: BusinessExceptionType.BAD_REQUEST,
           });
         }
-        
+
         // 고객 확인
         const customer = await txRepos.customer.findById(dto.customerId);
         if (!customer) {

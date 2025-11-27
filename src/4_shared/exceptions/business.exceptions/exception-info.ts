@@ -31,6 +31,7 @@ export enum BusinessExceptionType {
   REFRESHTOKEN_MISMATCH,
   CAR_NOT_EXIST,
   INVALID_CAR_NUMBER,
+  DUPLICATE_CAR_NUMBER,
   INVALID_MANUFACTURER,
   INVALID_MODEL,
   INVALID_MANUFACTURINGYEAR,
@@ -328,6 +329,10 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.ALREADY_EXIST_EAMIL]: {
     statusCode: 409,
     message: "이미 존재하는 이메일입니다.",
+  },
+  [BusinessExceptionType.DUPLICATE_CAR_NUMBER]: {
+    statusCode: 409,
+    message: "이미 존재하는 차량번호입니다.",
   },
 
   // 기타

@@ -85,7 +85,10 @@ export class ContractMapper {
       })),
 
       user: relations?.user ?? { id: entity.user?.id, name: entity.user?.name },
-      customer: relations?.customer ?? { id: entity.customer?.id, name: entity.customer?.name },
+      customer: relations?.customer ?? {
+        id: entity.customer?.id,
+        name: entity.customer?.name,
+      },
       car: relations?.car ?? { id: entity.car?.id, model: entity.car?.model },
     };
   }

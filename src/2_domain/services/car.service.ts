@@ -23,6 +23,16 @@ export class CarService extends BaseService implements ICarService {
   }): Promise<CarEntity> {
     const { body, userId } = params;
     const companyId = await this._getCompanyId(userId);
+
+    const exists = await this._unitOfWork.repos.car.findByCarNumber(
+      body.carNumber,
+      companyId,
+    );
+    if (exists) {
+      throw new BusinessException({
+        type: BusinessExceptionType.DUPLICATE_CAR_NUMBER,
+      });
+    }
     const entity = CarMapper.toCreateEntity({
       ...body,
       companyId,
@@ -158,6 +168,15 @@ export class CarService extends BaseService implements ICarService {
 
     await this._unitOfWork.do(async (txRepos) => {
       for (const row of rows) {
+        const exists = await txRepos.car.findByCarNumber(
+          row.carNumber,
+          companyId,
+        );
+        if (exists) {
+          throw new BusinessException({
+            type: BusinessExceptionType.DUPLICATE_CAR_NUMBER,
+          });
+        }
         const entity = CarMapper.toCreateEntity({
           ...row,
           companyId,
