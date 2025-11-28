@@ -21,7 +21,7 @@ model User {
   createdAt      DateTime @default(now()) @db.Timestamptz(6)
   updatedAt      DateTime @updatedAt  @db.Timestamptz(6)
 
-  company   Company? @relation(fields: [companyId], references: [id])
+  company   Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId Int?
 
   contracts Contract[]
