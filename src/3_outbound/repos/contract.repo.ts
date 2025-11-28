@@ -16,6 +16,7 @@ import { ContractStatus } from "../../2_domain/entities/contract/contract.enum";
 import { ContractRecord } from "../../2_domain/entities/contract/contract.entity.util";
 import { ContractDocMapper } from "../mappers/contract-doc.mapper";
 import { ContractDocViewEntity } from "../../2_domain/entities/cotract-doc/contract-doc-view.entity";
+import { connect } from "http2";
 
 export type ContractDBForDocView = Prisma.ContractGetPayload<{
   include: {
@@ -94,7 +95,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
 
   async update(id: number, entity: ContractEntity) {
     try {
-      const { contract, meeting } = ContractMapper.toUpdateData(entity);
+      const { contract, meeting, contractDocuments } = ContractMapper.toUpdateData(entity);
 
       const data: any = {
         ...contract,
@@ -109,6 +110,13 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
         data.meeting = meeting;
       }
 
+      if(contractDocuments) {
+        data.documents = {
+          set: [],
+          connect: contractDocuments.map(d => ({id: d.id}))
+        }
+      }
+      
       const record = await this._prisma.contract.update({
         where: {
           id,
