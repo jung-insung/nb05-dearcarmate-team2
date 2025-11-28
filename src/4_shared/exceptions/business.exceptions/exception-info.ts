@@ -68,6 +68,7 @@ export enum BusinessExceptionType {
   CONTRACT_STATUS_CHANGED,
   CONTRACT_DATA_CHANGED,
   ALREADY_EXIST_EAMIL,
+  CONTRACT_NO_AUTHORITY,
 }
 
 export const BusinessExceptionTable: Record<
@@ -355,5 +356,9 @@ export const BusinessExceptionTable: Record<
   [BusinessExceptionType.NOT_ADMIN]: {
     statusCode: 403,
     message: "관리자가 아닙니다.",
+  },
+  [BusinessExceptionType.CONTRACT_NO_AUTHORITY]: {
+    statusCode: 403,
+    message: "담당 직원이 아닙니다.",
   },
 };

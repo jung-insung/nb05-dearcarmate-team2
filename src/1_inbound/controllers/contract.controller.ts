@@ -30,10 +30,12 @@ export class ContractController
 
   updateContract = async (req: Request, res: Response) => {
     const contractId = Number(req.params.id);
+    const userId = Number(req.userId);
     const body = req.body;
 
     const dto = this.validateOrThrow(updateContractReqSchema, { body });
     const result = await this._contractService.updateContract({
+      userId,
       contractId,
       dto,
     });
