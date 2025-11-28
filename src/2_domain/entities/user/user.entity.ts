@@ -34,7 +34,7 @@ export class UserEntity {
   private _employeeNumber: string;
   private _phoneNumber: string;
   private _password: string;
-  private _imageUrl?: string;
+  private _imageUrl?: string | null;
   private _isAdmin: boolean;
   private _version: number;
   private _refreshToken?: string;
@@ -48,7 +48,7 @@ export class UserEntity {
     email: string;
     employeeNumber: string;
     phoneNumber: string;
-    imageUrl?: string;
+    imageUrl?: string | null;
     isAdmin: boolean;
     password: string;
     version: number;
@@ -183,7 +183,7 @@ export class UserEntity {
     employeeNumber: string;
     phoneNumber: string;
     password: string;
-    imageUrl: string;
+    imageUrl: string | null;
     isAdmin: boolean;
     version: number;
   }): UpdateUserEntity {
