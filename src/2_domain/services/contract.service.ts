@@ -28,15 +28,22 @@ export class ContractService extends BaseService implements IContractService {
     super(unitOfWork);
   }
 
-  async updateContract(params: { contractId: number; dto: UpdateContractReq }) {
+  async updateContract(params: { userId: number; contractId: number; dto: UpdateContractReq }) {
     return await this._unitOfWork.do(
       async (txRepos) => {
+        
         const entity = await txRepos.contract.findById(params.contractId);
         if (!entity) {
           throw new BusinessException({
             type: BusinessExceptionType.CONTRACT_NOT_EXIST,
           });
         }
+
+        if (entity.userId !== params.userId) {
+        throw new BusinessException({
+          type: BusinessExceptionType.CONTRACT_NO_AUTHORITY,
+        });
+      }
 
         const { status: statusKey, ...restBody } = params.dto.body;
 
