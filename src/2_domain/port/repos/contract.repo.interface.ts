@@ -36,10 +36,6 @@ export interface IContractRepo {
 
   create(entity: ContractEntity): Promise<ContractEntity>;
 
-  getContractsForDocView(
-    pagination: ContractDocPagination,
-  ): Promise<ContractDocViewReturn>;
-
   getDraftContracts(): Promise<ContractDocViewEntity[]>;
 
   delete(id: number): Promise<void>;

@@ -110,10 +110,10 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
         data.meeting = meeting;
       }
 
-      if(contractDocuments) {
+      if (contractDocuments) {
         data.documents = {
           set: [],
-          connect: contractDocuments.map(d => ({id: d.id}))
+          connect: contractDocuments.map(d => ({ id: d.id }))
         }
       }
 
@@ -237,7 +237,9 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       take: pagination.pageSize,
       orderBy: { createdAt: "desc" },
     });
-    const totalItemCount = contracts.length;
+    const totalItemCount = await this._prisma.contract.count({
+      where: whereCondition,
+    });;
     const totalPages = Math.ceil(totalItemCount / pagination.pageSize);
 
     return {
@@ -325,7 +327,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
         },
       },
     });
-    
+
     return result._sum.contractPrice ?? 0;
   }
 
