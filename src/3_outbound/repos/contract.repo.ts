@@ -268,7 +268,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       where: {
         status: "CONTRACT_SUCCESSFUL",
         documents: {
-          some: {},
+          none: {},
         },
       },
       include: this._includeOptionForDoc,
