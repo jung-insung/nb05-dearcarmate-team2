@@ -26,6 +26,7 @@ export interface IContractService {
   }): Promise<any>;
 
   updateContract(params: {
+    userId:number;
     contractId: number;
     dto: UpdateContractReq;
   }): Promise<ContractResponseDto>;
