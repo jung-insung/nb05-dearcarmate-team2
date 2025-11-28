@@ -29,15 +29,26 @@ export class ContractService extends BaseService implements IContractService {
   }
 
   async updateContract(params: { userId: number; contractId: number; dto: UpdateContractReq }) {
+    console.log('[updateContract] called', {
+    userId: params.userId,
+    contractId: params.contractId,
+    body: params.dto.body,
+  });
     return await this._unitOfWork.do(
       async (txRepos) => {
-        
+
         const entity = await txRepos.contract.findById(params.contractId);
         if (!entity) {
           throw new BusinessException({
             type: BusinessExceptionType.CONTRACT_NOT_EXIST,
           });
         }
+        if (entity.userId !== params.userId) {
+          throw new BusinessException({
+            type: BusinessExceptionType.CONTRACT_NO_AUTHORITY,
+          });
+        }
+
         const { status: statusKey, ...restBody } = params.dto.body;
 
         const statusEnum = statusKey
@@ -48,7 +59,7 @@ export class ContractService extends BaseService implements IContractService {
           ...restBody,
           status: statusEnum,
         });
-        
+
         if (statusEnum) {
           const car = await txRepos.car.findById({
             companyId: entity.companyId,
