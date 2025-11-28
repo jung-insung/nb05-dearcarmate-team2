@@ -1,0 +1,120 @@
+sql
+
+DAYOFMONTH() 함수는 날짜값에서 일만 뽑아낼 수 있습니다. 
+날짜에서 며칠을 더하고 빼는 것도 가능한데요. 더하는 함수는 DATE_ADD(), 빼는 함수는 DATE_SUB()입니다.
+
+이스케이핑
+%\
+
+limit 8,2 -> 0번쨰부터 시작 해서 8은 9번쨰 row부터 2개를 가져온다.
+
+BINARY 대소문자 확실히 구분하고 싶을 때
+
+SELECT * 
+FROM sales 
+ORDER BY CAST(registration_num AS SIGNED);
+
+집계함수
+STD() 함수 - 표준편차
+ABS() 함수 - 절댓값을 구하는 함수
+SQRT() 함수 - 제곱근을 구하는 함수
+CEIL() 함수 - 올림 함수
+
+COALESCE 
+
+DISTINCT
+LENGTH() 함수는 문자열의 길이
+UPPER()는 문자열을 모두 대문자로 바꿔서 보여주는 함수이고, LOWER()는 문자열을 모두 소문자로 바꿔서 보여주는 함수입니다.
+LPAD는 LEFT(왼쪽) + PADDING(채우기)의 줄임말, RPAD는 RIGHT(오른쪽) + PADDING(채우기)의 줄임말인데요.
+GURU
+
+예를 들어 LPAD(age, 10, ’0’)는 age 컬럼의 값을, 왼쪽에 문자 0을 붙여서 총 10자리로 만드는 함수입니다. 보통 어떤 숫자의 자릿수를 맞출 때 자주 사용하는 함수입니다. 아래 그림을 보면 무슨 뜻인지 바로 이해할 수 있습니다.
+
+LTRIM() 함수는 왼쪽의 공백만, RTRIM() 함수는 오른쪽의 공백만, TRIM() 함수는 왼쪽, 오른쪽 양쪽 모두의 공백을 제거해서 보여줍니다.
+
+
+GROUP BY SUBSTRING(ADDRESS, 1, 2)  경기 서울 대전.. 이런식으로 그룹핑됨
+주요 지역(SUBSTRING(address, 1, 2) → region)
+
+
+WITH ROLLUP 부분 합계
+SELECT SUBSTRING(address, 1, 2) as region,
+       gender,
+       COUNT(*)
+FROM member
+GROUP BY SUBSTRING(address, 1, 2), gender WITH ROLLUP
+HAVING region IS NOT NULL
+ORDER BY region ASC, gender DESC;
+
+조인은 하나의 테이블로 만듧, 결합 연산은 공통 행을 가져오는 것
+
+결합 연산
+A ∩ B (INTERSECT 연산자 사용)
+A - B (MINUS 연산자 또는 EXCEPT 연산자 사용)
+A U B (UNION 연산자 사용)
+
+
+join on 에서 on의 id가 같으면 USING(id)로 할 수 있다.
+
+
+DESCRIBE
+
+굳이 테이블 전체 데이터를 조회하지 않고, 테이블의 컬럼 구조만 간단하게 파악하려면 DESCRIBE '테이블 이름;을 실행하면 됩니다.
+
+
+“커서”는 현재 페이지의 마지막 데이터 위치를 가리키는 값이에요.
+
+PostgreSQL은 LIKE 자체가 대소문자 구분, ILIKE는 대소문자 무시
+
+
+어떤 데이터베이스를 사용할 지 지정할 때
+USE course_rating; 
+
+DESCRIBE 컬럼 구조 타입 한번에 알아보기
+
+now() 현재 시간 저장
+
+constraint 제약 사항
+constraint 제약 이름 check ()
+ALTER TABLE book modify location SET default('warehouse');
+
+
+테이블 복사본
+CRATE AS
+CREATE LIKE - 구조만 복사
+
+TRUNCATE
+
+ SHOW CREATE TABLE
+
+cascade
+restrict
+set null
+
+개념상, 논리적으로 성립하는 Foreign Key를 논리적(Logical) Foreign Key라고 하고,
+DBMS 상에서 실제로 특정 컬럼을 Foreign Key로 설정해서 두 테이블 간의 참조 무결성을 보장할 수 있게 됐을 때, 그 컬럼을 물리적(Physical) Foreign Key라고 합니다.
+
+ 실무에서는 논리적 Foreign Key를 굳이 물리적 Foreign Key로 설정하지 않는 경우도 많습니다. 여러분이 혹시 실무에서 이런 현상을 발생하게 되더라도 당황하지 마시라고 알려드리는 건데요.
+
+
+
+1 Layer - 물리계층(Physical Layer)
+단순 데이터를 전기적인 신호로 변환(on/off)해서 주고받는 기능만 하며,
+케이블, 리피터, 허브를 통해 데이터를 전송합니다.
+2 Layer - 데이터 링크계층(DataLink Layer)
+물리계층을 통해 송수신되는 정보의 오류와 흐름을 관리하여 안전한 정보의 전달을 수행하도록 역할합니다.
+MAC주소를 가지고 통신을 합니다.
+3 Layer - 네트워크 계층(NetWork Layer)
+전송 데이터를 목적지까지 경로를 찾아 전송하는 계층입니다.주소(IP)를 정하고, 경로(route)를 선택하여 패킷을 전달하는 것이 핵심입니다.
+4 Layer - 전송 계층(Transport)
+데이터를 전송하고 전송 속도를 조절하며 오류가 발생된 부분은 다시 맞춰주며,
+주로 TCP프로토콜을 사용합니다.
+5 Layer - 세션 계층(Session)
+네트워크의 양쪽 연결을 관리하고 지속적으로 연결을 시켜줍니다.
+TCP/IP의 세션을 만들고 없애는 것을 반복합니다.
+6 Layer - 표현 계층(Presentation)
+응용계층으로부터 전달받거나 전송하는 데이터의 인코딩(언어처리) 및 디코딩이 이루어 집니다.
+JPEG,TIFF,GIF 등의 다양한 포멧을 지원합니다.
+7 Layer - 응용계층(Application)
+사용자가 네트워크에 접근할 수 있도록 도와줍니다.
+사용자에게 보이는 유일한 계층으로 메일전송/인터넷접속 등의 작업을 수행합니다.

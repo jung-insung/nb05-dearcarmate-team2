@@ -60,12 +60,6 @@ export class ContractDocService
         dto.query,
       );
 
-      if (foundContractDocs.data.length < 1) {
-        throw new BusinessException({
-          type: BusinessExceptionType.CONTRACTFORDOC_NOT_EXIST,
-        });
-      }
-
       return foundContractDocs;
     });
   }

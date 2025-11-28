@@ -43,7 +43,8 @@ export class ContractDocController extends BaseController {
     const draftContracts =
       await this._ContractDocService.getDraftContracts(reqDto);
 
-    const resDto = new DraftcontractsResDto(draftContracts);
+    const resDto = new DraftcontractsResDto(draftContracts).drafts;
+
     return res.json(resDto);
   };
 
