@@ -6,7 +6,6 @@ export const registerCarSchema = z.object({
   carNumber: z
     .string({ message: "차량번호는 문자열이어야 합니다." })
     .nonempty({ message: "차량번호는 필수 입력 항목입니다." })
-    .trim()
     .transform((v) => v.replace(/\s+/g, ""))
     .refine((v) => CAR_NUMBER_REGEX.test(v), {
       message: "차량번호 형식이 올바르지 않습니다.",
@@ -23,34 +22,27 @@ export const registerCarSchema = z.object({
 
   manufacturingYear: z
     .number({ message: "제조년도는 숫자여야 합니다." })
-    .int({ message: "제조년도는 정수여야 합니다." })
-    .gte(1975),
+    .int()
+    .gte(1975, { message: "제조년도는 1975년 이상이어야 합니다." }),
 
   mileage: z
     .number({ message: "주행거리는 숫자여야 합니다." })
-    .int({ message: "주행거리는 정수여야 합니다." })
+    .int()
     .nonnegative({ message: "주행거리는 0 이상이어야 합니다." }),
 
   price: z
     .number({ message: "가격은 숫자여야 합니다." })
-    .int({ message: "가격은 정수여야 합니다." })
+    .int()
     .nonnegative({ message: "가격은 0 이상이어야 합니다." }),
 
   accidentCount: z
     .number({ message: "사고 횟수는 숫자여야 합니다." })
-    .int({ message: "사고 횟수는 정수여야 합니다." })
+    .int()
     .nonnegative({ message: "사고 횟수는 0 이상이어야 합니다." })
     .default(0),
 
-  explanation: z
-    .string({ message: "설명은 문자열이어야 합니다." })
-    .trim()
-    .optional(),
-
-  accidentDetails: z
-    .string({ message: "사고 상세 정보는 문자열이어야 합니다." })
-    .trim()
-    .optional(),
+  explanation: z.string().trim().optional(),
+  accidentDetails: z.string().trim().optional(),
 });
 
 export const updateCarSchema = registerCarSchema
