@@ -1,8 +1,10 @@
 import { BusinessException } from "../exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../exceptions/business.exceptions/exception-info";
-import { RegisterCarReq, CAR_NUMBER_REGEX } from "../../1_inbound/requests/car-schema.request";
+import {
+  RegisterCarReq,
+  CAR_NUMBER_REGEX,
+} from "../../1_inbound/requests/car-schema.request";
 import { MODEL_TYPE_MAP } from "./car-type.util";
-
 
 function normalizeManufacturer(raw: string): string {
   const v = raw.trim().replace(/\s+/g, "");

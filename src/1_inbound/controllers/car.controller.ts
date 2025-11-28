@@ -25,23 +25,23 @@ export class CarController extends BaseController {
   };
 
   getCars = async (req: Request, res: Response) => {
-  const page = Number(req.query.page ?? 1);
-  const pageSize = Number(req.query.pageSize ?? 10);
+    const page = Number(req.query.page ?? 1);
+    const pageSize = Number(req.query.pageSize ?? 10);
 
-  const rawKeyword = req.query.keyword as string;
-  const cleanedKeyword = (rawKeyword ?? "").replace(/\s+/g, "");
+    const rawKeyword = req.query.keyword as string;
+    const cleanedKeyword = (rawKeyword ?? "").replace(/\s+/g, "");
 
-  const result = await this._carService.getCars({
-    userId: req.userId!,
-    page,
-    pageSize,
-    status: req.query.status as string,
-    searchBy: req.query.searchBy as "carNumber" | "model" | undefined,
-    keyword: cleanedKeyword,
-  });
+    const result = await this._carService.getCars({
+      userId: req.userId!,
+      page,
+      pageSize,
+      status: req.query.status as string,
+      searchBy: req.query.searchBy as "carNumber" | "model" | undefined,
+      keyword: cleanedKeyword,
+    });
 
-  return res.json(new CarListResDto(result));
-};
+    return res.json(new CarListResDto(result));
+  };
 
   getCar = async (req: Request, res: Response) => {
     const carId = Number(req.params.carId);
