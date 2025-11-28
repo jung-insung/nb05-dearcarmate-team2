@@ -17,6 +17,21 @@ export class CarService extends BaseService implements ICarService {
     super(unitOfWork);
   }
 
+  // 중복 차량번호 검사 공통 함수
+  private async _ensureCarNumberNotExists(carNumber: string, companyId: number) {
+    const exists = await this._unitOfWork.repos.car.findByCarNumber(
+      carNumber,
+      companyId,
+    );
+
+    if (exists) {
+      throw new BusinessException({
+        type: BusinessExceptionType.DUPLICATE_CAR_NUMBER,
+      });
+    }
+  }
+
+  // 차량 등록
   async registerCar(params: {
     body: RegisterCarReq;
     userId: number;
@@ -24,21 +39,13 @@ export class CarService extends BaseService implements ICarService {
     const { body, userId } = params;
     const companyId = await this._getCompanyId(userId);
 
-    const exists = await this._unitOfWork.repos.car.findByCarNumber(
-      body.carNumber,
-      companyId,
-    );
-    if (exists) {
-      throw new BusinessException({
-        type: BusinessExceptionType.DUPLICATE_CAR_NUMBER,
-      });
-    }
-    const entity = CarMapper.toCreateEntity({
-      ...body,
-      companyId,
-    });
+    await this._ensureCarNumberNotExists(body.carNumber, companyId);
+
+    const entity = CarMapper.toCreateEntity({ ...body, companyId });
     return await this._unitOfWork.repos.car.create(entity);
   }
+
+  // 리스트 조회
   async getCars(params: {
     userId: number;
     page: number;
@@ -49,14 +56,16 @@ export class CarService extends BaseService implements ICarService {
   }) {
     const { userId, page, pageSize, status, searchBy, keyword } = params;
     const companyId = await this._getCompanyId(userId);
+
     const mappedStatus =
       status === "possession"
         ? CarStatus.POSSESSION
         : status === "contractProceeding"
-          ? CarStatus.CONTRACT_PROCEEDING
-          : status === "contractCompleted"
-            ? CarStatus.CONTRACT_COMPLETED
-            : undefined;
+        ? CarStatus.CONTRACT_PROCEEDING
+        : status === "contractCompleted"
+        ? CarStatus.CONTRACT_COMPLETED
+        : undefined;
+
     const { items, totalItemCount } = await this._unitOfWork.repos.car.findMany(
       {
         companyId,
@@ -67,6 +76,7 @@ export class CarService extends BaseService implements ICarService {
         keyword,
       },
     );
+
     return {
       currentPage: page,
       totalPages: Math.ceil(totalItemCount / pageSize),
@@ -74,20 +84,23 @@ export class CarService extends BaseService implements ICarService {
       items,
     };
   }
+
+  // 단일 조회
   async getCar(params: { userId: number; carId: number }): Promise<CarEntity> {
     const { userId, carId } = params;
     const companyId = await this._getCompanyId(userId);
-    const car = await this._unitOfWork.repos.car.findById({
-      companyId,
-      carId,
-    });
+
+    const car = await this._unitOfWork.repos.car.findById({ companyId, carId });
     if (!car) {
       throw new BusinessException({
         type: BusinessExceptionType.CAR_NOT_EXIST,
       });
     }
+
     return car;
   }
+
+  // 차량 수정
   async updateCar(params: {
     body: UpdateCarReq;
     userId: number;
@@ -95,63 +108,71 @@ export class CarService extends BaseService implements ICarService {
   }): Promise<CarEntity> {
     const { body, userId, carId } = params;
     const companyId = await this._getCompanyId(userId);
+
     const existing = await this._unitOfWork.repos.car.findById({
       companyId,
       carId,
     });
+
     if (!existing) {
       throw new BusinessException({
         type: BusinessExceptionType.CAR_NOT_EXIST,
       });
     }
+
+    // 차량번호 변경 시 중복 검사
+    if (body.carNumber && body.carNumber !== existing.carNumber) {
+      await this._ensureCarNumberNotExists(body.carNumber, companyId);
+    }
+
     const updated = CarMapper.toUpdateEntity(existing, body);
     return await this._unitOfWork.repos.car.update(updated);
   }
+
+  // 삭제
   async deleteCar(params: { userId: number; carId: number }): Promise<void> {
     const { userId, carId } = params;
     const companyId = await this._getCompanyId(userId);
+
     const existing = await this._unitOfWork.repos.car.findById({
       companyId,
       carId,
     });
+
     if (!existing) {
       throw new BusinessException({
         type: BusinessExceptionType.CAR_NOT_EXIST,
       });
     }
+
     await this._unitOfWork.repos.car.delete({
       companyId,
       carId,
     });
   }
+
+  // 모델 목록
   async getCarModels() {
     return [
-      {
-        manufacturer: "기아",
-        model: ["K3", "K5", "K7", "K9", "K8"],
-      },
-      {
-        manufacturer: "현대",
-        model: ["그랜저", "아반떼", "소나타", "투싼", "베뉴"],
-      },
-      {
-        manufacturer: "쉐보레",
-        model: ["스파크", "말리부", "트랙스"],
-      },
+      { manufacturer: "기아", model: ["K3", "K5", "K7", "K9", "K8"] },
+      { manufacturer: "현대", model: ["그랜저", "아반떼", "소나타", "투싼", "베뉴"] },
+      { manufacturer: "쉐보레", model: ["스파크", "말리부", "트랙스"] },
     ];
   }
+
+  // CSV 업로드
   async uploadCars(params: { userId: number; req: any }): Promise<void> {
     const { userId, req } = params;
     const companyId = await this._getCompanyId(userId);
+
     const file = req.file;
     if (!file) {
       throw new BusinessException({
         type: BusinessExceptionType.CAR_UPLOAD_FILE_NOT_UPLOADED,
       });
     }
-    // multer 메모리 스토리지를 사용하므로 buffer 사용
-    const content = file.buffer?.toString("utf-8");
 
+    const content = file.buffer?.toString("utf-8");
     if (!content) {
       throw new BusinessException({
         type: BusinessExceptionType.CAR_UPLOAD_FILE_EMPTY,
@@ -160,27 +181,15 @@ export class CarService extends BaseService implements ICarService {
 
     const rows = CarCsvUtil.parse(content);
 
-    if (rows.length === 0) {
-      throw new BusinessException({
-        type: BusinessExceptionType.CAR_UPLOAD_NO_VALID_DATA,
-      });
-    }
-
     await this._unitOfWork.do(async (txRepos) => {
       for (const row of rows) {
-        const exists = await txRepos.car.findByCarNumber(
-          row.carNumber,
-          companyId,
-        );
-        if (exists) {
-          throw new BusinessException({
-            type: BusinessExceptionType.DUPLICATE_CAR_NUMBER,
-          });
-        }
+        await this._ensureCarNumberNotExists(row.carNumber, companyId);
+
         const entity = CarMapper.toCreateEntity({
           ...row,
           companyId,
         });
+
         await txRepos.car.create(entity);
       }
     }, false);
