@@ -26,11 +26,11 @@ export class CustomerController extends BaseController {
 
   getCustomers = async (req: Request, res: Response) => {
     const userId = req.userId!;
-
-    const query = this.validateOrThrow(getCustomersQuerySchema, {
-      query: req.query,
-    });
-
+    console.log("[Controller] raw req.query =", req.query);
+    const query = this.validateOrThrow(getCustomersQuerySchema, 
+     req.query,
+    );
+    console.log("[Controller] parsed query =", query);
     const { page, pageSize, searchBy, keyword } = query;
 
     const customers = await this._customerService.getCustomers({

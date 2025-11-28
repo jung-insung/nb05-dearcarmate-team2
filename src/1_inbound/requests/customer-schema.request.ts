@@ -116,7 +116,7 @@ export const getCustomersQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(8),
   searchBy: z.enum(["name", "email"]).optional(),
-  keyword: z.string().trim().min(1).optional(),
+  keyword: z.string().trim().optional(),
 });
 
 export type RegistCustomerReq = z.infer<typeof registCustomerSchema>;
