@@ -26,9 +26,9 @@ export class DashboardService extends BaseService implements IDashboardService {
 
     return this._unitOfWork.do(async (txRepos) => {
       const monthlySales =
-        await txRepos.contract.getMonthlySalesAggregates("current");
+        await txRepos.contract.getMonthlySalesAggregates(foundUser.companyId,"current");
       const lastMonthSales =
-        await txRepos.contract.getMonthlySalesAggregates("last");
+        await txRepos.contract.getMonthlySalesAggregates(foundUser.companyId, "last");
 
       const growthRate =
         lastMonthSales === 0
@@ -38,10 +38,10 @@ export class DashboardService extends BaseService implements IDashboardService {
           : ((monthlySales - lastMonthSales) / lastMonthSales) * 100;
 
       const { completedContractsCount, carTypeAggregates } =
-        await txRepos.contract.getSuccessfulContractAggregates();
+        await txRepos.contract.getSuccessfulContractAggregates(foundUser.companyId);
 
       const proceedingContractsCount =
-        await txRepos.contract.getProceedingContractAggregate();
+        await txRepos.contract.getProceedingContractAggregate(foundUser.companyId);
 
       const contractsByCarType: { carType: string; count: number }[] = [];
       const salesByCarType: { carType: string; count: number }[] = [];

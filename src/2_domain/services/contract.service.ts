@@ -55,7 +55,7 @@ export class ContractService extends BaseService implements IContractService {
           ...restBody,
           status: statusEnum,
         });
-
+        
         if (statusEnum) {
           const car = await txRepos.car.findById({
             companyId: entity.companyId,

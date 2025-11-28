@@ -143,6 +143,9 @@ export class ContractEntity {
     if (params.meetings !== undefined) {
       this.replaceMeetings(params.meetings);
     }
+    if(params.contractDocuments) {
+      this._contractDocuments = params.contractDocuments;
+    }
   }
 
   private replaceMeetings(meetingParams: NewMeetingParams[]) {

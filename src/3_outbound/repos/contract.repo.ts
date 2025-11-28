@@ -16,6 +16,7 @@ import { ContractStatus } from "../../2_domain/entities/contract/contract.enum";
 import { ContractRecord } from "../../2_domain/entities/contract/contract.entity.util";
 import { ContractDocMapper } from "../mappers/contract-doc.mapper";
 import { ContractDocViewEntity } from "../../2_domain/entities/cotract-doc/contract-doc-view.entity";
+import { connect } from "http2";
 
 export type ContractDBForDocView = Prisma.ContractGetPayload<{
   include: {
@@ -94,7 +95,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
 
   async update(id: number, entity: ContractEntity) {
     try {
-      const { contract, meeting } = ContractMapper.toUpdateData(entity);
+      const { contract, meeting, contractDocuments } = ContractMapper.toUpdateData(entity);
 
       const data: any = {
         ...contract,
@@ -107,6 +108,13 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
 
       if (meeting) {
         data.meeting = meeting;
+      }
+
+      if(contractDocuments) {
+        data.documents = {
+          set: [],
+          connect: contractDocuments.map(d => ({id: d.id}))
+        }
       }
 
       const record = await this._prisma.contract.update({
@@ -293,7 +301,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     }
   }
 
-  async getMonthlySalesAggregates(month: string): Promise<number> {
+  async getMonthlySalesAggregates(companyId: number, month: string): Promise<number> {
     const now = new Date();
     let startOfMonth: Date;
     let endOfMonth: Date;
@@ -309,6 +317,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     const result = await this._prisma.contract.aggregate({
       _sum: { contractPrice: true },
       where: {
+        companyId,
         status: "CONTRACT_SUCCESSFUL",
         resolutionDate: {
           gte: startOfMonth,
@@ -316,13 +325,14 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
         },
       },
     });
-
+    
     return result._sum.contractPrice ?? 0;
   }
 
-  async getSuccessfulContractAggregates(): Promise<SuccessfulContractAggregates> {
+  async getSuccessfulContractAggregates(companyId: number): Promise<SuccessfulContractAggregates> {
     const successContracts = await this._prisma.contract.count({
       where: {
+        companyId,
         status: "CONTRACT_SUCCESSFUL",
       },
     });
@@ -341,6 +351,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       FROM "Contract" AS c
       JOIN "Car" AS c2 ON c."carId" = c2.id
       WHERE c.status = 'contractSuccessful'
+        AND c."companyId" = ${companyId}
       GROUP BY c2.type;
     `;
 
@@ -350,9 +361,10 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     };
   }
 
-  async getProceedingContractAggregate(): Promise<number> {
+  async getProceedingContractAggregate(companyId: number): Promise<number> {
     const proceedingContracts = await this._prisma.contract.count({
       where: {
+        companyId,
         status: {
           in: ["CAR_INSPECTION", "CONTRACT_DRAFT", "PRICE_NEGOTIATION"],
         },

@@ -36,7 +36,7 @@ export class CarController extends BaseController {
       page,
       pageSize,
       status: req.query.status as string,
-      searchBy: req.query.searchBy as any,
+      searchBy: req.query.searchBy as "carNumber" | "model" | undefined,
       keyword: cleanedKeyword,
     });
 

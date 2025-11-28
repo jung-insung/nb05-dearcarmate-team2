@@ -1,38 +1,20 @@
 import { BusinessException } from "../exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../exceptions/business.exceptions/exception-info";
-import { RegisterCarReq } from "../../1_inbound/requests/car-schema.request";
+import {
+  RegisterCarReq,
+  CAR_NUMBER_REGEX,
+} from "../../1_inbound/requests/car-schema.request";
+import { MODEL_TYPE_MAP } from "./car-type.util";
 
-// 모델 => 타입
-const MODEL_TYPE_MAP: Record<string, string> = {
-  K5: "세단",
-  K7: "세단",
-  K3: "세단",
-  K8: "세단",
-  K9: "세단",
-  그랜저: "세단",
-  아반떼: "세단",
-  소나타: "세단",
-  스파크: "경차",
-  모닝: "경차",
-  투싼: "SUV",
-  스포티지: "SUV",
-  싼타페: "SUV",
-};
-
-// 제조사
 function normalizeManufacturer(raw: string): string {
   const v = raw.trim().replace(/\s+/g, "");
-
-  if (["기아", "현대", "쉐보레"].includes(v)) {
-    return v;
-  }
+  if (["기아", "현대", "쉐보레"].includes(v)) return v;
 
   throw new BusinessException({
     type: BusinessExceptionType.INVALID_MANUFACTURER,
   });
 }
 
-// 문자열 => 숫자로
 function toNumber(value: string, errorType: BusinessExceptionType): number {
   const n = Number(value);
   if (Number.isNaN(n)) throw new BusinessException({ type: errorType });
@@ -88,7 +70,7 @@ export class CarCsvUtil {
         });
       }
 
-      const [
+      let [
         carNumber,
         rawManufacturer,
         model,
@@ -100,7 +82,15 @@ export class CarCsvUtil {
         accidentDetails,
       ] = row.map((v) => v.trim());
 
-      // 개별 필드 검증
+      // 차량번호 공백 제거 + 형식 검증 추가
+      const cleanedCarNumber = carNumber.replace(/\s+/g, "");
+
+      if (!CAR_NUMBER_REGEX.test(cleanedCarNumber)) {
+        throw new BusinessException({
+          type: BusinessExceptionType.INVALID_CAR_NUMBER,
+        });
+      }
+
       const manufacturer = normalizeManufacturer(rawManufacturer);
 
       const manufacturingYear = toNumber(
@@ -112,6 +102,7 @@ export class CarCsvUtil {
         BusinessExceptionType.INVALID_MILEAGE,
       );
       const price = toNumber(priceStr, BusinessExceptionType.INVALID_PRICE);
+
       const accidentCount = toNumber(
         accidentStr || "0",
         BusinessExceptionType.INVALID_ACCIDENTCOUNT,
@@ -120,7 +111,7 @@ export class CarCsvUtil {
       const type = MODEL_TYPE_MAP[model] ?? "세단";
 
       result.push({
-        carNumber,
+        carNumber: cleanedCarNumber,
         manufacturer,
         model,
         manufacturingYear,

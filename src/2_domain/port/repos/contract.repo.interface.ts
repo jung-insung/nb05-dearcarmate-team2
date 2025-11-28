@@ -44,9 +44,9 @@ export interface IContractRepo {
 
   delete(id: number): Promise<void>;
 
-  getMonthlySalesAggregates(month: string): Promise<number>;
+  getMonthlySalesAggregates(companyId: number, month: string): Promise<number>;
 
-  getSuccessfulContractAggregates(): Promise<SuccessfulContractAggregates>;
+  getSuccessfulContractAggregates(companyId: number): Promise<SuccessfulContractAggregates>;
 
-  getProceedingContractAggregate(): Promise<number>;
+  getProceedingContractAggregate(companyId: number): Promise<number>;
 }

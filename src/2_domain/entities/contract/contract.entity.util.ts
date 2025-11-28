@@ -47,6 +47,7 @@ export interface ContractUpdateEn {
   resolutionDate?: Date | string | null;
   contractPrice?: number;
   meetings?: NewMeetingParams[];
+  contractDocuments?: ContractDocumentEn[];
 }
 
 export type NewContractEn = Omit<
