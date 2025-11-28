@@ -116,7 +116,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
           connect: contractDocuments.map(d => ({id: d.id}))
         }
       }
-      
+
       const record = await this._prisma.contract.update({
         where: {
           id,
@@ -325,7 +325,7 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
         },
       },
     });
-
+    
     return result._sum.contractPrice ?? 0;
   }
 
