@@ -79,7 +79,16 @@
     - 페이지네이션 가능
 - 대시보드
   - 이 달의 매출, 지난 달의 매출, 계약 수, 성사된 계약 수, 차량타입별 계약수, 차량타입별 매출액을 표시
-  
+<p align="center">
+  <img src="image-3.png" style="width:49%; height:auto; object-fit:cover;"/>
+  <img src="image-4.png" style="width:49%; height:auto; object-fit:cover;"/>
+</p>
+
+<p align="center">
+  <img src="image-2.png" style="width:49%; height:auto; object-fit:cover;"/>
+  <img src="image.png" style="width:49%; height:auto; object-fit:cover;"/>
+</p>
+
 ---
 
 ### 🟥 최지혜
