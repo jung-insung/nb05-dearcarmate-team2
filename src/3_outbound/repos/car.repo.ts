@@ -72,11 +72,11 @@ export class CarRepo extends BaseRepo implements ICarRepo {
     };
   }
   async findByCarNumber(carNumber: string, companyId: number) {
-  const record = await this._prisma.car.findFirst({
-    where: { carNumber, companyId },
-  });
-  return record ? CarEntity.fromPersistence(record) : null;
-}
+    const record = await this._prisma.car.findFirst({
+      where: { carNumber, companyId },
+    });
+    return record ? CarEntity.fromPersistence(record) : null;
+  }
 
   async update(entity: CarEntity): Promise<CarEntity> {
     const data = entity.toUpdateData();

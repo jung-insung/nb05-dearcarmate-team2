@@ -18,7 +18,10 @@ export class CarService extends BaseService implements ICarService {
   }
 
   // 중복 차량번호 검사 공통 함수
-  private async _ensureCarNumberNotExists(carNumber: string, companyId: number) {
+  private async _ensureCarNumberNotExists(
+    carNumber: string,
+    companyId: number,
+  ) {
     const exists = await this._unitOfWork.repos.car.findByCarNumber(
       carNumber,
       companyId,
@@ -61,10 +64,10 @@ export class CarService extends BaseService implements ICarService {
       status === "possession"
         ? CarStatus.POSSESSION
         : status === "contractProceeding"
-        ? CarStatus.CONTRACT_PROCEEDING
-        : status === "contractCompleted"
-        ? CarStatus.CONTRACT_COMPLETED
-        : undefined;
+          ? CarStatus.CONTRACT_PROCEEDING
+          : status === "contractCompleted"
+            ? CarStatus.CONTRACT_COMPLETED
+            : undefined;
 
     const { items, totalItemCount } = await this._unitOfWork.repos.car.findMany(
       {
@@ -155,7 +158,10 @@ export class CarService extends BaseService implements ICarService {
   async getCarModels() {
     return [
       { manufacturer: "기아", model: ["K3", "K5", "K7", "K9", "K8"] },
-      { manufacturer: "현대", model: ["그랜저", "아반떼", "소나타", "투싼", "베뉴"] },
+      {
+        manufacturer: "현대",
+        model: ["그랜저", "아반떼", "소나타", "투싼", "베뉴"],
+      },
       { manufacturer: "쉐보레", model: ["스파크", "말리부", "트랙스"] },
     ];
   }
