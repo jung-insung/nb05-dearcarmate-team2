@@ -6,6 +6,15 @@ import { RepoFactory } from "./repo-factory";
 import { TechnicalException } from "../4_shared/exceptions/technical.exceptions/technical.exception";
 import { TechnicalExceptionType } from "../4_shared/exceptions/technical.exceptions/exception-info";
 
+export type TransactionOptions =
+  | {
+    useTransaction: false;
+  }
+  | {
+    useTransaction: true;
+    isolationLevel: "ReadCommitted" | "RepeatableRead" | "Serializable";
+  };
+
 export class UnitOfWork implements IUnitOfWork {
   private _repos: IRepos;
 
@@ -24,24 +33,23 @@ export class UnitOfWork implements IUnitOfWork {
   async do<T>(
     work: (repos: IRepos) => Promise<T>,
     isOptimistic: boolean = true,
-    isTransaction: boolean = false,
-    isolationLevel:
-      | "ReadCommitted"
-      | "RepeatableRead"
-      | "Serializable" = "ReadCommitted",
+    isTransaction: TransactionOptions = {
+      useTransaction: false
+    }
   ): Promise<T> {
     let lastErr: unknown;
 
     const maxRetries = isOptimistic
       ? this._configUtil.getParsed().MAX_RETRIES
-      : 1;
+      : 0;
+
 
     for (let i = 0; i <= maxRetries; i++) {
       if (i > 0) {
         console.warn(`재시도 ${i}/${maxRetries}회차`);
       }
       try {
-        if (!isTransaction) {
+        if (!isTransaction.useTransaction) {
           return await work(this.repos);
         }
 
@@ -51,7 +59,9 @@ export class UnitOfWork implements IUnitOfWork {
             return await work(txRepos);
           },
           {
-            isolationLevel,
+            isolationLevel: isTransaction.isolationLevel,
+            maxWait: 5000,
+            timeout: 5000,
           },
         );
       } catch (err) {

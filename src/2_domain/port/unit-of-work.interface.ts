@@ -1,3 +1,4 @@
+import { TransactionOptions } from "../../3_outbound/unit-of-work";
 import { IRepos } from "./repos/repos.interface";
 
 export interface IUnitOfWork {
@@ -6,7 +7,6 @@ export interface IUnitOfWork {
   do<T>(
     work: (txRepos: IRepos) => Promise<T>,
     isOptimistic?: boolean,
-    isTransaction?: boolean,
-    isolationLevel?: "ReadCommitted" | "RepeatableRead" | "Serializable",
+    isTransaction?: TransactionOptions,
   ): Promise<T>;
 }
