@@ -1,3 +1,4 @@
+import { IContractDocService } from "../../1_inbound/port/services/contractDoc.service.interface";
 import {
   ContractDocDownloadReqDto,
   ContractDocDraftListReqDto,
@@ -14,21 +15,6 @@ import {
 } from "../entities/cotract-doc/contract-doc.entity";
 import { IUnitOfWork } from "../port/unit-of-work.interface";
 import { BaseService } from "./base.service";
-
-export interface IContractDocService {
-  getContractForDocView(
-    dto: ContractDocListReqDto,
-  ): Promise<ContractDocViewReturn>;
-  getDraftContracts(
-    dto: ContractDocDraftListReqDto,
-  ): Promise<ContractDocViewEntity[]>;
-  uploadContractDoc(
-    dto: ContractDocUploadReqDto,
-  ): Promise<PersistContractDocEntity>;
-  downloadcontractDocs(
-    dto: ContractDocDownloadReqDto,
-  ): Promise<PersistContractDocEntity>;
-}
 
 export type ContractDocPagination = {
   page: number;
@@ -47,8 +33,7 @@ export class ContractDocService
   async getContractForDocView(
     dto: ContractDocListReqDto,
   ): Promise<ContractDocViewReturn> {
-    return this._unitOfWork.do(async (repos) => {
-      const foundUser = await repos.user.findUserById(dto.userId);
+      const foundUser = await this._unitOfWork.repos.user.findUserById(dto.userId);
 
       if (!foundUser) {
         throw new BusinessException({
@@ -56,19 +41,17 @@ export class ContractDocService
         });
       }
 
-      const foundContractDocs = await repos.contract.getContractsForDocView(
+      const foundContractDocs = await this._unitOfWork.repos.contract.getContractsForDocView(
         dto.query,
       );
 
       return foundContractDocs;
-    });
   }
 
   async getDraftContracts(
     dto: ContractDocDraftListReqDto,
   ): Promise<ContractDocViewEntity[]> {
-    return this._unitOfWork.do(async (repos) => {
-      const foundUser = await repos.user.findUserById(dto.userId);
+      const foundUser = await this._unitOfWork.repos.user.findUserById(dto.userId);
 
       if (!foundUser) {
         throw new BusinessException({
@@ -76,10 +59,9 @@ export class ContractDocService
         });
       }
 
-      const foundContractDocs = await repos.contract.getDraftContracts();
+      const foundContractDocs = await this._unitOfWork.repos.contract.getDraftContracts();
 
       return foundContractDocs;
-    });
   }
 
   async uploadContractDoc(
@@ -102,14 +84,16 @@ export class ContractDocService
       const contractDoc = await repos.contractDoc.create(NewContractDoc);
 
       return contractDoc;
+    },false,{
+      useTransaction: true,
+      isolationLevel: "ReadCommitted"
     });
   }
 
   async downloadcontractDocs(
     dto: ContractDocDownloadReqDto,
   ): Promise<PersistContractDocEntity> {
-    return this._unitOfWork.do(async (repos) => {
-      const foundUser = await repos.user.findUserById(dto.userId);
+      const foundUser = await this._unitOfWork.repos.user.findUserById(dto.userId);
 
       if (!foundUser) {
         throw new BusinessException({
@@ -117,7 +101,7 @@ export class ContractDocService
         });
       }
 
-      const foundContractDoc = await repos.contractDoc.findContractDocById(
+      const foundContractDoc = await this._unitOfWork.repos.contractDoc.findContractDocById(
         dto.params.contractDocId,
       );
 
@@ -128,6 +112,5 @@ export class ContractDocService
       }
 
       return foundContractDoc;
-    });
   }
 }

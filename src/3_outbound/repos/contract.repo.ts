@@ -237,9 +237,11 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
       take: pagination.pageSize,
       orderBy: { createdAt: "desc" },
     });
+
     const totalItemCount = await this._prisma.contract.count({
       where: whereCondition,
     });;
+    
     const totalPages = Math.ceil(totalItemCount / pagination.pageSize);
 
     return {
