@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { ICompanyController } from "../port/controllers/company.controller.interface";
 import { ICompanyService } from "../port/services/company.service.interface";
 import { BaseController } from "./base.controller";
 import {
@@ -12,7 +11,6 @@ import {
 
 export class CompanyController
   extends BaseController
-  implements ICompanyController
 {
   constructor(private _companyService: ICompanyService) {
     super();

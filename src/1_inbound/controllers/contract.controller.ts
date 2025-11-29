@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { BaseController } from "./base.controller";
 import { IContractService } from "../port/services/contract.service.interface";
-import { IContractController } from "../port/controllers/contract.controller.interface";
 import {
   createContractReqSchema,
   getContractListReqSchema,
@@ -11,7 +10,6 @@ import {
 
 export class ContractController
   extends BaseController
-  implements IContractController
 {
   constructor(private _contractService: IContractService) {
     super();
