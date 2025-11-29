@@ -9,12 +9,7 @@ import {
 import { LoginUserResDto } from "../responses/auth/login-user.res.dto";
 import { RefreshAccessTokenResDto } from "../responses/auth/refresh-acess-token.res.dto";
 
-export interface IAuthController {
-  login: ControllerHandler;
-  refreshAccessToken: ControllerHandler;
-}
-
-export class AuthController extends BaseController implements IAuthController {
+export class AuthController extends BaseController {
   constructor(private _authService: IAuthService) {
     super();
   }
