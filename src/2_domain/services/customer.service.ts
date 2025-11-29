@@ -122,8 +122,6 @@ export class CustomerService extends BaseService implements ICustomerService {
           throw err;
         }
       },
-      true,
-      false,
     );
   }
 
