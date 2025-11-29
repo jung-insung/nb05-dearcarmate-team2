@@ -16,7 +16,7 @@ import { AuthRouter } from "./1_inbound/routers/auth.router";
 import { ContractDocRouter } from "./1_inbound/routers/contract-doc.router";
 import { ImageRouter } from "./1_inbound/routers/image.router";
 import { DashBoardRouter } from "./1_inbound/routers/dashboard.router";
-import path from "path";
+import { StaticFileMiddleware } from "./1_inbound/middlewares/static-file.middleware";
 
 export class Server {
   private _app;
@@ -37,6 +37,7 @@ export class Server {
     private _jsonMiddleware: JsonMiddleware,
     private _notFoundMiddleware: NotFoundMiddleware,
     private _globalErrorMiddleware: GlobalErrorMiddleware,
+    private _staticFileMiddleware: StaticFileMiddleware,
   ) {
     this._app = express();
   }
@@ -53,12 +54,7 @@ export class Server {
     this._app.use(this._corsMiddleware.handler());
     this._app.use(this._loggerMiddleware.handler());
     this._app.use(this._jsonMiddleware.handler());
-
-    // 정적 파일 서빙 추가
-    this._app.use(
-      "/uploads",
-      express.static(path.join(__dirname, "../public")),
-    );
+    this._app.use(this._staticFileMiddleware.basePath, this._staticFileMiddleware.handler());
 
     // routers
     this._app.use(this._authRouter.basePath, this._authRouter.router);

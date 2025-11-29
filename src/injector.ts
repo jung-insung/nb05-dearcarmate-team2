@@ -50,6 +50,7 @@ import { ImageRouter } from "./1_inbound/routers/image.router";
 import { DashboardService } from "./2_domain/services/dashboard.service";
 import { DashboardController } from "./1_inbound/controllers/dashboard.controller";
 import { DashBoardRouter } from "./1_inbound/routers/dashboard.router";
+import { StaticFileMiddleware } from "./1_inbound/middlewares/static-file.middleware";
 
 export class Injector {
   private _server: Server;
@@ -76,6 +77,7 @@ export class Injector {
     const notFoundMiddleware = new NotFoundMiddleware();
     const authMiddleware = new AuthMiddleware(tokenUtil);
     const fileUploadMiddleware = new FileUploadMiddleware();
+    const staticFileMiddleware = new StaticFileMiddleware("/uploads", "../../../public");
 
     const repoFactory = new RepoFactory({
       user: (prisma) => new UserRepo(prisma),
@@ -154,6 +156,7 @@ export class Injector {
       jsonMiddleware,
       notFoundMiddleware,
       globalErrorMiddleware,
+      staticFileMiddleware,
     );
   }
 }
