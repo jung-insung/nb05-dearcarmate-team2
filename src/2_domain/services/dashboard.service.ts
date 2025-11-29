@@ -1,13 +1,10 @@
+import { IDashboardService } from "../../1_inbound/port/services/dashboard.service.interface";
 import { getDashboardDataReqDto } from "../../1_inbound/requests/dashboard-shema.request";
 import { BusinessException } from "../../4_shared/exceptions/business.exceptions/business.exception";
 import { BusinessExceptionType } from "../../4_shared/exceptions/business.exceptions/exception-info";
 import { DashBoardViewEntity } from "../entities/dashboard/dashboard-view.entity";
 import { IUnitOfWork } from "../port/unit-of-work.interface";
 import { BaseService } from "./base.service";
-
-export interface IDashboardService {
-  getData(dto: getDashboardDataReqDto): Promise<DashBoardViewEntity>;
-}
 
 export class DashboardService extends BaseService implements IDashboardService {
   constructor(unitOfwork: IUnitOfWork) {
@@ -68,6 +65,9 @@ export class DashboardService extends BaseService implements IDashboardService {
       });
 
       return dashboard;
+    },false, {
+      useTransaction: true,
+      isolationLevel: "RepeatableRead"
     });
   }
 }
