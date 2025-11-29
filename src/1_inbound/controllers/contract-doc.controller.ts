@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { BaseController } from "./base.controller";
-import { IContractDocService } from "../../2_domain/services/contract-doc.service";
 import {
   contractDocDownLoadReqSchema,
   contractDocDraftListReqSchema,
@@ -11,6 +10,7 @@ import { contractDocListResDto } from "../responses/contract-doc/contract-doc-li
 import { DraftcontractsResDto } from "../responses/contract-doc/draft-contracts.res.dto";
 import { UploadContractDocResDto } from "../responses/contract-doc/upload-contract-doc.res.dto";
 import path from "path";
+import { IContractDocService } from "../port/services/contractDoc.service.interface";
 
 export class ContractDocController extends BaseController {
   constructor(private _ContractDocService: IContractDocService) {

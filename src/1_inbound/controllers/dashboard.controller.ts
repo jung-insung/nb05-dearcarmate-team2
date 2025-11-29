@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { IDashboardService } from "../../2_domain/services/dashboard.service";
 import { getDashboardDataReqSchema } from "../requests/dashboard-shema.request";
 import { BaseController } from "./base.controller";
 import { DashboardDataResDto } from "../responses/dashboard/dashboardData.res.dto";
+import { IDashboardService } from "../port/services/dashboard.service.interface";
 
 export class DashboardController extends BaseController {
   constructor(private _dashboardService: IDashboardService) {
