@@ -1,8 +1,8 @@
-import { IAuthController } from "../controllers/auth.controller";
+import { AuthController } from "../controllers/auth.controller";
 import { BaseRouter } from "./base.router";
 
 export class AuthRouter extends BaseRouter {
-  constructor(private _authController: IAuthController) {
+  constructor(private _authController: AuthController) {
     super("/auth");
     this.registerAuthRouter();
   }

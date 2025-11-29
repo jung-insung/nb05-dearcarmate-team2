@@ -1,10 +1,10 @@
 import { BaseRouter } from "./base.router";
-import { ICompanyController } from "../port/controllers/company.controller.interface";
 import { AuthMiddleware } from "../middlewares/auth.middleware";
+import { CompanyController } from "../controllers/company.controller";
 
 export class CompanyRouter extends BaseRouter {
   constructor(
-    private _companyController: ICompanyController,
+    private _companyController: CompanyController,
     private _authMiddleware: AuthMiddleware,
   ) {
     super("/companies");

@@ -12,14 +12,7 @@ import { UpdateUserResDto } from "../responses/user/update.user.res.dto";
 import { DeleteUserReqDto } from "../responses/user/delete.user.res.dto";
 import { GetUserResDto } from "../responses/user/get.user.res.dto";
 
-export interface IUserController {
-  signUpUserController: ControllerHandler;
-  updateUserController: ControllerHandler;
-  getUserController: ControllerHandler;
-  deleteUserController: ControllerHandler;
-}
-
-export class UserController extends BaseController implements IUserController {
+export class UserController extends BaseController {
   constructor(private _userService: IUserService) {
     super();
   }
