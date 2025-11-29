@@ -123,7 +123,10 @@ export class ContractService extends BaseService implements IContractService {
         }
       },
       true,
-      true,
+      {
+        useTransaction: true,
+        isolationLevel: "ReadCommitted"
+      },
     );
   }
 
@@ -276,7 +279,10 @@ export class ContractService extends BaseService implements IContractService {
         });
       },
       true,
-      true,
+      {
+        useTransaction: true,
+        isolationLevel: "ReadCommitted"
+      },
     );
   }
 
@@ -317,7 +323,10 @@ export class ContractService extends BaseService implements IContractService {
         await repos.contract.delete(contractId);
       },
       true,
-      true,
+      {
+        useTransaction: true,
+        isolationLevel: "ReadCommitted"
+      },
     );
   }
 }
