@@ -8,6 +8,8 @@
 | ---------- | ----------- | ------------------------------------------------------------ | ---------------------------------------------------------------- |
 | **김경연** | 백엔드 개발 | 🔗 [GitHub](개인 Github 링크)                                | -                                                                  |
 | **오창섭** | 백엔드 개발 | 🔗 [GitHub](https://github.com/GhostGN95)                    | 🔗 []()                                                         |
+| **김경연** | 백엔드 개발 | 🔗 [GitHub]https://github.com/gyeongyeonkmy/study            | 🔗 [https://velog.io/@gyeongyeonk/posts]-                        |
+| **오창섭** | 백엔드 개발 | 🔗 [GitHub](개인 Github 링크)                                | -                                                                |
 | **정인성** | 백엔드 개발 | 🔗 [GitHub](https://github.com/jung-insung?tab=repositories) | 🔗 [insungcoding.tistory.com](https://insungcoding.tistory.com/) |
 | **최지혜** | 백엔드 개발 | 🔗 [GitHub](https://github.com/918-jihye?tab=repositories) | [노션](https://www.notion.so/CODE-IT-_-259bc88351b78087b0b0dd3e68ac20d5) |
 
@@ -39,7 +41,26 @@
 
 ### 🟦 김경연
 
-(자신이 개발한 기능에 대한 사진이나 gif 파일 첨부)
+- 고객 정보 관리 기능
+  - 고객 등록: 고객의 신상을 간단한 메모와 함께 입력하여 고객 등록 가능
+  - 고객 수정: 회사 내 고객 정보 수정
+  - 고객 삭제: 회사 내 고객 정보 삭제
+  - 고객 목록 조회
+    - 등록된 고객 정보 목록 확인
+    - 페이지네이션
+    - 고객명, 이메일로 검색 가능
+  - 대용량 업로드: csv 파일을 검증하여 고객 데이터 대용량 업로드 가능
+
+- 계약 수정 기능
+  - 계약 상태 수정: 계약 진행 현황(차량 확인, 가격 협의, 계약 성사 여부)에 따라 차량 정보 조회 시 차량의 거래 상태, 고객 정보 조회 시 고객의 계약 횟수가 반영됨
+  - 계약 세부 내용 수정: 차량, 고객, 가격, 미팅 일정을 수정할 수 있음
+
+  ![고객 목록](./public/customer_list.png)
+  ![고객 등록](./public/customer_create.png)
+  ![고객 상세 정보](./public/customer_detail.png)
+  ![고객 수정](./public/customer_edit.png)
+  ![고객 삭제](./public/customer_delete.png)
+  ![계약 수정](./public/contract.png)
 
 ---
 
