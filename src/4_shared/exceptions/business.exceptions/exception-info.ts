@@ -238,23 +238,23 @@ export const BusinessExceptionTable: Record<
   },
   [BusinessExceptionType.CUSTOMER_CSV_INVALID_GENDER]: {
     statusCode: 400,
-    message: "gender 데이터 형식이 올바르지 않습니다.",
+    message: "성별 형식이 올바르지 않습니다.",
   },
   [BusinessExceptionType.CUSTOMER_CSV_INVALID_AGEGROUP]: {
     statusCode: 400,
-    message: "agegroup 데이터 형식이 올바르지 않습니다.",
+    message: "나이 형식이 올바르지 않습니다.",
   },
   [BusinessExceptionType.CUSTOMER_CSV_INVALID_REGION]: {
     statusCode: 400,
-    message: "region 데이터 형식이 올바르지 않습니다.",
+    message: "지역 형식이 올바르지 않습니다.",
   },
   [BusinessExceptionType.CUSTOMER_CSV_INVALID_NAME]: {
     statusCode: 400,
-    message: "name 데이터 형식이 올바르지 않습니다.",
+    message: "이름 형식이 올바르지 않습니다.",
   },
   [BusinessExceptionType.CUSTOMER_CSV_INVALID_EMAIL]: {
     statusCode: 400,
-    message: "email 데이터 형식이 올바르지 않습니다.",
+    message: "이메일 형식이 올바르지 않습니다.",
   },
   [BusinessExceptionType.CUSTOMER_CSV_INVALID_PHONENUMBER]: {
     statusCode: 400,
