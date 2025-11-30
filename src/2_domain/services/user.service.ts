@@ -113,10 +113,15 @@ export class UserService extends BaseService implements IUserService {
           type: BusinessExceptionType.USER_NOT_EXIST,
         });
       }
-      if(!await foundUser.isPasswordMatch(body.currentPassword, this._bcryptHashManager)){
+      if (
+        !(await foundUser.isPasswordMatch(
+          body.currentPassword,
+          this._bcryptHashManager,
+        ))
+      ) {
         throw new BusinessException({
-          type: BusinessExceptionType.PASSWORD_MISMATCH
-        })
+          type: BusinessExceptionType.PASSWORD_MISMATCH,
+        });
       }
       let updatedPassword: string | undefined;
 

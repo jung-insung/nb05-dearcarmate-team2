@@ -85,9 +85,9 @@ export const updateUserReqSchema = z.object({
       .optional(),
 
     imageUrl: z
-      .string({ message: "이미지url이 문자열이 아닙니다."})
+      .string({ message: "이미지url이 문자열이 아닙니다." })
       .url({ message: "이미지url 형식이 아닙니다." })
-      .nullable()
+      .nullable(),
   }),
 });
 

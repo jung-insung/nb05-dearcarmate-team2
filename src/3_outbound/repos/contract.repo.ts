@@ -95,7 +95,8 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
 
   async update(id: number, entity: ContractEntity) {
     try {
-      const { contract, meeting, contractDocuments } = ContractMapper.toUpdateData(entity);
+      const { contract, meeting, contractDocuments } =
+        ContractMapper.toUpdateData(entity);
 
       const data: any = {
         ...contract,
@@ -305,7 +306,10 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     }
   }
 
-  async getMonthlySalesAggregates(companyId: number, month: string): Promise<number> {
+  async getMonthlySalesAggregates(
+    companyId: number,
+    month: string,
+  ): Promise<number> {
     const now = new Date();
     let startOfMonth: Date;
     let endOfMonth: Date;
@@ -333,7 +337,9 @@ export class ContractRepo extends BaseRepo implements IContractRepo {
     return result._sum.contractPrice ?? 0;
   }
 
-  async getSuccessfulContractAggregates(companyId: number): Promise<SuccessfulContractAggregates> {
+  async getSuccessfulContractAggregates(
+    companyId: number,
+  ): Promise<SuccessfulContractAggregates> {
     const successContracts = await this._prisma.contract.count({
       where: {
         companyId,

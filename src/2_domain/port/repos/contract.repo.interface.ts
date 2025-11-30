@@ -42,7 +42,9 @@ export interface IContractRepo {
 
   getMonthlySalesAggregates(companyId: number, month: string): Promise<number>;
 
-  getSuccessfulContractAggregates(companyId: number): Promise<SuccessfulContractAggregates>;
+  getSuccessfulContractAggregates(
+    companyId: number,
+  ): Promise<SuccessfulContractAggregates>;
 
   getProceedingContractAggregate(companyId: number): Promise<number>;
 }
