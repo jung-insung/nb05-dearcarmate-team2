@@ -1,0 +1,4 @@
+﻿carNumber,manufacturer,model,manufacturingYear,mileage,price,accidentCount,explanation,accidentDetails
+12가3456,기아,K5,2020,30000,15000000,1,깨끗한 차량,사소한 접촉사고 1회
+34나7890,현대,아반떼,2019,45000,12000000,0,무사고 차량,
+56다1122,쉐보레,스파크,2018,60000,7000000,2,가성비 차량,"전면 교체 1회, 후면 판금 1회"
