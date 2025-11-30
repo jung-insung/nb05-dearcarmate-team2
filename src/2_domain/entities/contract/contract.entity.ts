@@ -143,7 +143,7 @@ export class ContractEntity {
     if (params.meetings !== undefined) {
       this.replaceMeetings(params.meetings);
     }
-    if(params.contractDocuments) {
+    if (params.contractDocuments) {
       this._contractDocuments = params.contractDocuments;
     }
   }

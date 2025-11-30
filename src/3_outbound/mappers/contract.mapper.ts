@@ -33,9 +33,9 @@ export class ContractMapper {
     const meeting =
       meetingsData.length > 0
         ? {
-          deleteMany: {},
-          create: meetingsData,
-        }
+            deleteMany: {},
+            create: meetingsData,
+          }
         : undefined;
 
     const docsData = entity.contractDocuments.map((d) => ({
@@ -43,15 +43,12 @@ export class ContractMapper {
       fileName: d.fileName,
     }));
 
-    const contractDocuments =
-    docsData.length > 0
-      ? docsData
-      : undefined;
+    const contractDocuments = docsData.length > 0 ? docsData : undefined;
 
     return {
       contract: contractData,
       meeting,
-      contractDocuments
+      contractDocuments,
     };
   }
 
