@@ -1,0 +1,6 @@
+name,email,gender,phoneNumber,region,ageGroup,memo
+김민준,minjun.kim@example.com,male,010-1234-5678,서울,30-40,첫 번째 고객
+이서연,seoyeon.lee@example.com,female,010-2345-6789,부산,20-30,두 번째 고객
+박지훈,jihoon.park@example.com,male,010-3456-7890,인천,40-50,세 번째 고객
+최수아,sua.choi@example.com,female,010-4567-8901,대구,20-30,네 번째 고객
+정도윤,doyoon.jung@example.com,male,010-5678-9012,광주,30-40,다섯 번째 고객 

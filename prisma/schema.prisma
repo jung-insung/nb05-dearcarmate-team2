@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int      @id @default(autoincrement())
+  name           String
+  email          String   @unique
+  employeeNumber String
+  phoneNumber    String
+  password       String
+  imageUrl       String?
+  isAdmin        Boolean  @default(false)
+  version        Int      @default(1)
+  refreshToken   String?
+  createdAt      DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime @updatedAt  @db.Timestamptz(6)
+
+  company   Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId Int?
+
+  contracts Contract[]
+}
+
+model Company {
+  id          Int      @id @default(autoincrement())
+  companyName String   @unique
+  companyCode String   @unique
+  userCount   Int
+  version     Int      @default(1)
+  createdAt   DateTime @default(now())  @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(6)
+
+  users     User[]
+  customers Customer[]
+  cars      Car[]
+  contracts Contract[]
+}
+
+enum Gender {
+  MALE  @map("남")
+  FEMALE @map("여")
+}
+
+enum AgeGroup {
+  TEN     @map("10대")
+  TWENTY  @map("20대")
+  THIRTY  @map("30대")
+  FOURTY  @map("40대")
+  FIFTY   @map("50대")
+  SIXTY   @map("60대")
+  SEVENTY @map("70대")
+  EIGHTY  @map("80대")
+}
+
+enum Region {
+  SEOUL     @map("서울")
+  GYEONGGI  @map("경기")
+  INCHEON   @map("인천")
+  GANGWON   @map("강원")
+  CHUNGBUK  @map("충북")
+  CHUNGNAM  @map("충남")
+  SEJONG    @map("세종")
+  DAEJEON   @map("대전")
+  JEONBUK   @map("전북")
+  JEONNAM   @map("전남")
+  GWANGJU   @map("광주")
+  GYEONGBUK @map("경북")
+  GYEONGNAM @map("경남")
+  DAEGU     @map("대구")
+  ULSAN     @map("울산")
+  BUSAN     @map("부산")
+  JEJU      @map("제주")
+}
+
+model Customer {
+  id            Int       @id @default(autoincrement())
+  name          String
+  gender        Gender
+  phoneNumber   String
+  ageGroup      AgeGroup?
+  region        Region?
+  email         String
+  memo          String?
+  contractCount Int       @default(0)
+  version       Int       @default(1)
+  createdAt     DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime  @updatedAt  @db.Timestamptz(6)
+
+  companyId Int
+  company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contract  Contract[]
+
+  @@unique([email, companyId])
+  @@index([name])
+  @@index([email])
+  @@index([name, email])
+}
+
+enum CarManufacturer {
+  KIA       @map("기아")
+  HYUNDAI   @map("현대")
+  CHEVROLET @map("쉐보레")
+}
+
+enum CarType {
+  SEDAN   @map("세단")
+  COMPACT @map("경차")
+  SUV     @map("SUV")
+}
+
+enum CarStatus {
+  POSSESSION          @map("possession")
+  CONTRACT_PROCEEDING @map("contractProceeding")
+  CONTRACT_COMPLETED  @map("contractCompleted")
+}
+
+model Car {
+  id                Int             @id @default(autoincrement())
+  carNumber         String          @unique
+  manufacturer      CarManufacturer
+  model             String
+  type              CarType
+  manufacturingYear Int
+  mileage           Int
+  price             Int
+  accidentCount     Int             @default(0)
+  explanation       String?
+  accidentDetails   String?
+  status            CarStatus       @default(POSSESSION)
+  version           Int             @default(1)
+  createdAt         DateTime        @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime        @updatedAt  @db.Timestamptz(6)
+
+  companyId Int
+  company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contracts Contract[]
+
+  @@index([companyId])
+  @@index([model])
+}
+
+model Contract {
+  id         Int @id @default(autoincrement())
+  userId     Int
+  carId      Int
+  customerId Int
+  companyId  Int
+
+  status         ContractStatus @default(CAR_INSPECTION)
+  resolutionDate DateTime?      @db.Timestamptz(6)
+  contractPrice  Int
+  version        Int            @default(1)
+  createdAt      DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime       @updatedAt @db.Timestamptz(6)
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  car      Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  company  Company  @relation(fields: [companyId], references: [id])
+
+  meeting Meeting[]
+
+  documents ContractDocument[]
+}
+
+model Meeting {
+  id         Int      @id @default(autoincrement())
+  contractId Int
+  date       DateTime @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @updatedAt @db.Timestamptz(6)
+
+  alarms AlarmTime[]
+
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+}
+
+enum ContractStatus {
+  CAR_INSPECTION      @map("carInspection")
+  PRICE_NEGOTIATION   @map("priceNegotiation")
+  CONTRACT_DRAFT      @map("contractDraft")
+  CONTRACT_SUCCESSFUL @map("contractSuccessful")
+  CONTRACT_FAILED     @map("contractFailed")
+}
+
+enum AlarmTime {
+  DAY_BEFORE_9AM
+  ON_DAY_9AM
+}
+
+model ContractDocument {
+  id        Int      @id @default(autoincrement())
+  fileName  String
+  filePath  String
+  createdAt DateTime @default(now())  @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  contractId Int?
+  contract   Contract? @relation(fields: [contractId], references: [id], onDelete: Cascade)
+}
+
+enum Cartype {
+  SEDAN    @map("세단")
+  SUV      @map("SUV")
+  KEUN_CHA @map("경차")
+}

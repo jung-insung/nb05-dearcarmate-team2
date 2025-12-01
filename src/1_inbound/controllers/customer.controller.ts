@@ -1,0 +1,75 @@
+import { Request, Response } from "express";
+import { BaseController } from "./base.controller";
+import {
+  getCustomersQuerySchema,
+  registCustomerSchema,
+  updateCustomerSchema,
+} from "../requests/customer-schema.request";
+import { ICustomerService } from "../port/services/customer.service.interface";
+
+export class CustomerController extends BaseController {
+  constructor(private _customerService: ICustomerService) {
+    super();
+  }
+
+  registCustomer = async (req: Request, res: Response) => {
+    const userId = req.userId!;
+    const dto = this.validateOrThrow(registCustomerSchema, { body: req.body });
+
+    const newCusotmer = await this._customerService.registCustomer({
+      dto,
+      userId,
+    });
+
+    res.status(201).json(newCusotmer);
+  };
+
+  getCustomers = async (req: Request, res: Response) => {
+    const userId = req.userId!;
+    const query = this.validateOrThrow(getCustomersQuerySchema, req.query);
+    const { page, pageSize, searchBy, keyword } = query;
+
+    const customers = await this._customerService.getCustomers({
+      userId,
+      page,
+      pageSize,
+      searchBy,
+      keyword,
+    });
+
+    return res.status(200).json(customers);
+  };
+
+  getCustomer = async (req: Request, res: Response) => {
+    const customerId = Number(req.params.customerId);
+    const customer = await this._customerService.getCustomer(customerId);
+
+    return res.status(200).json(customer);
+  };
+
+  updateCustomer = async (req: Request, res: Response) => {
+    const customerId = Number(req.params.customerId);
+    const dto = this.validateOrThrow(updateCustomerSchema, { body: req.body });
+
+    const updatedCustomer = await this._customerService.updateCustomer({
+      customerId,
+      dto,
+    });
+
+    res.status(200).json(updatedCustomer);
+  };
+
+  deleteCusomer = async (req: Request, res: Response) => {
+    const customerId = Number(req.params.customerId);
+    await this._customerService.deleteCustomer(customerId);
+
+    res.status(200).json({ message: "고객 삭제 성공" });
+  };
+
+  uploadCustomers = async (req: Request, res: Response) => {
+    const userId = req.userId!;
+    await this._customerService.uploadCustomers({ userId, req });
+
+    res.status(200).json({ message: "고객 정보가 등록되었습니다" });
+  };
+}
