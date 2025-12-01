@@ -2,7 +2,7 @@
   "name": "nb05-dearcarmate-team2",
   "description": "Dear Carmate - 중고차 계약 관리 백엔드 서버",
   "scripts": {
-    "build": "npx tsc",
+    "build": "node_modules/.bin/tsc",
     "format": "prettier --write .",
     "description": "Dear Carmate - 중고차 계약 관리 백엔드 서버",
     "window-dev-ts": "cross-env NODE_ENV=dev nodemon --exec ts-node ./src/index.ts",
