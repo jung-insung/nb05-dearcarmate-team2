@@ -7,7 +7,7 @@
     "description": "Dear Carmate - 중고차 계약 관리 백엔드 서버",
     "window-dev-ts": "cross-env NODE_ENV=dev nodemon --exec ts-node ./src/index.ts",
     "mac-dev-ts": "export NODE_ENV=dev && nodemon --exec ts-node src/index.ts",
-    "prod": "cross-env NODE_ENV=dev && node ./dist/index.js"
+    "prod": "NODE_ENV=prod node ./dist/index.js"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
