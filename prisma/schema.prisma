@@ -98,8 +98,6 @@ model Customer {
 
   @@unique([email, companyId])
   @@index([name])
-  @@index([email])
-  @@index([name, email])
 }
 
 enum CarManufacturer {
