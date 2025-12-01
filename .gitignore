@@ -42,7 +42,6 @@ $RECYCLE.BIN/
 node_modules/
 
 # Builds
-dist/
 build/
 
 # Env files
