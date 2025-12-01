@@ -6,10 +6,8 @@
 
 | 이름       | 역할        | GitHub                                                       | 개인 개발 블로그                                                   |
 | ---------- | ----------- | ------------------------------------------------------------ | ---------------------------------------------------------------- |
-| **김경연** | 백엔드 개발 | 🔗 [GitHub](개인 Github 링크)                                | -                                                                  |
 | **오창섭** | 백엔드 개발 | 🔗 [GitHub](https://github.com/GhostGN95)                    | 🔗 []()                                                         |
 | **김경연** | 백엔드 개발 | 🔗 [GitHub]https://github.com/gyeongyeonkmy/study            | 🔗 [https://velog.io/@gyeongyeonk/posts]-                        |
-| **오창섭** | 백엔드 개발 | 🔗 [GitHub](개인 Github 링크)                                | -                                                                |
 | **정인성** | 백엔드 개발 | 🔗 [GitHub](https://github.com/jung-insung?tab=repositories) | 🔗 [insungcoding.tistory.com](https://insungcoding.tistory.com/) |
 | **최지혜** | 백엔드 개발 | 🔗 [GitHub](https://github.com/918-jihye?tab=repositories) | [노션](https://www.notion.so/CODE-IT-_-259bc88351b78087b0b0dd3e68ac20d5) |
 
