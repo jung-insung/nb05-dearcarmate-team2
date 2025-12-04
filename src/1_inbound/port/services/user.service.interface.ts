@@ -21,12 +21,13 @@ export interface IUserService {
   /**
    * 회원 정보 수정
    * 1. DB에서 userId로 사용자 조회
-   * 2. 조회 실패 시 예외 처리
-   * 3. 비밀번호 변경 시 검증
-   * 4. UserEntity.updateUser로 새로운 엔티티 생성
-   * 5. DB update 호출
-   * 6. 동시성 문제 - lost update
-   * 7. 해결방안 - 낙관적 검증으로 해결
+   * 2. 조회 실패 시, 2차 비번 검증 실패시 예외 처리
+   * 3. UserEntity.updateUser로 새로운 엔티티 생성
+   * 4. DB에서 update 호출
+   * 5. 동시성 문제 - lost update
+   * 6. 해결방안 - 낙관적 검증으로 해결
+   * @throws BusinessExceptionType.USER_NOT_EXIST,
+   * @throws BusinessExceptionType.PASSWORD_MISMATCH
    */
   updateUser(dto: UpdateUserReqDto): Promise<PersistUserEntityWithCompany>;
 

@@ -42,13 +42,11 @@ $RECYCLE.BIN/
 node_modules/
 
 # Builds
-dist/
 build/
 
 # Env files
 .env
-.env.* 
-!.env.example
+.env.dev 
 
 # Logs
 npm-debug.log*

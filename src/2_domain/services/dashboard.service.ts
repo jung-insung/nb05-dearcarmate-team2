@@ -58,7 +58,7 @@ export class DashboardService extends BaseService implements IDashboardService {
         });
         salesByCarType.push({
           carType: cartype.type,
-          count: Number(cartype.totalSales) ?? 0,
+          count: Number(cartype.totalSales) ? Number(cartype.totalSales) / 10000 : 0,
         });
       });
 
@@ -73,7 +73,7 @@ export class DashboardService extends BaseService implements IDashboardService {
       });
 
       return dashboard;
-    },false, {
+    }, false, {
       useTransaction: true,
       isolationLevel: "RepeatableRead"
     });
