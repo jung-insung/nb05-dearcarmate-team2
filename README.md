@@ -443,4 +443,4 @@ README.md
 
 ## 🪞 프로젝트 회고록
 
-[회고록](https://www.notion.so/codeit/5-2b56fd228e8d80d6b055d0474375315e)
+[회고록](https://www.notion.so/NB_05-2-Dear-Carmate-2ac3fdc694758080ae96d16cf56ed8aa?source=copy_link)
