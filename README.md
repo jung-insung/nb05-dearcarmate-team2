@@ -233,36 +233,203 @@
 
 <pre>
 src
- ┣ config
- ┃ ┗ db.ts
- ┣ controllers
- ┃ ┣ auth.controller.ts
- ┃ ┗ user.controller.ts
- ┣ middleware
- ┃ ┣ auth.middleware.ts
- ┃ ┗ error.middleware.ts
- ┣ models
- ┃ ┣ user.model.ts
- ┃ ┗ course.model.ts
- ┣ routes
- ┃ ┣ auth.routes.ts
- ┃ ┗ user.routes.ts
- ┣ services
- ┃ ┣ auth.service.ts
- ┃ ┗ user.service.ts
- ┣ utils
- ┃ ┣ jwt.ts
- ┃ ┣ constants.ts
- ┃ ┗ logger.ts
- ┣ app.ts
- ┗ server.ts
-prisma
- ┣ schema.prisma
- ┗ seed.ts
-.env
-.gitignore
-package.json
-tsconfig.json
+    |   index.ts
+    |   injector.ts
+    |   server.ts
+    |
+    +---1_inbound
+    |   +---controllers
+    |   |       auth.controller.ts
+    |   |       base.controller.ts
+    |   |       car.controller.ts
+    |   |       company.controller.ts
+    |   |       contract-doc.controller.ts
+    |   |       contract.controller.ts
+    |   |       customer.controller.ts
+    |   |       dashboard.controller.ts
+    |   |       image.controller.ts
+    |   |       user.controller.ts
+    |   |
+    |   +---middlewares
+    |   |       auth.middleware.ts
+    |   |       cors.middleware.ts
+    |   |       file-upload.middleware.ts
+    |   |       global-error.middleware.ts
+    |   |       json.middleware.ts
+    |   |       logger.middleware.ts
+    |   |       not-found.middleware.ts
+    |   |       static-file.middleware.ts
+    |   |
+    |   +---port
+    |   |   \---services
+    |   |           auth.service.interface.ts
+    |   |           car.service.interface.ts
+    |   |           company.service.interface.ts
+    |   |           contract.service.interface.ts
+    |   |           contractDoc.service.interface.ts
+    |   |           customer.service.interface.ts
+    |   |           dashboard.service.interface.ts
+    |   |           user.service.interface.ts
+    |   |
+    |   +---requests
+    |   |       auth-schema.request.ts
+    |   |       car-schema.request.ts
+    |   |       company-schema.request.ts
+    |   |       contract-doc-schema.request.ts
+    |   |       contract-schema.request.ts
+    |   |       customer-schema.request.ts
+    |   |       dashboard-shema.request.ts
+    |   |       image-schema.request.ts
+    |   |       user-schema.request.ts
+    |   |
+    |   +---responses
+    |   |   |   car.res.dto.ts
+    |   |   |
+    |   |   +---auth
+    |   |   |       login-user.res.dto.ts
+    |   |   |       refresh-acess-token.res.dto.ts
+    |   |   |
+    |   |   +---company
+    |   |   |       company.response.ts
+    |   |   |
+    |   |   +---contract
+    |   |   |       contract.response.ts
+    |   |   |
+    |   |   +---contract-doc
+    |   |   |       contract-doc-list.res.dto.ts
+    |   |   |       draft-contracts.res.dto.ts
+    |   |   |       upload-contract-doc.res.dto.ts
+    |   |   |
+    |   |   +---customer
+    |   |   |       customer.response.ts
+    |   |   |
+    |   |   +---dashboard
+    |   |   |       dashboardData.res.dto.ts
+    |   |   |
+    |   |   +---image
+    |   |   |       image-upload-res.dto.ts
+    |   |   |
+    |   |   \---user
+    |   |           base.user.res.dto.ts
+    |   |           delete.user.res.dto.ts
+    |   |           get.user.res.dto.ts
+    |   |           sign-up.user.res.dto.ts
+    |   |           update.user.res.dto.ts
+    |   |
+    |   \---routers
+    |           auth.router.ts
+    |           base.router.ts
+    |           car.router.ts
+    |           company.router.ts
+    |           contract-doc.router.ts
+    |           contract.router.ts
+    |           coustomer.router.ts
+    |           dashboard.router.ts
+    |           image.router.ts
+    |           user.router.ts
+    |
+    +---2_domain
+    |   +---entities
+    |   |   +---car
+    |   |   |       car.entity.ts
+    |   |   |
+    |   |   +---company
+    |   |   |       company.entity.ts
+    |   |   |       company.entity.util.ts
+    |   |   |
+    |   |   +---contract
+    |   |   |       contract.entity.ts
+    |   |   |       contract.entity.util.ts
+    |   |   |       contract.enum.ts
+    |   |   |       meeting.entity.ts
+    |   |   |
+    |   |   +---cotract-doc
+    |   |   |       contract-doc-view.entity.ts
+    |   |   |       contract-doc.entity.ts
+    |   |   |
+    |   |   +---customer
+    |   |   |       customer.entity.ts
+    |   |   |       customer.enum.ts
+    |   |   |
+    |   |   +---dashboard
+    |   |   |       dashboard-view.entity.ts
+    |   |   |
+    |   |   \---user
+    |   |           user.entity.ts
+    |   |
+    |   +---port
+    |   |   |   unit-of-work.interface.ts
+    |   |   |
+    |   |   +---managers
+    |   |   |       bcrypt-hash.manager.interface.ts
+    |   |   |
+    |   |   \---repos
+    |   |           car.repo.interface.ts
+    |   |           company.repo.interface.ts
+    |   |           contract-doc.repo.interface.ts
+    |   |           contract.repo.interface.ts
+    |   |           customer.repo.interface.ts
+    |   |           repos.interface.ts
+    |   |           user.repo.interface.ts
+    |   |
+    |   \---services
+    |           auth.service.ts
+    |           base.service.ts
+    |           car.service.ts
+    |           company.service.ts
+    |           contract-doc.service.ts
+    |           contract.service.ts
+    |           customer.service.ts
+    |           dashboard.service.ts
+    |           user.service.ts
+    |
+    +---3_outbound
+    |   |   repo-factory.ts
+    |   |   unit-of-work.ts
+    |   |
+    |   +---managers
+    |   |       bcrypt-hash.manager.ts
+    |   |
+    |   +---mappers
+    |   |       car.mapper.ts
+    |   |       company.mapper.ts
+    |   |       contract-doc.mapper.ts
+    |   |       contract.mapper.ts
+    |   |       customer.mapper.ts
+    |   |       user.mapper.ts
+    |   |
+    |   \---repos
+    |           base.repo.ts
+    |           car.repo.ts
+    |           company.repo.ts
+    |           contract-doc.repo.ts
+    |           contract.repo.ts
+    |           customer.repo.ts
+    |           user.repo.ts
+    |
+    +---4_shared
+    |   +---exceptions
+    |   |   +---business.exceptions
+    |   |   |       business.exception.ts
+    |   |   |       exception-info.ts
+    |   |   |
+    |   |   \---technical.exceptions
+    |   |           exception-info.ts
+    |   |           technical.exception.ts
+    |   |
+    |   +---port
+    |   |       config.util.interface.ts
+    |   |
+    |   \---utils
+    |           car-csv.util.ts
+    |           car-type.util.ts
+    |           config.util.ts
+    |           customer-csv.util.ts
+    |           customer-normalizer.util.ts
+    |           token.util.ts
+    |
+    \---types
+            express.d.ts
 README.md
 </pre>
 
@@ -270,10 +437,10 @@ README.md
 
 ## 🌐 구현 홈페이지
 
-[https://www.codeit.kr/](https://www.codeit.kr/)
+[dear carmate](https://fe-dear-carmate.onrender.com)
 
 ---
 
 ## 🪞 프로젝트 회고록
 
-(제작한 발표자료 링크 혹은 첨부파일 첨부)
+[회고록](https://www.notion.so/codeit/5-2b56fd228e8d80d6b055d0474375315e)
