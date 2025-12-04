@@ -10,7 +10,7 @@ export class ConfigUtil implements IConfigUtil {
 
   constructor() {
     dotenv.config({
-      path: process.env.NODE_ENV === "dev" ? ".env.dev" : ".env.prod",
+      path: process.env.NODE_ENV === "dev" ? ".env.dev" : ".env",
     });
 
     const result = configSchema.safeParse(process.env);
